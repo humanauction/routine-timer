@@ -26,12 +26,11 @@ SECRET_KEY = 'django-insecure-z$l*58g%%22h=ek1jtgr8^dg6&514ks=0n3=$*$cmf4kd414q2
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'git.heroku.com/routine-timer.git',
     '.herokuapp.com',
     '.127.0.0.1',
 ]
 
-CSRF_TRUSTED_ORIGINS =['https://*.herokuapp.com']
+CSRF_TRUSTED_ORIGINS = ['https://*.herokuapp.com']
 
 
 # Application definition
@@ -43,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'routine_planner'
+    'home'
 ]
 
 MIDDLEWARE = [
