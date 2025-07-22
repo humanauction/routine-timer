@@ -2,14 +2,14 @@ from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 from django.contrib.auth.views import LoginView as DjangoLoginView, LogoutView
-from .forms import SignupForm, LoginForm
-from .services import register_user, send_welcome_email
+from .forms import SignUpForm, LoginForm
+from .services import register_user, send_welcome_mail
 from django.shortcuts import render
 
 # Create your views here.
-class SignupView(FormView):
+class SignUpView(FormView):
     template_name = 'authentication/signup.html'
-    form_class = SignupForm
+    form_class = SignUpForm
     success_url = reverse_lazy('authentication:login')
 
     def form_valid(self, form):
