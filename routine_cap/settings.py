@@ -37,7 +37,6 @@ ALLOWED_HOSTS = [
 
 CSRF_TRUSTED_ORIGINS = ['https://*.herokuapp.com']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -49,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'home',
     'authentication',
+    'routine',
 ]
 
 MIDDLEWARE = [
