@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 import dj_database_url
 
-if os.path.isfile('env.py'): # This file does not exist on the deployed version
+if os.path.isfile('env.py'):  # This file does not exist on the deployed version.
     import env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -85,15 +85,15 @@ WSGI_APPLICATION = 'routine_cap.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.sqlite3',
 #        'NAME': BASE_DIR / 'db.sqlite3',
 #    }
-#}
+# }
 
 DATABASES = {
-    'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    'default': dj_database_url.parse(os.environ.get("DATABASE_URL", ""))
 }
 # custom models
 AUTH_USER_MODEL = 'authentication.CustomUser'
