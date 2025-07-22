@@ -9,7 +9,11 @@ User = get_user_model()
 def register_user(username: str, email: str, password: str) -> AbstractBaseUser:
     """
     Create and return a new user instance.
-    add email confirmation here.
+    This function sets the password and saves the user to the database.
+    :param username: The username for the new user.
+    :param email: The email address for the new user.
+    :param password: The password for the new user.
+    :return: The created user instance.
     """
     user = User(username=username, email=email)
     user.set_password(password)
@@ -17,7 +21,7 @@ def register_user(username: str, email: str, password: str) -> AbstractBaseUser:
     return user
 
 
-def send_welcome_mail(user: AbstractBaseUser):
+def send_welcome_mail(user: User):
     """
     Send email confirmation to new user.
     """

@@ -33,7 +33,6 @@ DEBUG = False
 ALLOWED_HOSTS = [
     '.herokuapp.com',
     '127.0.0.1',
-    
 ]
 
 CSRF_TRUSTED_ORIGINS = ['https://*.herokuapp.com']
@@ -98,7 +97,6 @@ DATABASES = {
 }
 # custom models
 AUTH_USER_MODEL = 'authentication.CustomUser'
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

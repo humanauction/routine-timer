@@ -7,6 +7,8 @@ from .services import register_user, send_welcome_mail
 from django.shortcuts import render
 
 # Create your views here.
+
+
 class SignUpView(FormView):
     template_name = 'authentication/signup.html'
     form_class = SignUpForm
@@ -20,8 +22,9 @@ class SignUpView(FormView):
             password=form.cleaned_data['password1']
         )
         """send welcome email"""
-        send_welcome_email(user)
+        send_welcome_mail(user)
         return super().form_valid(form)
+
 
 class LoginView(DjangoLoginView):
     template_name = 'authentication/login.html'
