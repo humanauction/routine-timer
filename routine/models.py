@@ -17,6 +17,7 @@ class Routine(models.Model):
         result = self.items.aggregate(total=Sum('duration'))['total']
         return result or 0
 
+
 class RoutineItem(models.Model):
     routine  = models.ForeignKey(Routine,
                                  on_delete=models.CASCADE,
@@ -27,3 +28,4 @@ class RoutineItem(models.Model):
 
     class Meta:
         ordering = ['order']
+
