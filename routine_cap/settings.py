@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 import dj_database_url
 
-if os.path.isfile('env.py'):# This file does not exist on the deployed version
+if os.path.isfile('env.py'): # This file does not exist on the deployed version
     import env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,10 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-z$l*58g%%22h=ek1jtgr8^dg6&514ks=0n3=$*$cmf4kd414q2'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '.herokuapp.com',
@@ -93,9 +93,10 @@ WSGI_APPLICATION = 'routine_cap.wsgi.application'
 #}
 
 DATABASES = {
-'default':
-dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
+# custom models
+AUTH_USER_MODEL = 'authentication.CustomUser'
 
 
 # Password validation
