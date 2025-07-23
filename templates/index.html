@@ -9,6 +9,11 @@
         <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     </head>
     <body>
-        <h1>well, it is alive</h1>
+        <div id="grid"></div>
+        <div id="scanline"></div>
+
+        {% block content %}{% endblock %}
+
+        <script src="{% static 'js/tron-grid.js' %}"></script>
     </body>
 </html>

@@ -1,0 +1,169 @@
+* colours,
+spacing & shadows as variables */ :root {
+    --bg: #e0e5ec;
+    --fg: #e6e8ed;
+    --shadow-light: #ffffff;
+    --shadow-dark: #a3aab5;
+    --input-shadow: inset 6px 6px 8px #c1c6cd, inset -6px -6px 8px #f0f5fa;
+    --btn-shadow: 8px 8px 16px var(--shadow-dark),
+        -8px -8px 16px var(--shadow-light);
+    --radius: 10px;
+    --spacing: 1rem;
+    --icon-bg-hover: #333;
+    --icon-fg-hover: #ffffff;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Montserrat", sans-serif;
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.visually-hidden {
+    position: absolute;
+    clip: rect(0 0 0 0);
+    width: 1px;
+    height: 1px;
+    white-space: nowrap;
+}
+
+.container {
+    background: var(--bg);
+    padding: 2rem;
+    border-radius: 2rem;
+    box-shadow: 10px 10px 30px var(--shadow-dark),
+        -10px -10px 30px var(--shadow-light);
+    width: 320px;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+
+.tabs button:hover {
+    background: #d6dce4;
+}
+
+.tabs button {
+    flex: 1;
+    padding: var(--spacing);
+    background: none;
+    border: none;
+    font-weight: bold;
+    font-family: "Monserrat", sans-serif;
+    cursor: pointer;
+    border-radius: var(--radius);
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+.tabs button[aria-selected="true"] {
+    background: var(--fg);
+    box-shadow: inset 2px 2px 5px #bec4cb, inset -2px -2px 5px #f0f5fa;
+}
+
+.tabs button[aria-selected="false"] {
+    border: 0.5px solid #dcddde; /* or whatever accent you prefer */
+    border-radius: var(--radius);
+    box-shadow: 2px 2px 6px rgba(189, 194, 204, 0.3);
+}
+
+.form {
+    display: none;
+}
+
+.form.active {
+    display: block;
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+label {
+    display: block;
+    margin-top: var(--spacing);
+    font-size: 0.9rem;
+    color: #333;
+}
+
+input {
+    width: 100%;
+    margin-top: 0.25rem;
+    padding: 0.75rem;
+    border-radius: var(--radius);
+    border: none;
+    background: var(--bg);
+    box-shadow: var(--input-shadow);
+    font-size: 1rem;
+}
+
+input:focus,
+.btn:focus {
+    box-shadow: inset 2px 2px 5px #bec4cb, inset -2px -2px 5px #f0f5fa,
+        0 0 4px rgba(0, 0, 0, 0.1); /* soft glow */
+    outline: none;
+}
+
+.btn {
+    width: 60%; /* shrink the button to half container width */
+    margin: 1.5rem auto 0; /* auto left/right centers it horizontally */
+    display: block; /* block allows margin auto to work */
+    padding: 0.75rem;
+    background: var(--fg);
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: var(--btn-shadow);
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background: #d6dce4;
+}
+
+.or {
+    text-align: center;
+    margin: 1.5rem 0 1rem;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.socials {
+    display: flex;
+    gap: 2.75rem;
+    justify-content: center;
+}
+
+.social {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg);
+    box-shadow: var(--btn-shadow);
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: grid;
+    place-items: center;
+}
+
+.social:hover {
+    background: var(--icon-bg-hover);
+    color: var(--icon-fg-hover);
+    transition: background 0.6s, color 0.1s;
+}

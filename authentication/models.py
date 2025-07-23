@@ -10,13 +10,7 @@ class CustomUser(AbstractUser):
     username = models.CharField(max_length=150, unique=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=128, unique=True)
+    created_on = models.DateTimeField(auto_now_add=True)
     pass
     class Meta:
-        ordering = ["-created_on"]
-
-
-@admin.register(MyModel)
-class MyModelAdmin(SummernoteModelAdmin):
-    list_display = ('username', 'email', 'date_joined')
-    search_fields = ['username', 'email',]
-    list_filter = ('is_active', 'date_joined')
+        ordering = ["-date_joined"]
