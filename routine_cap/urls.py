@@ -18,10 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 from home import urls as home_urls
 from authentication import urls as auth_urls
+from routine import urls as routine_urls
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('summernote/', include('django_summernote.urls')),
     path('', include(home_urls, namespace='home')),
     path('auth/', include(auth_urls, namespace='authentication')),
-    path('routine/', include('routine.urls', namespace='routine')),
+    path('routine/', include(routine_urls, namespace='routine')),
 ]

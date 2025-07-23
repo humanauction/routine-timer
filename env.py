@@ -4,14 +4,15 @@ import os
 
 DATABASE_URL = os.environ.setdefault(
     "DATABASE_URL",
-	"postgresql://neondb_owner:npg_cLm5KvfBDeV0@ep-twilight-forest-a2vgit80.eu-central-1.aws.neon.tech/ladle_shun_panty_468426"
+    "postgresql://neondb_owner:npg_cLm5KvfBDeV0@ep-twilight-forest-a2vgit80.eu-central-1.aws.neon.tech/ladle_shun_panty_468426"
 )
 
 SECRET_KEY = os.environ.setdefault(
-	"SECRET_KEY",
-	"ybZj_I|o!bvN-}LEb9c~^XU[w4!@PIBDToLD6%vBfgR*7GPC[B)BTUkH(nUWhFA-)q.;bJzs-[PV]&dP#86SYT"
+    "SECRET_KEY", 
+    "ybZj_I|o!bvN-}LEb9c~^XU[w4!@PIBDToLD6%vBfgR*7GPC[B)BTUkH(nUWhFA-)q.;bJzs-[PV]&dP#86SYT"
 )
 
 CLOUDINARY_URL = os.environ.setdefault(
-    "CLOUDINARY_URL", "cloudinary://914958239669143:**********@deui9rkav"
+    "CLOUDINARY_URL",
+    "cloudinary://914958239669143:jGfe90eL6Zvt-2POkrfq8y0whsk@deui9rkav"
 )

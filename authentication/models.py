@@ -11,4 +11,12 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=128, unique=True)
     pass
+    class Meta:
+        ordering = ["-created_on"]
 
+
+@admin.register(MyModel)
+class MyModelAdmin(SummernoteModelAdmin):
+    list_display = ('username', 'email', 'date_joined')
+    search_fields = ['username', 'email',]
+    list_filter = ('is_active', 'date_joined')
