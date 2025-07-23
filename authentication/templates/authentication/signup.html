@@ -1,0 +1,58 @@
+{% extends "auth.html" %} {% block content %} {% load static %}
+<form
+    id="registerForm"
+    class="form"
+    aria-labelledby="registerTab"
+    method="post"
+>
+    <!-- Register Form -->
+    <fieldset>
+        <legend class="visually-hidden">Register</legend>
+        <label for="regName">Full Name</label>
+        <input id="regName" type="text" placeholder="Jane Doe" required />
+
+        <label for="regEmail">Email</label>
+        <input
+            id="regEmail"
+            type="email"
+            placeholder="you@example.com"
+            required
+        />
+
+        <label for="regPassword">Password</label>
+        <input
+            id="regPassword"
+            type="password"
+            placeholder="••••••••"
+            required
+        />
+
+        <label for="regConfirm">Confirm Password</label>
+        <input
+            id="regConfirm"
+            type="password"
+            placeholder="••••••••"
+            required
+        />
+
+        <button type="submit" class="btn">
+            <i class="fa fa-user-plus"></i> Register
+        </button>
+    </fieldset>
+
+    <p class="or">Or sign up with</p>
+    <div class="socials" role="group" aria-label="Social signup">
+        <button class="social" aria-label="Sign up with Google">
+            <i class="fa-brands fa-google"></i>
+        </button>
+        <button class="social" aria-label="Sign up with Facebook">
+            <i class="fa-brands fa-facebook-f"></i>
+        </button>
+        <button class="social" aria-label="Sign up with Twitter">
+            <i class="fa-brands fa-twitter"></i>
+        </button>
+    </div>
+    {% csrf_token %}
+    <button type="submit">Register</button>
+</form>
+{% endblock %}

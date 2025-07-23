@@ -12,7 +12,7 @@
             href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+        <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
         <!-- Font Awesome deferred -->
         <script
             defer
@@ -23,7 +23,6 @@
     <body>
         <main class="container" aria-labelledby="auth-heading">
             <h1 id="auth-heading" class="visually-hidden">Authentication</h1>
-
             <nav class="tabs" role="tablist">
                 <button
                     role="tab"
@@ -44,7 +43,12 @@
             </nav>
 
             <!-- Login Form -->
-            <form id="loginForm" class="form active" aria-labelledby="loginTab">
+            <form
+                id="loginForm"
+                method="post"
+                class="form active"
+                aria-labelledby="loginTab"
+            >
                 <fieldset>
                     <legend class="visually-hidden">Login</legend>
                     <label for="loginEmail">Email</label>
@@ -62,7 +66,6 @@
                         placeholder="••••••••"
                         required
                     />
-
                     <button type="submit" class="btn">Login</button>
                 </fieldset>
 
@@ -87,61 +90,6 @@
                         aria-label="Login with X (Twitter)"
                         onclick="window.location.href='https://accounts.x.com/Login'"
                     >
-                        <i class="fa-brands fa-twitter"></i>
-                    </button>
-                </div>
-            </form>
-
-            <!-- Register Form -->
-            <form id="registerForm" class="form" aria-labelledby="registerTab">
-                <fieldset>
-                    <legend class="visually-hidden">Register</legend>
-                    <label for="regName">Full Name</label>
-                    <input
-                        id="regName"
-                        type="text"
-                        placeholder="Jane Doe"
-                        required
-                    />
-
-                    <label for="regEmail">Email</label>
-                    <input
-                        id="regEmail"
-                        type="email"
-                        placeholder="you@example.com"
-                        required
-                    />
-
-                    <label for="regPassword">Password</label>
-                    <input
-                        id="regPassword"
-                        type="password"
-                        placeholder="••••••••"
-                        required
-                    />
-
-                    <label for="regConfirm">Confirm Password</label>
-                    <input
-                        id="regConfirm"
-                        type="password"
-                        placeholder="••••••••"
-                        required
-                    />
-
-                    <button type="submit" class="btn">
-                        <i class="fa fa-user-plus"></i> Register
-                    </button>
-                </fieldset>
-
-                <p class="or">Or sign up with</p>
-                <div class="socials" role="group" aria-label="Social signup">
-                    <button class="social" aria-label="Sign up with Google">
-                        <i class="fa-brands fa-google"></i>
-                    </button>
-                    <button class="social" aria-label="Sign up with Facebook">
-                        <i class="fa-brands fa-facebook-f"></i>
-                    </button>
-                    <button class="social" aria-label="Sign up with Twitter">
                         <i class="fa-brands fa-twitter"></i>
                     </button>
                 </div>

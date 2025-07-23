@@ -1,0 +1,26 @@
+/* colours, spacing & shadows as variables */
+:root {
+    --bg: #e0e5ec;
+    --fg: #e6e8ed;
+    --shadow-light: #ffffff;
+    --shadow-dark: #a3aab5;
+    --input-shadow: inset 6px 6px 8px #c1c6cd, inset -6px -6px 8px #f0f5fa;
+    --btn-shadow: 8px 8px 16px var(--shadow-dark),
+        -8px -8px 16px var(--shadow-light);
+    --radius: 10px;
+    --spacing: 1rem;
+    --icon-bg-hover: #333;
+    --icon-fg-hover: #ffffff;
+    --font-primary: #333;
+}
+
+body {
+    margin: 0;
+    font-family: "Montserrat", sans-serif;
+    color: var(--font-primary);
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
