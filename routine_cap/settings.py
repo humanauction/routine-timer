@@ -102,6 +102,8 @@ DATABASES = {
 }
 # custom models
 AUTH_USER_MODEL = 'authentication.CustomUser'
+LOGIN_REDIRECT_URL = '/'  # Redirect to home page after login
+LOGOUT_REDIRECT_URL = '/'  # Redirect to home page after logout
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

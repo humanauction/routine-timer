@@ -1,58 +1,44 @@
-{% extends "auth.html" %} {% block content %} {% load static %}
-<form
-    id="registerForm"
-    class="form"
-    aria-labelledby="registerTab"
-    method="post"
->
-    <!-- Register Form -->
-    <fieldset>
-        <legend class="visually-hidden">Register</legend>
-        <label for="regName">Full Name</label>
-        <input id="regName" type="text" placeholder="Jane Doe" required />
+{% extends "base.html" %} {% load static %} {% block content %}
+<div class="auth-container">
+    <h2>Sign Up</h2>
+    <form id="registerForm" class="form" method="post">
+        {% csrf_token %}
+        <!-- Register Form -->
+        <fieldset>
+            <legend class="visually-hidden">Register</legend>
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" required />
 
-        <label for="regEmail">Email</label>
-        <input
-            id="regEmail"
-            type="email"
-            placeholder="you@example.com"
-            required
-        />
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required />
 
-        <label for="regPassword">Password</label>
-        <input
-            id="regPassword"
-            type="password"
-            placeholder="••••••••"
-            required
-        />
+            <label for="password1">Password</label>
+            <input id="password1" name="password1" type="password" required />
 
-        <label for="regConfirm">Confirm Password</label>
-        <input
-            id="regConfirm"
-            type="password"
-            placeholder="••••••••"
-            required
-        />
+            <label for="password2">Confirm Password</label>
+            <input id="password2" name="password2" type="password" required />
+        </fieldset>
 
         <button type="submit" class="btn">
             <i class="fa fa-user-plus"></i> Register
         </button>
-    </fieldset>
+    </form>
+</div>
 
-    <p class="or">Or sign up with</p>
-    <div class="socials" role="group" aria-label="Social signup">
-        <button class="social" aria-label="Sign up with Google">
-            <i class="fa-brands fa-google"></i>
-        </button>
-        <button class="social" aria-label="Sign up with Facebook">
-            <i class="fa-brands fa-facebook-f"></i>
-        </button>
-        <button class="social" aria-label="Sign up with Twitter">
-            <i class="fa-brands fa-twitter"></i>
-        </button>
-    </div>
-    {% csrf_token %}
-    <button type="submit">Register</button>
-</form>
+        <p class="or">Or sign up with</p>
+        <div class="socials" role="group" aria-label="Social signup">
+            <button class="social" aria-label="Sign up with Google">
+                <i class="fa-brands fa-google"></i>
+            </button>
+            <button class="social" aria-label="Sign up with Facebook">
+                <i class="fa-brands fa-facebook-f"></i>
+            </button>
+            <button class="social" aria-label="Sign up with Twitter">
+                <i class="fa-brands fa-twitter"></i>
+            </button>
+        </div>
+        {% csrf_token %}
+        <button type="submit">Register</button>
+    </form>
+</div>
 {% endblock %}
