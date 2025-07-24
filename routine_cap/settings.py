@@ -14,9 +14,10 @@ from pathlib import Path
 import os
 import dj_database_url
 
-if os.path.isfile('env.py'):  # This file does not exist on the deployed version.
+if os.path.isfile('env.py'):  # file not deployed.
     import env
-    
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
@@ -159,3 +160,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_USE_TLS = True
 # EMAIL_HOST_USER = 'your_email@example.com'
 # EMAIL_HOST_PASSWORD = 'your_password'
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
