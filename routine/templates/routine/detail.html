@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ routine.name }} - Routine Details{% endblock %}
+
+{% block content %}
+<div class="routine-detail">
+    <div class="routine-header">
+        <h1>{{ routine.name }}</h1>
+        <div class="routine-actions">
+            <a href="{% url 'routine:list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Routines
+            </a>
+            <a href="#" class="btn btn-primary start-routine" data-routine-id="{{ routine.id }}">
+                <i class="fas fa-play"></i> Start Routine
+            </a>
+        </div>
+    </div>
+
+    <div class="routine-stats">
+        <div class="stat">
+            <span class="stat-label">Total Duration</span>
+            <span class="stat-value">{{ total_duration }} minutes</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Tasks</span>
+            <span class="stat-value">{{ routine_items.count }}</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Created</span>
+            <span class="stat-value">{{ routine.created_at|date:"F j, Y" }}</span>
+        </div>
+    </div>
+
+    <div class="routine-items">
+        <h2>Tasks</h2>
+        {% if routine_items %}
+            <ul class="task-list">
+                {% for item in routine_items %}
+                <li class="task-item">
+                    <div class="task-order">{{ item.order }}</div>
+                    <div class="task-info">
+                        <h3 class="task-name">{{ item.task }}</h3>
+                        <span class="task-duration">{{ item.duration }} minutes</span>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>This routine has no tasks yet.</p>
+        {% endif %}
+    </div>
+    <script>window.startRoutineUrl = "{% url 'routine:start' %}";</script>
+    <script>window.timerRoutineUrl = "{% url 'routine:timer' %}";</script>
+    <script>window.csrfToken = "{{ csrf_token }}";</script>
+</div>
+{% endblock %}

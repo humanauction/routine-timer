@@ -1,10 +1,8 @@
-from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 from django.contrib.auth.views import LoginView as DjangoLoginView, LogoutView
 from .forms import SignUpForm, LoginForm
 from .services import register_user, send_welcome_mail
-from django.shortcuts import render
 from django.contrib import messages
 
 # Create your views here.
@@ -25,8 +23,9 @@ class SignUpView(FormView):
         """send welcome email"""
         send_welcome_mail(user)
         # Add success message
-        messages.warning(self.request, "Account created successfully! Please log in.")
-        print("Message added to request:", self.request._messages._queued_messages)  # Debug print
+        messages.success(self.request, "Success, please sign in.")
+        # Console log success message
+        print("User registration successful for:", user.username)
         return super().form_valid(form)
 
 
@@ -38,4 +37,3 @@ class LoginView(DjangoLoginView):
 
 class LogoutView(LogoutView):
     next_page = reverse_lazy('authentication:login')
-

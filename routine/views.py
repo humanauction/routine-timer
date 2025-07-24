@@ -7,11 +7,14 @@ from .services import (
 )
 from .models import Routine
 from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required
+
 
 class TimerView(TemplateView):
     template_name = 'routine/timer.html'
 
 
+@login_required
 def routine_list(request):
     routines = Routine.objects.filter(user=request.user)
     return render(request, 'routine/list.html', {'routines': routines})
@@ -19,10 +22,12 @@ def routine_list(request):
 
 class RoutineBuilderView(LoginRequiredMixin, View):
     template_name = 'routine/builder.html'
-    form_class    = TaskForm
+    form_class = TaskForm
 
     def get(self, request):
-        form  = self.form_class()
+        if 'routine_tasks' not in request.session:
+            request.session['routine_tasks'] = []
+        form = self.form_class()
         tasks = get_current_routine(request.session)
         total = sum(item['duration'] for item in tasks)
         return render(request, self.template_name,
