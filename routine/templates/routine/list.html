@@ -1,11 +1,32 @@
 {% extends "base.html" %} {% load static %}
 {% block content %}
 <h1>Your Routines</h1>
-<ul>
-    {% for routine in routines %}
-    <li>{{ routine.name }} ({{ routine.total_time }} minutes)</li>
-    {% empty %}
-    <li>No routines found.</li>
-    {% endfor %}
-</ul>
+{% if routines %}
+    <ul class="routine-list">
+        {% for routine in routines %}
+        <li class="routine-item">
+            <div class="routine-info">
+                <span class="routine-name">{{ routine.name }}</span>
+                <span class="routine-time">({{ routine.total_time }} minutes)</span>
+            </div>
+            <div class="routine-actions">
+                <a href="{% url 'routine:detail' routine.id %}" class="btn btn-sm btn-info">
+                    <i class="fas fa-info-circle"></i> Details
+                </a>
+                <a href="{% url 'routine:delete' routine.id %}" class="btn btn-sm btn-danger">
+                    <i class="fas fa-trash"></i> Delete
+                </a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="no-routines">No routines found. <a href="{% url 'routine:builder' %}">Create a routine</a> to get started.</p>
+{% endif %}
+
+<div class="new-routine">
+    <a href="{% url 'routine:builder' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> New Routine
+    </a>
+</div>
 {% endblock %}

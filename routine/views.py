@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import TaskForm
@@ -6,7 +6,9 @@ from .services import (
     get_current_routine, add_task, clear_routine, save_routine_to_db
 )
 from .models import Routine
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DeleteView
+from django.urls import reverse_lazy
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 
@@ -71,3 +73,19 @@ class RoutineDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
         routine = get_object_or_404(Routine, pk=pk, user=request.user)
         return render(request, 'routine/detail.html', {'routine': routine})
+
+# delete routine
+class DeleteRoutineView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Routine
+    template_name = 'routine/routine_confirm_delete.html'
+    success_url = reverse_lazy('routine:list')
+
+    def test_func(self):
+        # Security check: only allow users to delete their own routines
+        routine = self.get_object()
+        return self.request.user == routine.user
+
+    def delete(self, request, *args, **kwargs):
+        routine = self.get_object()
+        messages.success(request, f"Routine '{routine.name}' deleted successfully.")
+        return super().delete(request, *args, **kwargs)

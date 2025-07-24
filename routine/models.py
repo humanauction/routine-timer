@@ -32,6 +32,6 @@ class RoutineItem(models.Model):
 
     def __str__(self):
         return (
+            f"in {self.routine.name})",
             f"{self.task} ({self.duration} min)"
-            f"in {self.routine.name})"
         )

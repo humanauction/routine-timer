@@ -16,6 +16,9 @@
             <a href="#" class="btn btn-primary start-routine" data-routine-id="{{ routine.id }}">
                 <i class="fas fa-play"></i> Start Routine
             </a>
+            <a href="{% url 'routine:delete' routine.id %}" class="btn btn-danger">
+                <i class="fas fa-trash"></i> Delete
+            </a>
         </div>
     </div>
 
