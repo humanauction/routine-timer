@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Build Your Routine{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'routine/css/builder.css' %}" />
+{% endblock %}
 {% block content %}
 <div class="routine-builder">
     <h1>Build Your Routine</h1>
@@ -64,6 +67,3 @@
 </div>
 {% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'routine/css/builder.css' %}" />
-{% endblock %}

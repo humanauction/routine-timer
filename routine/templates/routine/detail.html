@@ -2,7 +2,9 @@
 {% load static %}
 
 {% block title %}{{ routine.name }} - Routine Details{% endblock %}
-
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/detail.css' %}">
+{% endblock %}
 {% block content %}
 <div class="routine-detail">
     <div class="routine-header">
@@ -50,8 +52,10 @@
             <p>This routine has no tasks yet.</p>
         {% endif %}
     </div>
-    <script>window.startRoutineUrl = "{% url 'routine:start' %}";</script>
-    <script>window.timerRoutineUrl = "{% url 'routine:timer' %}";</script>
-    <script>window.csrfToken = "{{ csrf_token }}";</script>
+        <script>window.startRoutineUrl = "{% url 'routine:start' %}";</script>
+        <script>window.timerRoutineUrl = "{% url 'routine:timer' %}";</script>
+        <script>window.csrfToken = "{{ csrf_token }}";</script>
 </div>
+<!-- detail.js at the bottom -->
+<script src="{% static 'js/detail.js' %}"></script>
 {% endblock %}
