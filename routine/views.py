@@ -6,6 +6,10 @@ from .services import (
     get_current_routine, add_task, clear_routine, save_routine_to_db
 )
 from .models import Routine
+from django.views.generic import TemplateView
+
+class TimerView(TemplateView):
+    template_name = 'routine/timer.html'
 
 
 def routine_list(request):
