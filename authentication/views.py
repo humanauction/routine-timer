@@ -5,6 +5,7 @@ from django.contrib.auth.views import LoginView as DjangoLoginView, LogoutView
 from .forms import SignUpForm, LoginForm
 from .services import register_user, send_welcome_mail
 from django.shortcuts import render
+from django.contrib import messages
 
 # Create your views here.
 
@@ -23,6 +24,9 @@ class SignUpView(FormView):
         )
         """send welcome email"""
         send_welcome_mail(user)
+        # Add success message
+        messages.warning(self.request, "Account created successfully! Please log in.")
+        print("Message added to request:", self.request._messages._queued_messages)  # Debug print
         return super().form_valid(form)
 
 

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Build Your Routine{% endblock %}
+{% block content %}
+<div class="routine-builder">
+    <h1>Build Your Routine</h1>
+
+    <div class="task-list">
+        <h2>Current Tasks</h2>
+        {% if tasks %}
+        <ul class="tasks">
+            {% for task in tasks %}
+            <li class="task-item">
+                <span class="task-name">{{ task.task }}</span>
+                <span class="task-duration">{{ task.duration }} minutes</span>
+            </li>
+            {% endfor %}
+        </ul>
+        <p class="total-time">
+            Total time: <strong>{{ total }} minutes</strong>
+        </p>
+
+        <!-- Form to save the routine -->
+        <form action="{% url 'routine:save' %}" method="post" class="save-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="routine-name">Routine Name:</label>
+                <input type="text" name="name" id="routine-name" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Save Routine</button>
+        </form>
+
+        <!-- Form to start the routine -->
+        <form action="{% url 'routine:start' %}" method="post" class="start-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Start Routine</button>
+        </form>
+        {% else %}
+        <p>No tasks added yet. Use the form below to add tasks.</p>
+        {% endif %}
+    </div>
+
+    <div class="add-task">
+        <h2>Add New Task</h2>
+        <form method="post" action="{% url 'routine:builder' %}" class="task-form">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.task.label_tag }} {{ form.task }} 
+                {% if form.task.errors %}
+                <div class="form-error">{{ form.task.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.duration.label_tag }} {{ form.duration }} 
+                {% if form.duration.errors %}
+                <div class="form-error">{{ form.duration.errors }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Add Task</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'routine/css/builder.css' %}" />
+{% endblock %}
