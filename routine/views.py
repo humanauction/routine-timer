@@ -1,12 +1,16 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-
 from .forms import TaskForm
 from .services import (
     get_current_routine, add_task, clear_routine, save_routine_to_db
 )
 from .models import Routine
+
+
+def routine_list(request):
+    routines = Routine.objects.filter(user=request.user)
+    return render(request, 'routine/list.html', {'routines': routines})
 
 
 class RoutineBuilderView(LoginRequiredMixin, View):

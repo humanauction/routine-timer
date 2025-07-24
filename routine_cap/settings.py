@@ -35,7 +35,8 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://*.herokuapp.com']
+CSRF_TRUSTED_ORIGINS = ['https://*.herokuapp.com',
+                        "https://*.codeinstitute-ide.net/",]
 
 # Application definition
 

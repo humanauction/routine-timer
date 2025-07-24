@@ -1,0 +1,10 @@
+{% extends "base.html" %} {% block content %} {% load static %}
+<h1>Your Routines</h1>
+<ul>
+    {% for routine in routines %}
+    <li>{{ routine.name }} ({{ routine.total_time }} minutes)</li>
+    {% empty %}
+    <li>No routines found.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

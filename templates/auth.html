@@ -1,27 +1,23 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <title>Login & Register</title>
-        <!-- Performance: Preconnect & preload -->
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
-            rel="stylesheet"
-        />
-        <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
-        <!-- Font Awesome deferred -->
-        <script
-            defer
-            src="https://kit.fontawesome.com/844d1cd656.js"
-            crossorigin="anonymous"
-        ></script>
-    </head>
-    <body>
-        <main class="container" aria-labelledby="auth-heading">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Login & Register</title>
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/modal.css' %}" />
+    <script defer src="https://kit.fontawesome.com/844d1cd656.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- Trigger Button -->
+    <button id="openAuthModal" class="btn">Login / Register</button>
+
+    <!-- Modal Overlay -->
+    <div id="authModalOverlay" class="modal-overlay" style="display:none;">
+        <div class="modal">
+            <button class="close-modal" id="closeAuthModal">&times;</button>
+            <main class="container" aria-labelledby="auth-heading">
             <h1 id="auth-heading" class="visually-hidden">Authentication</h1>
             <nav class="tabs" role="tablist">
                 <button
@@ -94,8 +90,65 @@
                     </button>
                 </div>
             </form>
+            <form
+    id="registerForm"
+    class="form"
+    aria-labelledby="registerTab"
+    method="post"
+>
+    <!-- Register Form -->
+        <fieldset>
+            <legend class="visually-hidden">Register</legend>
+            <label for="regName">Full Name</label>
+            <input id="regName" type="text" placeholder="Jane Doe" required />
+
+            <label for="regEmail">Email</label>
+            <input
+                id="regEmail"
+                type="email"
+                placeholder="you@example.com"
+                required
+            />
+
+            <label for="regPassword">Password</label>
+            <input
+                id="regPassword"
+                type="password"
+                placeholder="••••••••"
+                required
+            />
+
+            <label for="regConfirm">Confirm Password</label>
+            <input
+                id="regConfirm"
+                type="password"
+                placeholder="••••••••"
+                required
+            />
+
+            <button type="submit" class="btn">
+                <i class="fa fa-user-plus"></i> Register
+            </button>
+        </fieldset>
+
+            <p class="or">Or sign up with</p>
+        <div class="socials" role="group" aria-label="Social signup">
+            <button class="social" aria-label="Sign up with Google">
+                <i class="fa-brands fa-google"></i>
+            </button>
+            <button class="social" aria-label="Sign up with Facebook">
+                <i class="fa-brands fa-facebook-f"></i>
+            </button>
+            <button class="social" aria-label="Sign up with Twitter">
+                <i class="fa-brands fa-twitter"></i>
+            </button>
+        </div>
+        {% csrf_token %}
+        <button type="submit">Register</button>
+    </form> 
         </main>
         <script src="assets/js/script.js" defer></script>
+         <script src="{% static 'js/modal.js' %}" defer></script>
         {% block content %}{% endblock %}
     </body>
 </html>
