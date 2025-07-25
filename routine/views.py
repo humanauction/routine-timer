@@ -51,7 +51,7 @@ class RoutineBuilderView(LoginRequiredMixin, View):
         if form.is_valid():
             task = form.cleaned_data['task']
             duration = form.cleaned_data['duration']
-            name = request.POST.get('name', 'My Routine')
+            routine_name = request.POST.get('name', 'My Routine')
 
             # Add to session
             add_task(request.session, task, duration)
@@ -63,11 +63,12 @@ class RoutineBuilderView(LoginRequiredMixin, View):
                     'task': {
                         'task': task,
                         'duration': duration
-                    }
+                    },
+                    'routine_name': routine_name
                 })
 
             # Non-AJAX response (regular form submit)
-            return redirect('routine:builder')
+            return redirect(f"{reverse('routine:builder')}?name={routine_name}")
         else:
             tasks = get_current_routine(request.session)
             total = sum(task['duration'] for task in tasks)
@@ -122,7 +123,14 @@ class StartRoutineView(LoginRequiredMixin, View):
 class RoutineDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
         routine = get_object_or_404(Routine, pk=pk, user=request.user)
-        return render(request, 'routine/detail.html', {'routine': routine})
+        routine_items = routine.items.all().order_by('order')
+        total_duration = sum(item.duration for item in routine_items)
+        return render(request, 'routine/detail.html', {
+            'routine': routine,
+            'routine_items': routine_items,  # Changed from 'tasks'
+            'total_duration': total_duration
+        })
+
 
 # delete routine
 

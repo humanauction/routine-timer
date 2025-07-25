@@ -1,4 +1,3 @@
-# Created by venv; see https://docs.python.org/3/library/venv.html
 # Python virtual environment
 .venv/
 env/
@@ -23,3 +22,9 @@ env.py
 
 # Logs
 *.log
+
+# macOS specific files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
