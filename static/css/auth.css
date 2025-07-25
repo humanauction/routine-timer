@@ -138,14 +138,36 @@ input:focus,
 }
 /* guest button style */
 .guest-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     width: 100%;
     margin-top: 10px;
     background-color: #6c757d;
     color: white;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
 }
 
 .guest-btn:hover {
     background-color: #5a6268;
+    color: white;
+    text-decoration: none;
+}
+
+.guest-indicator {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .or {

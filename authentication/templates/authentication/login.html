@@ -98,46 +98,48 @@
                     </button>
                 </div>
             </form>
+            <!-- Register Form -->
             <form
                 id="registerForm"
                 class="form"
                 aria-labelledby="registerTab"
                 method="post"
+                action="{% url 'authentication:signup' %}"
             >
                 {% csrf_token %}
                 <fieldset>
                     <legend class="visually-hidden">Register</legend>
-                    <label for="regName">Full Name</label>
+                    <label for="username">Username</label>
                     <input
-                        id="regName"
-                        name="regName"
+                        id="username"
+                        name="username"
                         type="text"
-                        placeholder="Jane Doe"
+                        placeholder="johndoe"
                         required
                     />
 
-                    <label for="regEmail">Email</label>
+                    <label for="email">Email</label>
                     <input
-                        id="regEmail"
-                        name="regEmail"
+                        id="email"
+                        name="email"
                         type="email"
                         placeholder="you@example.com"
                         required
                     />
 
-                    <label for="regPassword">Password</label>
+                    <label for="password1">Password</label>
                     <input
-                        id="regPassword"
-                        name="regPassword"
+                        id="password1"
+                        name="password1"
                         type="password"
                         placeholder="••••••••"
                         required
                     />
 
-                    <label for="regConfirm">Confirm Password</label>
+                    <label for="password2">Confirm Password</label>
                     <input
-                        id="regConfirm"
-                        name="regConfirm"
+                        id="password2"
+                        name="password2"
                         type="password"
                         placeholder="••••••••"
                         required

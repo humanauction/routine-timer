@@ -2,12 +2,11 @@ from django.contrib.auth import login, get_user_model
 from django.contrib.auth.models import Group
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import FormView
+from django.views.generic import FormView, View
 from django.contrib.auth.views import LoginView as DjangoLoginView, LogoutView
 from .forms import SignUpForm, LoginForm
 from .services import register_user, send_welcome_mail
 from django.contrib import messages
-from django.views import View
 from django.utils.crypto import get_random_string
 # Create your views here.
 
@@ -35,19 +34,31 @@ class SignUpView(FormView):
 
 class LoginView(DjangoLoginView):
     template_name = 'authentication/login.html'
-    authentication_form = LoginForm
+    form_class = LoginForm
     redirect_authenticated_user = True
 
     def get_success_url(self):
-
-        """Redirect to the home after login"""
         return reverse_lazy('home:index')
 
     def form_valid(self, form):
-        """ Add success message """
-        messages.success(self.request,
-                         "Hi, {}".format(form.cleaned_data['username']))
+        username = form.cleaned_data.get('username')
+        messages.success(self.request, f"Welcome back, {username}!")
         return super().form_valid(form)
+
+    def get(self, request, *args, **kwargs):
+        """If user is already logged in, redirect to home"""
+        if request.user.is_authenticated:
+            return redirect('home:index')
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """Check if login or register form submission"""
+        if 'password1' in request.POST:
+            # This is a signup form
+            return redirect('authentication:signup')
+
+        # Otherwise let Django's LoginView handle it
+        return super().post(request, *args, **kwargs)
 
 
 # Get the custom user model

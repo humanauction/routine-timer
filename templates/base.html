@@ -33,38 +33,50 @@
                     </a>
                     
                     {% if user.is_authenticated %}
+                        <!-- If user is authenticated -->
                         {% if user.profile.is_guest %}
-                        <!-- Indicates guest user-->
+                            <!-- Guest user-->
                             <div class="guest-indicator">
                                 <i class="fas fa-user-clock"></i> Guest Mode
                             </div>
-                        {% endif %}
-                        <!-- Make Routine link (available to all) -->
-                        <a href="{% url 'routine:builder' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:builder' %}active{% endif %}">
-                            <i class="fas fa-plus-circle icon"></i>
-                            <span>New Routine</span>
-                        </a>
-                        
-                        <!-- Timer link (available to all) -->
-                        <a href="{% url 'routine:timer' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:timer' %}active{% endif %}">
-                            <i class="fas fa-clock icon"></i>
-                            <span>Timer</span>
-                        </a>
-                        
-                        <!-- My Routines (show different message for guests) -->
-                        {% if user.profile.is_guest %}
+                            <!-- Links available to guests -->
+                            <a href="{% url 'routine:builder' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:builder' %}active{% endif %}">
+                                <i class="fas fa-plus-circle icon"></i>
+                                <span>New Routine</span>
+                            </a>
+                            <a href="{% url 'routine:timer' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:timer' %}active{% endif %}">
+                                <i class="fas fa-clock icon"></i>
+                                <span>Timer</span>
+                            </a>
                             <a href="{% url 'authentication:login' %}" class="nav-item">
                                 <i class="fas fa-save icon"></i>
                                 <span>Sign Up to Save</span>
                             </a>
+                            <a href="{% url 'authentication:logout' %}" class="nav-item">
+                                <i class="fas fa-sign-out-alt icon"></i>
+                                <span>End Guest Session</span>
+                            </a>
                         {% else %}
+                            <!-- Regular user -->
+                            <a href="{% url 'routine:builder' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:builder' %}active{% endif %}">
+                                <i class="fas fa-plus-circle icon"></i>
+                                <span>New Routine</span>
+                            </a>
+                            <a href="{% url 'routine:timer' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:timer' %}active{% endif %}">
+                                <i class="fas fa-clock icon"></i>
+                                <span>Timer</span>
+                            </a>
                             <a href="{% url 'routine:list' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:list' %}active{% endif %}">
                                 <i class="fas fa-list icon"></i>
                                 <span>My Routines</span>
                             </a>
+                            <a href="{% url 'authentication:logout' %}" class="nav-item">
+                                <i class="fas fa-sign-out-alt icon"></i>
+                                <span>Logout</span>
+                            </a>
                         {% endif %}
                     {% else %}
-                        <!-- Login/Register option when not logged in -->
+                        <!-- Not authenticated -->
                         <a href="{% url 'authentication:login' %}" class="nav-item">
                             <i class="fas fa-sign-in-alt icon"></i>
                             <span>Login / Register</span>
@@ -78,7 +90,6 @@
                     </a>
                 </div>
             </nav>
-
             <main>
                 {% if messages %}
                 <div class="messages">
