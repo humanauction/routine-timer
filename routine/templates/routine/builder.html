@@ -2,12 +2,12 @@
 {% load static %}
 {% block title %}Build Your Routine{% endblock %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'routine/css/builder.css' %}" />
+<link rel="stylesheet" href="{% static 'css/builder.css' %}" />
 {% endblock %}
 {% block content %}
 <div class="routine-builder">
     <h1>Build Your Routine</h1>
-    <!--form to save routine name-->
+    <!-- Name input section -->
     <form id="routine-name-form" method="post" action="{% url 'routine:builder' %}">
         {% csrf_token %}
         <div class="form-group">
@@ -16,39 +16,45 @@
         </div>
         <button type="submit" class="btn btn-secondary">Set Name</button>
     </form>
-
-    <div class="task-list">
-        <h2>Current Tasks</h2>
-        {% if tasks %}
-        <ul class="tasks">
-            {% for task in tasks %}
-            <li class="task-item">
-                <span class="task-name">{{ task.task }}</span>
-                <span class="task-duration">{{ task.duration }} minutes</span>
-            </li>
-            {% endfor %}
-        </ul>
-        <p class="total-time">
-            Total time: <strong>{{ total }} minutes</strong>
-        </p>
-        {% else %}
-            <p>No tasks added yet. Use the form below to add tasks.</p>
-        {% endif %}
+    
+    <!-- Live preview section -->
+    <div class="live-preview">
+        <h2>Preview</h2>
+        <div class="preview-name">
+            <strong>Routine:</strong> <span id="preview-routine-name">{{ routine_name }}</span>
+        </div>
+        <div class="task-list">
+            <h3>Tasks</h3>
+            <ul id="preview-tasks" class="tasks">
+                {% for task in tasks %}
+                <li class="task-item">
+                    <span class="task-name">{{ task.task }}</span>
+                    <span class="task-duration">{{ task.duration }} minutes</span>
+                </li>
+                {% endfor %}
+            </ul>
+            <p class="total-time">
+                Total time: <strong><span id="preview-total-time">{{ total }}</span> minutes</strong>
+            </p>
+        </div>
     </div>
 
-   <div class="add-task">
-        <h2>Add New Task</h2>
-        <form method="post" action="{% url 'routine:builder' %}" class="task-form">
+    <!-- Add task form -->
+    <div class="add-task">
+        <h2>Add Tasks</h2>
+        <form id="task-form" method="post" action="{% url 'routine:builder' %}" class="task-form">
             {% csrf_token %}
             <input type="hidden" name="name" value="{{ routine_name }}">
             <div class="form-group">
-                {{ form.task.label_tag }} {{ form.task }} 
+                {{ form.task.label_tag }} 
+                {{ form.task }} 
                 {% if form.task.errors %}
                 <div class="form-error">{{ form.task.errors }}</div>
                 {% endif %}
             </div>
             <div class="form-group">
-                {{ form.duration.label_tag }} {{ form.duration }} 
+                {{ form.duration.label_tag }} 
+                {{ form.duration }} 
                 {% if form.duration.errors %}
                 <div class="form-error">{{ form.duration.errors }}</div>
                 {% endif %}
@@ -56,13 +62,13 @@
             <button type="submit" class="btn btn-primary">Add Task</button>
         </form>
     </div>
-    <div>
-        <!-- Form to save the routine -->
+    
+    <!-- Action buttons -->
+    <div class="form-actions">
         <form action="{% url 'routine:save' %}" method="post" class="save-form">
             {% csrf_token %} 
             <button type="submit" class="btn btn-primary">Save Routine</button>
         </form>
-        <!-- Form to start the routine -->
         <form action="{% url 'routine:start' %}" method="post" class="start-form">
             {% csrf_token %}
             <button type="submit" class="btn btn-success">Start Routine</button>
@@ -71,6 +77,104 @@
 </div>
 {% endblock %}
 
-
-
-
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get elements
+    const routineNameInput = document.getElementById('routine-name');
+    const taskInput = document.getElementById('id_task');
+    const durationInput = document.getElementById('id_duration');
+    const previewName = document.getElementById('preview-routine-name');
+    const previewTasks = document.getElementById('preview-tasks');
+    const previewTotalTime = document.getElementById('preview-total-time');
+    
+    // Track total duration
+    let totalDuration = {{ total|default:0 }};
+    
+    // Update preview name when typing
+    routineNameInput.addEventListener('input', function() {
+        previewName.textContent = this.value || 'Unnamed Routine';
+    });
+    
+    // Add task preview feature
+    function updateTaskPreview() {
+        const taskName = taskInput.value.trim();
+        const duration = parseInt(durationInput.value) || 0;
+        
+        if (taskName && duration > 0) {
+            // Create preview item but don't add it yet
+            const previewItem = document.createElement('li');
+            previewItem.className = 'task-item preview-only';
+            previewItem.innerHTML = `
+                <span class="task-name">${taskName}</span>
+                <span class="task-duration">${duration} minutes</span>
+            `;
+            
+            // Remove any existing preview-only items
+            document.querySelectorAll('.preview-only').forEach(item => {
+                item.remove();
+            });
+            
+            // Add the new preview item
+            previewTasks.appendChild(previewItem);
+            
+            // Update total time with the potential new task
+            const potentialTotal = totalDuration + duration;
+            previewTotalTime.textContent = potentialTotal;
+        }
+    }
+    
+    // Listen for input in the task form
+    taskInput.addEventListener('input', updateTaskPreview);
+    durationInput.addEventListener('input', updateTaskPreview);
+    
+    // Handle form submission with fetch to avoid page reload
+    document.getElementById('task-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Add the task to the preview permanently
+                const taskItem = document.createElement('li');
+                taskItem.className = 'task-item';
+                taskItem.innerHTML = `
+                    <span class="task-name">${data.task.task}</span>
+                    <span class="task-duration">${data.task.duration} minutes</span>
+                `;
+                
+                // Remove any preview-only items
+                document.querySelectorAll('.preview-only').forEach(item => {
+                    item.remove();
+                });
+                
+                // Add the new task
+                previewTasks.appendChild(taskItem);
+                
+                // Update total time
+                totalDuration += data.task.duration;
+                previewTotalTime.textContent = totalDuration;
+                
+                // Clear the form
+                taskInput.value = '';
+                durationInput.value = '';
+            } else {
+                console.error('Error:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+});
+</script>
+{% endblock %}

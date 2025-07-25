@@ -34,26 +34,59 @@ class RoutineBuilderView(LoginRequiredMixin, View):
     form_class = TaskForm
 
     def get(self, request):
-        if 'routine_tasks' not in request.session:
-            request.session['routine_tasks'] = []
+        """Handle GET requests for the routine builder"""
         form = self.form_class()
         tasks = get_current_routine(request.session)
-        total = sum(item['duration'] for item in tasks)
-        return render(request, self.template_name,
-                      {'form': form, 'tasks': tasks, 'total': total})
+        total = sum(task['duration'] for task in tasks)
+        context = {
+            'form': form,
+            'tasks': tasks,
+            'total': total,
+            'routine_name': request.GET.get('name', 'My Routine')
+        }
+        return render(request, self.template_name, context)
 
     def post(self, request):
-        form = self.form_class(request.POST)
+        form = TaskForm(request.POST)
         if form.is_valid():
-            add_task(request.session,
-                     form.cleaned_data['task'],
-                     form.cleaned_data['duration'])
-            return redirect('routine:builder')
+            task = form.cleaned_data['task']
+            duration = form.cleaned_data['duration']
+            name = request.POST.get('name', 'My Routine')
 
-        tasks = get_current_routine(request.session)
-        total = sum(item['duration'] for item in tasks)
-        return render(request, self.template_name,
-                      {'form': form, 'tasks': tasks, 'total': total})
+            # Add to session
+            add_task(request.session, task, duration)
+
+            # Handle AJAX request
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': True,
+                    'task': {
+                        'task': task,
+                        'duration': duration
+                    }
+                })
+
+            # Non-AJAX response (regular form submit)
+            return redirect('routine:builder')
+        else:
+            tasks = get_current_routine(request.session)
+            total = sum(task['duration'] for task in tasks)
+
+            # Handle AJAX validation errors
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': False,
+                    'error': form.errors
+                })
+
+            # Non-AJAX response
+            context = {
+                'form': form,
+                'tasks': tasks,
+                'total': total,
+                'routine_name': request.POST.get('name', 'My Routine')
+            }
+            return render(request, 'routine/builder.html', context)
 
 
 class SaveRoutineView(LoginRequiredMixin, View):
