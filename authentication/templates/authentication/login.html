@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% load static %} {% block content %}
+{% extends "base_no_nav.html" %} {% load static %} {% block content %}
 <title>Login & Register</title>
 <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
 <link rel="stylesheet" href="{% static 'css/modal.css' %}" />
@@ -178,4 +178,10 @@
 </div>
 <script src="{% static 'js/auth.js' %}" defer></script>
 <script src="{% static 'js/modal.js' %}" defer></script>
+<script src="{% static 'js/login.js' %}" defer></script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+<link rel="stylesheet" href="{% static 'css/modal.css' %}" />
 {% endblock %}

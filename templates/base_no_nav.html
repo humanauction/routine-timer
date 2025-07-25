@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{% block title %}Routine Timer{% endblock %}</title>
+        <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+        <script
+            defer
+            src="https://kit.fontawesome.com/844d1cd656.js"
+            crossorigin="anonymous"
+        ></script>
+        {% block extra_css %}{% endblock %}
+    </head>
+    <body class="minimal-layout">
+        <main class="main-content">
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                    <button class="message-close">&times;</button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer>
+            <p>&copy; {% now "Y" %} Routine Timer. All rights reserved.</p>
+        </footer>
+
+        <script src="{% static 'js/base.js' %}"></script>
+        {% block extra_js %}{% endblock %}
+    </body>
+</html>

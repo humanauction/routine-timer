@@ -152,6 +152,47 @@ main {
     overflow-y: auto;
 }
 
+/* login and sign up forms */
+
+.minimal-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.minimal-layout .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.auth-header {
+    margin-bottom: 2rem;
+}
+
+.auth-header h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.minimal-layout footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: white;
+    border-top: 1px solid #eee;
+}
+
 /* Messages */
 .messages {
     margin-bottom: 20px;
@@ -221,14 +262,14 @@ footer {
     font-size: 1.2rem;
 }
 
-/* Optional: Add a notification dot if you want to show unread items */
+/* Optional: Add notification dot to show unread items */
 .user-icon .notification-dot {
     position: absolute;
     top: 0;
     right: 0;
     width: 8px;
     height: 8px;
-    background-color: #ff5722;
+    background-color: #ff4322;
     border-radius: 50%;
 }
 
