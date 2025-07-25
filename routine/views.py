@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
@@ -12,8 +13,15 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 
+
 class TimerView(TemplateView):
     template_name = 'routine/timer.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add any required context variables here
+        context['title'] = 'Routine Timer'
+        return context
 
 
 @login_required
@@ -51,11 +59,21 @@ class RoutineBuilderView(LoginRequiredMixin, View):
 
 class SaveRoutineView(LoginRequiredMixin, View):
     def post(self, request):
+        # Check for guest user first
+        if hasattr(request.user, 'profile') and request.user.profile.is_guest:
+            messages.warning(
+                request, "Please login or signup to save routines"
+            )
+            return JsonResponse(
+                {'success': False, 'error': 'Guests cannot save routines'},
+                status=403
+                )
+        # Registered user can save routines here
         tasks = get_current_routine(request.session)
         if not tasks:
             return redirect('routine:builder')
 
-        name    = request.POST.get('name', 'My Routine')
+        name = request.POST.get('name', 'My Routine')
         routine = save_routine_to_db(request.user, name, tasks)
         clear_routine(request.session)
         return redirect('routine:detail', pk=routine.pk)

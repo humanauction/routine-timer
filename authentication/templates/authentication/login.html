@@ -50,7 +50,7 @@
                         id="username"
                         name="username"
                         type="text"
-                        placeholder="Username or you@example.com"
+                        placeholder=""
                         required
                     />
 
@@ -63,6 +63,11 @@
                         required
                     />
                     <button type="submit" class="btn">Login</button>
+                    <!-- Add guest login button -->
+                    <p class="or">Or</p>
+                    <a href="{% url 'authentication:guest_login' %}" class="btn btn-secondary guest-btn">
+                        <i class="fas fa-user-clock"></i> Continue as Guest
+                    </a>
                 </fieldset>
 
                 <p class="or">Or continue with</p>
