@@ -210,6 +210,28 @@ footer {
     justify-content: center;
 }
 
+.user-icon {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.user-icon .icon {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+/* Optional: Add a notification dot if you want to show unread items */
+.user-icon .notification-dot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    background-color: #ff5722;
+    border-radius: 50%;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .grid-container {

@@ -23,63 +23,70 @@
                 </div>
             </header>
 
+            <!-- In your navigation section -->
             <nav class="main-nav">
-                <div class="nav-toggle" id="navToggle">
-                    <i class="fas fa-chevron-left"></i>
-                </div>
                 <div class="nav-content">
-                    <a
-                        href="{% url 'home:index' %}"
-                        class="nav-item {% if request.resolver_match.app_name == 'home' %}active{% endif %}"
-                    >
-                        <i class="fas fa-home icon"></i><span>Home</span>
-                    </a>
-                    <a
-                        href="{% url 'routine:list' %}"
-                        class="nav-item {% if request.resolver_match.app_name == 'routine' %}active{% endif %}"
-                    >
-                        <i class="fas fa-list-ul icon"></i><span>Routines</span>
-                    </a>
-                    <a
-                        href="{% url 'routine:timer' %}"
-                        class="nav-item {% if request.resolver_match.view_name == 'routine:timer' %}active{% endif %}"
-                    >
-                        <i class="fas fa-clock icon"></i><span>Timer</span>
-                    </a>
+                    <!-- Other nav items --> 
                     {% if user.is_authenticated %}
-                    <a href="{% url 'routine:builder' %}" class="nav-item">
-                        <i class="fas fa-plus-circle icon"></i
-                        ><span>Create Routine</span>
-                    </a>
-                    <a
-                        href="{% url 'authentication:logout' %}"
-                        class="nav-item"
-                    >
-                        <i class="fas fa-sign-out-alt icon"></i
-                        ><span>Logout</span>
-                    </a>
+                        <!-- User icon that appears when logged in -->
+                        <a href="{% url 'routine:list' %}" 
+                           class="nav-item user-icon {% if request.resolver_match.app_name == 'routine' %}active{% endif %}">
+                            <i class="fas fa-user icon"></i>
+                            <span>My Routines</span>
+                        </a>
+                        
+                        <!-- Logout option -->
+                        <a href="{% url 'authentication:logout' %}" class="nav-item">
+                            <i class="fas fa-sign-out-alt icon"></i>
+                            <span>Logout</span>
+                        </a>
                     {% else %}
-                    <a href="{% url 'authentication:login' %}" class="nav-item">
-                        <i class="fas fa-sign-in-alt icon"></i
-                        ><span>Login</span>
-                    </a>
-                    <a
-                        href="{% url 'authentication:signup' %}"
-                        class="nav-item"
-                    >
-                        <i class="fas fa-user-plus icon"></i
-                        ><span>Sign Up</span>
-                    </a>
+                        <!-- Login/Register option when not logged in -->
+                        <a href="{% url 'authentication:login' %}" class="nav-item">
+                            <i class="fas fa-sign-in-alt icon"></i>
+                            <span>Login / Register</span>
+                        </a>
                     {% endif %}
-                    <a
-                        href="{% url 'home:contact' %}"
-                        class="nav-item {% if request.resolver_match.view_name == 'home:contact' %}active{% endif %}"
-                    >
-                        <i class="fas fa-envelope icon"></i
-                        ><span>Contact Us</span>
+                    
+                    <!-- Contact and other links that should always appear -->
+                    <a href="{% url 'home:contact' %}" 
+                       class="nav-item {% if request.resolver_match.view_name == 'home:contact' %}active{% endif %}">
+                        <i class="fas fa-envelope icon"></i>
+                        <span>Contact Us</span>
                     </a>
                 </div>
             </nav>
+        <!-- Other nav items -->
+        
+        {% if user.is_authenticated %}
+            <!-- User icon that appears when logged in -->
+            <a href="{% url 'routine:list' %}" 
+               class="nav-item user-icon {% if request.resolver_match.app_name == 'routine' %}active{% endif %}">
+                <i class="fas fa-user icon"></i>
+                <span>My Routines</span>
+            </a>
+            
+            <!-- Logout option -->
+            <a href="{% url 'authentication:logout' %}" class="nav-item">
+                <i class="fas fa-sign-out-alt icon"></i>
+                <span>Logout</span>
+            </a>
+        {% else %}
+            <!-- Login/Register option when not logged in -->
+            <a href="{% url 'authentication:login' %}" class="nav-item">
+                <i class="fas fa-sign-in-alt icon"></i>
+                <span>Login / Register</span>
+            </a>
+        {% endif %}
+        
+        <!-- Contact and other links that should always appear -->
+        <a href="{% url 'home:contact' %}" 
+           class="nav-item {% if request.resolver_match.view_name == 'home:contact' %}active{% endif %}">
+            <i class="fas fa-envelope icon"></i>
+            <span>Contact Us</span>
+        </a>
+    </div>
+</nav>
 
             <main>
                 {% if messages %}

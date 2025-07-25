@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Delete Routine{% endblock %}
+{% block content %}
+<div class="container modal-like">
+    <h1>Delete Routine</h1>
+    <div class="alert alert-warning">
+        Are you sure you want to delete the routine "{{ object.name }}"?
+        <br>
+        This action cannot be undone.
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="button-group">
+            <a href="{% url 'routine:detail' object.id %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Cancel
+            </a>
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash"></i> Yes, Delete
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

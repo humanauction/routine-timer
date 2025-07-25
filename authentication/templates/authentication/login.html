@@ -45,19 +45,19 @@
                 {% csrf_token %}
                 <fieldset>
                     <legend class="visually-hidden">Login</legend>
-                    <label for="loginEmail">Email</label>
+                    <label for="username">Username or Email</label>
                     <input
-                        id="loginEmail"
-                        name="loginEmail"
-                        type="email"
-                        placeholder="you@example.com"
+                        id="username"
+                        name="username"
+                        type="text"
+                        placeholder="Username or you@example.com"
                         required
                     />
 
-                    <label for="loginPassword">Password</label>
+                    <label for="password">Password</label>
                     <input
-                        id="loginPassword"
-                        name="loginPassword"
+                        id="password"
+                        name="password"
                         type="password"
                         placeholder="••••••••"
                         required
