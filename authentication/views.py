@@ -1,5 +1,5 @@
-from django.contrib.auth import login
-from django.contrib.auth.models import User, Group
+from django.contrib.auth import login, get_user_model
+from django.contrib.auth.models import Group
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView
@@ -42,11 +42,16 @@ class LoginView(DjangoLoginView):
 
         """Redirect to the home after login"""
         return reverse_lazy('home:index')
-    
+
     def form_valid(self, form):
         """ Add success message """
-        messages.success(self.request, "Hi, {}".format(form.cleaned_data['username']))
+        messages.success(self.request,
+                         "Hi, {}".format(form.cleaned_data['username']))
         return super().form_valid(form)
+
+
+# Get the custom user model
+User = get_user_model()
 
 
 class GuestLoginView(View):
@@ -57,10 +62,10 @@ class GuestLoginView(View):
         if request.user.is_authenticated:
             messages.info(request, "love to, but you're already logged in.")
             return redirect('home:index')
-        
+
         # create guest user
         guest_username = f"guest_{get_random_string(8)}"
-        
+
         guest_user = User.objects.create_user(username=guest_username)
 
         # add to guest group(or create group if none exists)
@@ -71,11 +76,14 @@ class GuestLoginView(View):
         guest_user.profile.is_guest = True
         guest_user.profile.save()
 
-        #login guest_user
+        # login guest_user
         login(request, guest_user)
 
-        messages.success(request, "Logged in as guest user: {}".format(guest_user.username))
+        messages.success(
+            request,
+            "Logged in as guest user: {}".format(guest_user.username))
         return redirect('home:index')
+
 
 class LogoutView(LogoutView):
     next_page = reverse_lazy('authentication:login')
