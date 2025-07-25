@@ -13,7 +13,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 
-
 class TimerView(TemplateView):
     template_name = 'routine/timer.html'
 
@@ -93,6 +92,8 @@ class RoutineDetailView(LoginRequiredMixin, View):
         return render(request, 'routine/detail.html', {'routine': routine})
 
 # delete routine
+
+
 class DeleteRoutineView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Routine
     template_name = 'routine/routine_confirm_delete.html'
@@ -105,5 +106,8 @@ class DeleteRoutineView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         routine = self.get_object()
-        messages.success(request, f"Routine '{routine.name}' deleted successfully.")
+        messages.success(
+            request,
+            f"Routine '{routine.name}' deleted successfully."
+        )
         return super().delete(request, *args, **kwargs)

@@ -26,13 +26,17 @@ class SignUpForm(UserCreationForm):
         # Enforce allowed characters (letters, digits, underscores, hyphens)
         if not re.match(r'^[\w.@+-]+$', username):
             raise ValidationError(
-                _("Username may contain only letters, digits, and @/./+/-/_ characters.")
+                _(
+                    "Username may contain only letters, digits, "
+                    "and @/./+/-/_ characters."
+                )
             )
         # Prevent XSS by escaping username
         username = escape(username)
         # Check for duplicate usernames (case-insensitive)
         if User.objects.filter(username__iexact=username).exists():
-            raise ValidationError(_("Username already exists. Please choose another."))
+            raise ValidationError(
+                _("Username already exists. Please choose another."))
         return username
 
     def clean_email(self):
@@ -40,7 +44,9 @@ class SignUpForm(UserCreationForm):
         # Basic email format validation is already handled by EmailField
         # Prevent duplicate emails (case-insensitive)
         if User.objects.filter(email__iexact=email).exists():
-            raise ValidationError(_("Email already exists - please login instead or use a different email."))
+            raise ValidationError(
+                _("Email already exists - please login instead.")
+            )
         return email
 
     def clean(self):
