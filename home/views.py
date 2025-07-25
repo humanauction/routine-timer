@@ -25,7 +25,13 @@ class ContactFormView(FormView):
         name = form.cleaned_data['name']
         email = form.cleaned_data['email']
         # success confirmation message
-        messages.success(self.request, "Thanks, {}! We will contact you at {}.".format(name, email))
+        messages.success(
+            self.request,
+            (
+                "Thanks, {}! We will contact you at {}."
+                .format(name, email)
+            )
+        )
         return super().form_valid(form)
 
 
@@ -46,9 +52,9 @@ class ContactView(TemplateView):
         if not all([name, email, message]):
             messages.error(request, "Please fill in all fields.")
             return self.render_to_response({})
-            
+
         # Process form data
         # send_contact_email(name, email, message)
-        
+
         messages.success(request, "Thank you! Your message has been sent.")
         return self.render_to_response({})

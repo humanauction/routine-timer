@@ -8,7 +8,7 @@ from .services import (
 )
 from .models import Routine
 from django.views.generic import TemplateView, DeleteView
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
@@ -68,7 +68,9 @@ class RoutineBuilderView(LoginRequiredMixin, View):
                 })
 
             # Non-AJAX response (regular form submit)
-            return redirect(f"{reverse('routine:builder')}?name={routine_name}")
+            return redirect(
+                f"{reverse('routine:builder')}?name={routine_name}"
+            )
         else:
             tasks = get_current_routine(request.session)
             total = sum(task['duration'] for task in tasks)
