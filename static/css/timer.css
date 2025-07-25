@@ -1,0 +1,130 @@
+.timer-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.timer-display {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.current-task h2 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.task-duration {
+    font-size: 4rem;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+.progress-container {
+    height: 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #28a745;
+    transition: width 0.3s ease;
+    width: 100%;
+}
+
+.timer-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.info-item {
+    text-align: center;
+    flex: 1;
+}
+
+.info-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    display: block;
+}
+
+.info-value {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.timer-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    justify-content: center;
+}
+
+.timer-controls .btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.upcoming-tasks,
+.completed-tasks {
+    margin-bottom: 30px;
+}
+
+.tasks-list {
+    list-style: none;
+    padding: 0;
+}
+
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 15px;
+    background-color: #fff;
+    border-left: 3px solid #007bff;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.task-item.completed {
+    border-left-color: #28a745;
+}
+
+.check-icon {
+    color: #28a745;
+}
+
+.empty-message {
+    color: #6c757d;
+    font-style: italic;
+    text-align: center;
+    padding: 15px;
+}
+
+@media (max-width: 768px) {
+    .timer-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .timer-controls {
+        flex-wrap: wrap;
+    }
+    
+    .timer-controls .btn {
+        flex: 1;
+    }
+}

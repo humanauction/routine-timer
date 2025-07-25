@@ -11,6 +11,8 @@ from django.views.generic import TemplateView, DeleteView
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
+from django.utils.decorators import method_decorator
 
 
 class TimerView(TemplateView):
@@ -21,6 +23,18 @@ class TimerView(TemplateView):
         # Add any required context variables here
         context['title'] = 'Routine Timer'
         return context
+
+
+
+@login_required
+def get_current_tasks(request):
+    """API endpoint to get the current tasks in the session"""
+    tasks = get_current_routine(request.session)
+    total = sum(task['duration'] for task in tasks)
+    return JsonResponse({
+        'tasks': tasks,
+        'total': total,
+    })
 
 
 @login_required
@@ -114,7 +128,16 @@ class SaveRoutineView(LoginRequiredMixin, View):
         return redirect('routine:detail', pk=routine.pk)
 
 
+@method_decorator(require_http_methods(["GET", "POST"]), name='dispatch')
 class StartRoutineView(LoginRequiredMixin, View):
+    def get(self, request):
+        tasks = get_current_routine(request.session)
+        total = sum(item['duration'] for item in tasks)
+        return render(
+            request, 'routine/start.html',
+            {'tasks': tasks, 'total': total}
+        )
+
     def post(self, request):
         tasks = get_current_routine(request.session)
         total = sum(item['duration'] for item in tasks)
