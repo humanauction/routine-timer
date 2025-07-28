@@ -336,6 +336,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 {% block extra_js %}
+{{ block.super }}
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 // Set global variables for AJAX requests
 window.startRoutineUrl = "{% url 'routine:start' %}";

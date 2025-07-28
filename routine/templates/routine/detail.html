@@ -78,6 +78,7 @@
 </div>
 <!-- detail.js at the bottom -->
 {% block js %}
+{{ block.super }}
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 <script>
     window.startRoutineUrl = "{% url 'routine:start' %}";
