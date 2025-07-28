@@ -6,17 +6,7 @@
 {% endblock %}
 {% block content %}
 <div class="routine-builder">
-    <h1>Build Your Routine</h1>
-    <!-- Name input section -->
-    <form id="routine-name-form" method="post" action="{% url 'routine:builder' %}">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="routine-name">Routine Name:</label>
-            <input type="text" name="name" id="routine-name" value="{{ routine_name }}" required />
-        </div>
-        <button type="submit" class="btn btn-secondary">Set Name</button>
-    </form>
-    
+    <h1>Build Your Routine</h1> 
     <!-- Live preview section -->
     <div class="live-preview">
         <h2>Preview</h2>
@@ -38,6 +28,16 @@
             </p>
         </div>
     </div>
+    
+    <!-- Routine name form -->
+    <form id="routine-name-form" method="post" action="{% url 'routine:builder' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="routine-name">Routine Name:</label>
+            <input type="text" name="name" id="routine-name" value="{{ routine_name }}" required />
+        </div>
+        <button type="submit" class="btn btn-secondary">Set Name</button>
+    </form>
 
     <!-- Add task form -->
     <div class="add-task">
@@ -62,7 +62,6 @@
             <button type="submit" class="btn btn-primary">Add Task</button>
         </form>
     </div>
-    
     <!-- Action buttons -->
     <div class="form-actions">
         <form action="{% url 'routine:save' %}" method="post" class="save-form">
@@ -174,6 +173,46 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.error('Error:', error);
         });
+    });
+});
+
+document.getElementById('routine-name-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update the preview name
+            document.getElementById('preview-routine-name').textContent = data.routine_name;
+            
+            // Update the hidden input in the task form
+            document.querySelector('input[name="name"]').value = data.routine_name;
+            
+            // Show a success message
+            const message = document.createElement('div');
+            message.className = 'success-message';
+            message.textContent = 'Routine name updated!';
+            this.appendChild(message);
+            
+            // Remove the message after 3 seconds
+            setTimeout(() => {
+                message.remove();
+            }, 3000);
+        } else {
+            console.error('Error:', data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
     });
 });
 </script>

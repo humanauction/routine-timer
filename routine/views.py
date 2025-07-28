@@ -104,6 +104,20 @@ class RoutineBuilderView(LoginRequiredMixin, View):
             }
             return render(request, 'routine/builder.html', context)
 
+        # New routine name handling code
+        routine_name = request.POST.get('name', '')
+        request.session['routine_name'] = routine_name
+
+        # If it's an AJAX request, return JSON
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': True,
+                'routine_name': routine_name
+            })
+
+        # Otherwise redirect back to builder
+        return redirect('routine:builder')
+
 
 class SaveRoutineView(LoginRequiredMixin, View):
     def post(self, request):

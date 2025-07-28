@@ -124,10 +124,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     // Example data if no tasks are found
                     tasks = [
-                        { task: 'Warm Up', duration: 3 },
-                        { task: 'Stretch', duration: 2 },
-                        { task: 'Exercise', duration: 5 },
-                        { task: 'Cool Down', duration: 2 }
+                        { task: 'Wake up', duration: 3 },
+                        { task: 'evacuate', duration: 2 },
+                        { task: 'quick break', duration: 5 },
+                        { task: 'Coolwater by Davidoff', duration: 2 }
                     ];
                     totalDuration = tasks.reduce((sum, task) => sum + task.duration, 0);
                     updateTasksDisplay();
@@ -137,10 +137,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error loading tasks:', error);
                 // Use example data if fetch fails
                 tasks = [
-                    { task: 'Warm Up', duration: 3 },
-                    { task: 'Stretch', duration: 2 },
-                    { task: 'Exercise', duration: 5 },
-                    { task: 'Cool Down', duration: 2 }
+                    { task: 'Wake up', duration: 3 },
+                    { task: 'evacuate', duration: 2 },
+                    { task: 'quick break', duration: 5 },
+                    { task: 'Coolwater by Davidoff', duration: 2 }
                 ];
                 totalDuration = tasks.reduce((sum, task) => sum + task.duration, 0);
                 updateTasksDisplay();
