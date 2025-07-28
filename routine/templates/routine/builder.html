@@ -359,12 +359,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 {% endblock %}
-{% block extra_js %}
-{{ block.super }}
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
-// Set global variables for AJAX requests
-window.startRoutineUrl = "{% url 'routine:start' %}";
-window.timerRoutineUrl = "{% url 'routine:timer' %}";
-window.csrfToken = "{{ csrf_token }}";
-</script>
-{% endblock %}
