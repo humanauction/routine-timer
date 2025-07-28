@@ -77,14 +77,13 @@
     </div>
 </div>
 <!-- detail.js at the bottom -->
-{% block js %}
+{% block extra_js %}
 {{ block.super }}
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 <script>
+    window.routineId = {{ routine.id }};
     window.startRoutineUrl = "{% url 'routine:start' %}";
     window.timerRoutineUrl = "{% url 'routine:timer' %}";
     window.csrfToken = "{{ csrf_token }}";
 </script>
 <script src="{% static 'js/detail.js' %}"></script>
-{% endblock %}
 {% endblock %}

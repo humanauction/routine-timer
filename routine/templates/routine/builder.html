@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
+
 {% block title %}Build Your Routine{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/builder.css' %}" />
 {% endblock %}
+
 {% block content %}
 <div class="routine-builder">
     <h1>Build Your Routine</h1> 
@@ -83,7 +86,13 @@
 {% endblock %}
 
 {% block extra_js %}
+{{ block.super }}
 <script>
+// Set global variables for AJAX requests
+window.startRoutineUrl = "{% url 'routine:start' %}";
+window.timerRoutineUrl = "{% url 'routine:timer' %}";
+window.csrfToken = "{{ csrf_token }}";
+
 document.addEventListener('DOMContentLoaded', function() {
     // Get elements
     const routineNameInput = document.getElementById('routine-name');
@@ -190,10 +199,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Add the task to the preview permanently
                 const taskItem = document.createElement('li');
                 taskItem.className = 'task-item';
+                taskItem.dataset.index = document.querySelectorAll('.task-item:not(.preview-only)').length;
                 taskItem.innerHTML = `
                     <span class="task-name">${data.task.task}</span>
                     <span class="task-duration">${data.task.duration} minutes</span>
+                    <button type="button" class="btn-delete" aria-label="Delete task">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <span class="drag-handle" aria-label="Drag to reorder">
+                        <i class="fas fa-grip-lines"></i>
+                    </span>
                 `;
+                
+                // Add delete event handler to the new button
+                const deleteBtn = taskItem.querySelector('.btn-delete');
+                deleteBtn.addEventListener('click', handleDeleteTask);
                 
                 // Remove any preview-only items
                 document.querySelectorAll('.preview-only').forEach(item => {
@@ -217,6 +237,49 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.error('Error:', error);
         });
+    });
+    
+    // Setup delete task functionality
+    function handleDeleteTask() {
+        const taskItem = this.closest('.task-item');
+        const index = parseInt(taskItem.dataset.index);
+        
+        if (confirm('Are you sure you want to remove this task?')) {
+            // Send AJAX request to remove task
+            fetch('{% url "routine:remove_task" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': window.csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ index: index })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove the task from DOM
+                    taskItem.remove();
+                    
+                    // Update total time
+                    document.getElementById('preview-total-time').textContent = data.total;
+                    totalDuration = data.total;
+                    
+                    // Update data-index attributes for remaining tasks
+                    document.querySelectorAll('.task-item').forEach((item, idx) => {
+                        item.dataset.index = idx;
+                    });
+                } else {
+                    alert('Error removing task: ' + data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    }
+    
+    // Attach delete handlers to existing buttons
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', handleDeleteTask);
     });
     
     // Handle start routine button
@@ -249,47 +312,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Setup delete task functionality
-    document.querySelectorAll('.btn-delete').forEach(button => {
-        button.addEventListener('click', function() {
-            const taskItem = this.closest('.task-item');
-            const index = parseInt(taskItem.dataset.index);
-            
-            if (confirm('Are you sure you want to remove this task?')) {
-                // Send AJAX request to remove task
-                fetch('{% url "routine:remove_task" %}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: JSON.stringify({ index: index })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Remove the task from DOM
-                        taskItem.remove();
-                        
-                        // Update total time
-                        document.getElementById('preview-total-time').textContent = data.total;
-                        
-                        // Update data-index attributes for remaining tasks
-                        document.querySelectorAll('.task-item').forEach((item, idx) => {
-                            item.dataset.index = idx;
-                        });
-                    } else {
-                        alert('Error removing task: ' + data.error);
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            }
-        });
-    });
     
     // Setup drag and drop reordering with Sortable.js
     const taskList = document.getElementById('preview-tasks');
@@ -309,7 +331,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}',
+                        'X-CSRFToken': window.csrfToken,
                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     body: JSON.stringify({ order: newOrder })
@@ -335,6 +357,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+</script>
+{% endblock %}
 {% block extra_js %}
 {{ block.super }}
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
@@ -343,5 +367,4 @@ window.startRoutineUrl = "{% url 'routine:start' %}";
 window.timerRoutineUrl = "{% url 'routine:timer' %}";
 window.csrfToken = "{{ csrf_token }}";
 </script>
-{% endblock %}
 {% endblock %}
