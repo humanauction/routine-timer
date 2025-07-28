@@ -6,7 +6,8 @@ from django.contrib.auth.models import AbstractBaseUser
 User = get_user_model()
 
 
-def register_user(username: str, email: str, password: str) -> AbstractBaseUser:
+def register_user(
+        username: str, email: str, password: str) -> AbstractBaseUser:
     """
     Create and return a new user instance.
     This function sets the password and saves the user to the database.
@@ -15,13 +16,18 @@ def register_user(username: str, email: str, password: str) -> AbstractBaseUser:
     :param password: The password for the new user.
     :return: The created user instance.
     """
+
+
+    print(f"Creating user: {username}, {email}")
+
     user = User(username=username, email=email)
     user.set_password(password)
     user.save()
+    print(f"User created: {user.id}")
     return user
 
 
-def send_welcome_mail(user: User):
+def send_welcome_mail(user: AbstractBaseUser):
     """
     Send email confirmation to new user.
     """

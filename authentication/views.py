@@ -43,8 +43,8 @@ class LoginView(DjangoLoginView):
         # Check which form was submitted
         form_type = request.POST.get('form_type')
         
-        if form_type == 'register':
-            # This is a register submission
+        if form_type == 'sign_up':
+            # This is a sign up submission
             signup_form = SignUpForm(request.POST)
             login_form = self.form_class()
             
