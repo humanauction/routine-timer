@@ -80,3 +80,53 @@
         color: #6c757d;
         font-size: 0.9rem;
     }
+
+    .btn-delete {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 10px;
+    transition: color 0.2s;
+}
+
+.btn-delete:hover {
+    color: #bd2130;
+}
+
+.drag-handle {
+    cursor: grab;
+    color: #6c757d;
+    padding: 5px;
+    margin-left: auto; /* Push to the right side */
+    transition: color 0.2s;
+}
+
+.drag-handle:hover {
+    color: #5a6268;
+}
+
+.sortable-ghost {
+    opacity: 0.5;
+    background: #e9ecef;
+}
+
+/* Update task-item to work with drag handles and delete buttons */
+.task-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background-color: white;
+    margin-bottom: 0.5rem;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-left: 3px solid var(--primary-color, #007bff);
+}
+
+/* Add the action buttons container */
+.task-actions {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* Push to the right side */
+}

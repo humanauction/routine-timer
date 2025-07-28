@@ -27,6 +27,19 @@ class RoutineItem(models.Model):
     duration = models.PositiveIntegerField(help_text='Minutes')
     order = models.PositiveIntegerField()
 
+    def delete_and_reorder(self):
+        """Delete this item and reorder remaining items"""
+        routine = self.routine
+        order = self.order
+
+        # Delete this item
+        self.delete()
+
+        # Reorder remaining items to avoid gaps
+        for item in routine.items.filter(order__gt=order).order_by('order'):
+            item.order -= 1
+            item.save()
+
     class Meta:
         ordering = ['order']
 

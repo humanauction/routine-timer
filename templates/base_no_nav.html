@@ -31,8 +31,9 @@
         <footer>
             <p>&copy; {% now "Y" %} Routine Timer. All rights reserved.</p>
         </footer>
-
+        {% block extra_js %}
         <script src="{% static 'js/base.js' %}"></script>
-        {% block extra_js %}{% endblock %}
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+        {% endblock %}
     </body>
 </html>

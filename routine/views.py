@@ -1,18 +1,21 @@
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect, get_object_or_404
+import json
 from django.views import View
 from .forms import TaskForm
 from .services import (
-    get_current_routine, add_task, clear_routine, save_routine_to_db
+    get_current_routine, add_task, clear_routine, save_routine_to_db,
+    get_routine_name, set_routine_name, reorder_tasks, remove_task
 )
-from .models import Routine
+from .models import Routine, RoutineItem
 from django.views.generic import TemplateView, DeleteView
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.utils.decorators import method_decorator
+from django.db import transaction
 
 
 class TimerView(TemplateView):
@@ -50,23 +53,44 @@ class RoutineBuilderView(LoginRequiredMixin, View):
         """Handle GET requests for the routine builder"""
         form = self.form_class()
         tasks = get_current_routine(request.session)
+        routine_name = get_routine_name(request.session)
         total = sum(task['duration'] for task in tasks)
+
         context = {
             'form': form,
             'tasks': tasks,
             'total': total,
-            'routine_name': request.GET.get('name', 'My Routine')
+            'routine_name': routine_name
         }
         return render(request, self.template_name, context)
 
     def post(self, request):
+        """Handle POST requests for the routine builder"""
+        # Check if it's a routine name update
+        if 'name' in request.POST and 'task' not in request.POST:
+            # Handle routine name submission
+            routine_name = request.POST.get('name', 'My Routine')
+            set_routine_name(request.session, routine_name)
+
+            # If it's an AJAX request
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': True,
+                    'routine_name': routine_name
+                })
+
+            # Regular form submission
+            return redirect('routine:builder')
+
+        # Handle task submission
         form = TaskForm(request.POST)
+        routine_name = get_routine_name(request.session)
+
         if form.is_valid():
             task = form.cleaned_data['task']
             duration = form.cleaned_data['duration']
-            routine_name = request.POST.get('name', 'My Routine')
 
-            # Add to session
+            # Add task to session
             add_task(request.session, task, duration)
 
             # Handle AJAX request
@@ -80,62 +104,48 @@ class RoutineBuilderView(LoginRequiredMixin, View):
                     'routine_name': routine_name
                 })
 
-            # Non-AJAX response (regular form submit)
-            return redirect(
-                f"{reverse('routine:builder')}?name={routine_name}"
-            )
-        else:
-            tasks = get_current_routine(request.session)
-            total = sum(task['duration'] for task in tasks)
+            # Regular form submission
+            return redirect('routine:builder')
 
-            # Handle AJAX validation errors
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'success': False,
-                    'error': form.errors
-                })
+        # Form is invalid
+        tasks = get_current_routine(request.session)
+        total = sum(task['duration'] for task in tasks)
 
-            # Non-AJAX response
-            context = {
-                'form': form,
-                'tasks': tasks,
-                'total': total,
-                'routine_name': request.POST.get('name', 'My Routine')
-            }
-            return render(request, 'routine/builder.html', context)
-
-        # New routine name handling code
-        routine_name = request.POST.get('name', '')
-        request.session['routine_name'] = routine_name
-
-        # If it's an AJAX request, return JSON
+        # Handle AJAX validation errors
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({
-                'success': True,
-                'routine_name': routine_name
+                'success': False,
+                'error': form.errors
             })
 
-        # Otherwise redirect back to builder
-        return redirect('routine:builder')
+        # Regular form submission with errors
+        context = {
+            'form': form,
+            'tasks': tasks,
+            'total': total,
+            'routine_name': routine_name
+        }
+        return render(request, self.template_name, context)
 
 
 class SaveRoutineView(LoginRequiredMixin, View):
     def post(self, request):
         # Check for guest user first
         if hasattr(request.user, 'profile') and request.user.profile.is_guest:
-            messages.warning(
-                request, "Please login or signup to save routines"
-            )
+            messages.warning(request,
+                             "Please login or signup to save routines"
+                             )
             return JsonResponse(
                 {'success': False, 'error': 'Guests cannot save routines'},
                 status=403
-                )
+            )
+
         # Registered user can save routines here
         tasks = get_current_routine(request.session)
         if not tasks:
             return redirect('routine:builder')
 
-        name = request.POST.get('name', 'My Routine')
+        name = get_routine_name(request.session)
         routine = save_routine_to_db(request.user, name, tasks)
         clear_routine(request.session)
         return redirect('routine:detail', pk=routine.pk)
@@ -190,3 +200,129 @@ class DeleteRoutineView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             f"Routine '{routine.name}' deleted successfully."
         )
         return super().delete(request, *args, **kwargs)
+
+
+@login_required
+def remove_task_from_builder(request):
+    """Remove a task from the session by index"""
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            index = data.get('index')
+            tasks = remove_task(request.session, index)
+            total = sum(task['duration'] for task in tasks)
+            return JsonResponse({
+                'success': True,
+                'tasks': tasks,
+                'total': total
+            })
+        except (ValueError, IndexError) as e:
+            return JsonResponse(
+                {'success': False, 'error': str(e)}, status=400
+                )
+    return JsonResponse(
+        {'success': False, 'error': 'Invalid method'}, status=405
+        )
+
+
+@login_required
+def reorder_tasks_in_builder(request):
+    """Reorder tasks in the session"""
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            new_order = data.get('order', [])
+            tasks = reorder_tasks(request.session, new_order)
+            total = sum(task['duration'] for task in tasks)
+            return JsonResponse({
+                'success': True,
+                'tasks': tasks,
+                'total': total
+            })
+        except (ValueError, TypeError) as e:
+            return JsonResponse(
+                {'success': False, 'error': str(e)}, status=400
+                )
+    return JsonResponse(
+        {'success': False, 'error': 'Invalid method'}, status=405
+        )
+
+
+@login_required
+def remove_routine_item(request, pk):
+    """Remove a routine item by its primary key"""
+    if request.method == 'POST':
+        try:
+            item = get_object_or_404(RoutineItem, pk=pk)
+
+            # Security check: only allow users to modify their own routines
+            if item.routine.user != request.user:
+                return JsonResponse(
+                    {'success': False, 'error': 'Permission denied'},
+                    status=403
+                )
+
+            routine = item.routine
+            item.delete_and_reorder()
+
+            # Get updated items and total
+            routine_items = routine.items.all().order_by('order')
+            total_duration = sum(item.duration for item in routine_items)
+
+            return JsonResponse({
+                'success': True,
+                'total': total_duration
+            })
+        except RoutineItem.DoesNotExist:
+            return JsonResponse(
+                {'success': False, 'error': 'Routine item not found'},
+                status=404
+            )
+        except Exception as e:
+            return JsonResponse(
+                {'success': False, 'error': str(e)},
+                status=400
+            )
+    return JsonResponse({'success': False, 'error': 'Invalid method'},
+                        status=405)
+
+
+@login_required
+def reorder_routine_items(request, routine_pk):
+    """Reorder routine items"""
+    if request.method == 'POST':
+        try:
+            routine = get_object_or_404(
+                Routine,
+                pk=routine_pk,
+                user=request.user
+            )
+            data = json.loads(request.body)
+            new_order = data.get('order', [])
+
+            # Validate that all item IDs belong to this routine
+            item_ids = [int(id) for id in new_order]
+            routine_items = routine.items.filter(id__in=item_ids)
+
+            if routine_items.count() != len(item_ids):
+                return JsonResponse(
+                    {'success': False, 'error': 'Invalid item IDs'},
+                    status=400
+                )
+
+            # Update the order of items
+            with transaction.atomic():
+                for index, item_id in enumerate(new_order):
+                    item = routine_items.get(id=item_id)
+                    item.order = index
+                    item.save()
+
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse(
+                {'success': False, 'error': str(e)}, status=400
+            )
+    return JsonResponse(
+        {'success': False, 'error': 'Invalid method'},
+        status=405
+    )

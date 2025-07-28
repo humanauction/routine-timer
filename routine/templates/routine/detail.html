@@ -36,7 +36,27 @@
             <span class="stat-value">{{ routine.created_at|date:"F j, Y" }}</span>
         </div>
     </div>
-
+    <div class="routine-tasks">
+        <ul id="routine-tasks" class="task-list sortable">
+            {% for item in routine_items %}
+            <li class="task-item" data-item-id="{{ item.id }}">
+                <div class="task-order">{{ item.order|add:"1" }}</div>
+                <div class="task-info">
+                    <h4 class="task-name">{{ item.task }}</h4>
+                    <div class="task-duration">{{ item.duration }} minutes</div>
+                </div>
+                <div class="task-actions">
+                    <button type="button" class="btn-delete" aria-label="Delete task">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <span class="drag-handle" aria-label="Drag to reorder">
+                        <i class="fas fa-grip-lines"></i>
+                    </span>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
     <div class="routine-items">
         <h2>Tasks</h2>
         {% if routine_items %}
@@ -55,10 +75,15 @@
             <p>This routine has no tasks yet.</p>
         {% endif %}
     </div>
-        <script>window.startRoutineUrl = "{% url 'routine:start' %}";</script>
-        <script>window.timerRoutineUrl = "{% url 'routine:timer' %}";</script>
-        <script>window.csrfToken = "{{ csrf_token }}";</script>
 </div>
 <!-- detail.js at the bottom -->
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+<script>
+    window.startRoutineUrl = "{% url 'routine:start' %}";
+    window.timerRoutineUrl = "{% url 'routine:timer' %}";
+    window.csrfToken = "{{ csrf_token }}";
+</script>
 <script src="{% static 'js/detail.js' %}"></script>
+{% endblock %}
 {% endblock %}
