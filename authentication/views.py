@@ -1,36 +1,17 @@
-from django.contrib.auth import login, get_user_model
-from django.contrib.auth.models import Group
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView, View
 from django.contrib.auth.views import LoginView as DjangoLoginView, LogoutView
+from django.contrib.auth import login, get_user_model
+from django.contrib.auth.models import Group
 from .forms import SignUpForm, LoginForm
 from .services import register_user, send_welcome_mail
 from django.contrib import messages
 from django.utils.crypto import get_random_string
+
 # Create your views here.
 
-
-class SignUpView(FormView):
-    template_name = 'authentication/signup.html'
-    form_class = SignUpForm
-    success_url = reverse_lazy('authentication:login')
-
-    def form_valid(self, form):
-        """"register new user"""
-        user = register_user(
-            username=form.cleaned_data['username'],
-            email=form.cleaned_data['email'],
-            password=form.cleaned_data['password1']
-        )
-        """send welcome email"""
-        send_welcome_mail(user)
-        # Add success message
-        messages.success(self.request, "Success, please sign in.")
-        # Console log success message
-        print("User registration successful for:", user.username)
-        return super().form_valid(form)
-
+User = get_user_model()
 
 class LoginView(DjangoLoginView):
     template_name = 'authentication/login.html'
@@ -49,20 +30,51 @@ class LoginView(DjangoLoginView):
         """If user is already logged in, redirect to home"""
         if request.user.is_authenticated:
             return redirect('home:index')
-        return super().get(request, *args, **kwargs)
+        # Initialize both forms for the template
+        login_form = self.form_class()
+        signup_form = SignUpForm()
+        return render(request, self.template_name, {
+            'login_form': login_form,
+            'signup_form': signup_form
+        })
 
     def post(self, request, *args, **kwargs):
-        """Check if login or register form submission"""
-        if 'password1' in request.POST:
-            # This is a signup form
-            return redirect('authentication:signup')
-
-        # Otherwise let Django's LoginView handle it
-        return super().post(request, *args, **kwargs)
-
-
-# Get the custom user model
-User = get_user_model()
+        """Handle both login and register form submissions"""
+        # Check which form was submitted
+        form_type = request.POST.get('form_type')
+        
+        if form_type == 'register':
+            # This is a register submission
+            signup_form = SignUpForm(request.POST)
+            login_form = self.form_class()
+            
+            if signup_form.is_valid():
+                # Create the new user
+                user = register_user(
+                    username=signup_form.cleaned_data['username'],
+                    email=signup_form.cleaned_data['email'],
+                    password=signup_form.cleaned_data['password1']
+                )
+                # Send welcome email
+                send_welcome_mail(user)
+                
+                # Log the user in
+                login(request, user)
+                
+                # Add success message
+                messages.success(request, f"Welcome to Routine Timer, {user.username}!")
+                
+                # Redirect to home
+                return redirect('home:index')
+            else:
+                # Form is invalid, re-render with errors
+                return render(request, self.template_name, {
+                    'login_form': login_form,
+                    'signup_form': signup_form
+                })
+        else:
+            # This is a login submission, let the parent class handle it
+            return super().post(request, *args, **kwargs)
 
 
 class GuestLoginView(View):
