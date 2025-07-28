@@ -299,6 +299,20 @@ input:focus,
     color: #065f46;
 }
 
+form {
+    display: none;
+}
+
+.form.active {
+    display: block;
+}
+
+/* Tab active state */
+.tabs button[aria-selected="true"] {
+    background: var(--accent, #4a90e2);
+    color: white;
+}
+
 @media (max-width: 768px) {
     .container {
         grid-template-columns: 1fr;

@@ -1,0 +1,40 @@
+{% extends "base_no_nav.html" %} {% load static %} {% block content %}
+<div class="auth-container">
+    <h2>Sign Up</h2>
+    <form id="registerForm" class="form" method="post">
+        {% csrf_token %}
+        <!-- Register Form -->
+        <fieldset>
+            <legend class="visually-hidden">Register</legend>
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" autocomplete="username" required />
+
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+
+            <label for="password1">Password</label>
+            <input id="password1" name="password1" type="password" autocomplete="new-password" required />
+
+            <label for="password2">Confirm Password</label>
+            <input id="password2" name="password2" type="password" autocomplete="new-password" required />
+        </fieldset>
+
+        <button type="submit" class="btn">
+            <i class="fa fa-user-plus"></i> Register
+        </button>
+
+        <p class="or">Or sign up with</p>
+        <div class="socials" role="group" aria-label="Social signup">
+            <button type="button" class="social" aria-label="Sign up with Google">
+                <i class="fa-brands fa-google"></i>
+            </button>
+            <button type="button" class="social" aria-label="Sign up with Facebook">
+                <i class="fa-brands fa-facebook-f"></i>
+            </button>
+            <button type="button" class="social" aria-label="Sign up with Twitter">
+                <i class="fa-brands fa-twitter"></i>
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

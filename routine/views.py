@@ -25,7 +25,6 @@ class TimerView(TemplateView):
         return context
 
 
-
 @login_required
 def get_current_tasks(request):
     """API endpoint to get the current tasks in the session"""

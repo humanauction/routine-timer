@@ -8,4 +8,14 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Username:', this.username.value);
         });
     }
+
+
+// Add signup form handling
+    const signupForm = document.getElementById('signupForm');
+    if (signupForm) {
+        signupForm.addEventListener('submit', function(e) {
+            console.log('Signup form submitted');
+            // Let the form submit normally
+        });
+    }
 });

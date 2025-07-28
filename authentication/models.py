@@ -10,11 +10,13 @@ class CustomUser(AbstractUser):
     Extend model (e.g. add profile picture,
     phone number, preferences) here.
     """
-    username = models.CharField(max_length=150, unique=True)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=128)
+    # These fields already exist in AbstractUser, no need to redefine:
+    # username = models.CharField(max_length=150, unique=True)
+    # email = models.EmailField(unique=True)
+    # password = models.CharField(max_length=128)
+    
     created_on = models.DateTimeField(auto_now_add=True)
-    pass
+    # Remove the unnecessary 'pass' statement
 
     class Meta:
         ordering = ["-date_joined"]

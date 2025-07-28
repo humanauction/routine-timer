@@ -1,7 +1,7 @@
 {% extends "base_no_nav.html" %}
 {% load static %}
 
-{% block title %}Login & Register{% endblock %}
+{% block title %}Login & Sign Up{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
@@ -25,20 +25,20 @@
                 <button
                     role="tab"
                     id="loginTab"
+                    type="button"
                     aria-controls="loginForm"
                     aria-selected="true"
                 >
                     Login
                 </button>
                 <button
+                    id="signupTab"
                     role="tab"
-                    id="registerTab"
-                    aria-controls="registerForm"
-                    aria-selected="false"
-                >
-                    Register
-                </button>
+                    type="button"
+                    aria-controls="signupForm"
+                >Sign Up</button>
             </nav>
+
             
             <!-- Login Form -->
             <form
@@ -91,7 +91,7 @@
                     </div>
                     {% endif %}
                     
-                    <button type="submit" class="btn">Login</button>
+                    <button type="submit">Login</button>
                     <!-- Add guest login button -->
                     <p class="or">Or</p>
                     <a href="{% url 'authentication:guest_login' %}" class="btn btn-secondary guest-btn">
@@ -128,21 +128,21 @@
                 </div>
             </form>
             
-            <!-- Register Form -->
+            <!-- Signup Form -->
             <form
-                id="registerForm"
+                id="signupForm"
                 class="form"
-                aria-labelledby="registerTab"
+                aria-labelledby="signupTab"
                 method="post"
                 action=""
             >
                 {% csrf_token %}
                 <input type="hidden" name="form_type" value="sign_up">
                 <fieldset>
-                    <legend class="visually-hidden">Register</legend>
-                    <label for="register_username">Username</label>
+                    <legend class="visually-hidden">Sign Up</legend>
+                    <label for="signup_username">Username</label>
                     <input
-                        id="register_username"
+                        id="signup_username"
                         name="username"
                         type="text"
                         required
@@ -155,9 +155,9 @@
                     </div>
                     {% endif %}
 
-                    <label for="register_email">Email</label>
+                    <label for="signup_email">Email</label>
                     <input
-                        id="register_email"
+                        id="signup_email"
                         name="email"
                         type="email"
                         required
@@ -170,9 +170,9 @@
                     </div>
                     {% endif %}
 
-                    <label for="register_password1">Password</label>
+                    <label for="signup_password1">Password</label>
                     <input
-                        id="register_password1"
+                        id="signup_password1"
                         name="password1"
                         type="password"
                         required
@@ -185,9 +185,9 @@
                     </div>
                     {% endif %}
 
-                    <label for="register_password2">Confirm Password</label>
+                    <label for="signup_password2">Confirm Password</label>
                     <input
-                        id="register_password2"
+                        id="signup_password2"
                         name="password2"
                         type="password"
                         required
@@ -200,9 +200,7 @@
                     </div>
                     {% endif %}
 
-                    <button type="submit" class="btn">
-                        <i class="fa fa-user-plus"></i> Register
-                    </button>
+                    <button type="submit">Sign Up</button>
                 </fieldset>
             </form>
         </div>

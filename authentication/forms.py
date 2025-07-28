@@ -5,30 +5,13 @@ from django.contrib.auth import get_user_model
 from django.utils.html import escape
 from django.utils.translation import gettext_lazy as _
 import re
-from .services import register_user
 
 User = get_user_model()
 
 
-class SignUpForm(UserCreationForm):
-    def signup(self, request):
-        signup_form = SignUpForm(request.POST)
-        print(f"Form data: {request.POST}")
-        if signup_form.is_valid():
-            print("Form is valid!")
-            user = register_user(
-                username=signup_form.cleaned_data['username'],
-                email=signup_form.cleaned_data['email'],
-                password=signup_form.cleaned_data['password1']
-            )
-            return user
-        else:
-            print(f"Form errors: {signup_form.errors}")
-            return None
+class SignupForm(UserCreationForm):
     email = forms.EmailField(
         required=True,
-        help_text=_('Please enter a valid email address.'),
-        max_length=254,
         widget=forms.EmailInput(attrs={'autocomplete': 'email'})
     )
 
@@ -86,13 +69,3 @@ class LoginForm(AuthenticationForm):
         strip=False,
         widget=forms.PasswordInput(attrs={'autocomplete': 'current-password'}),
     )
-
-    def clean_username(self):
-        username = self.cleaned_data.get('username', '').strip()
-        # todo: add further validation and normalization here
-        return username
-
-    def clean_password(self):
-        password = self.cleaned_data.get('password', '')
-        # todo: add further validation here
-        return password

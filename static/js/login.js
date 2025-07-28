@@ -2,35 +2,51 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Get tab elements
     const loginTab = document.getElementById('loginTab');
-    const registerTab = document.getElementById('registerTab');
+    const signupTab = document.getElementById('signupTab');
     
     // Get form elements
     const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
+    const signupForm = document.getElementById('signupForm');
     
-    // tab switching
-    loginTab.addEventListener('click', function() {
-        loginTab.setAttribute('aria-selected', 'true');
-        registerTab.setAttribute('aria-selected', 'false');
-        
-        loginForm.classList.add('active');
-        registerForm.classList.remove('active');
+    // Make sure we found all elements
+    console.log("Elements found:", {
+        loginTab: !!loginTab,
+        signupTab: !!signupTab, 
+        loginForm: !!loginForm, 
+        signupForm: !!signupForm
     });
     
-    registerTab.addEventListener('click', function() {
-        registerTab.setAttribute('aria-selected', 'true');
+    // Only set up listeners if all elements are found
+    if (loginTab && signupTab && loginForm && signupForm) {
+        // tab switching
+        loginTab.addEventListener('click', function() {
+            loginTab.setAttribute('aria-selected', 'true');
+            signupTab.setAttribute('aria-selected', 'false');
+            
+            loginForm.classList.add('active');
+            signupForm.classList.remove('active');
+        });
+        
+        signupTab.addEventListener('click', function() {
+            signupTab.setAttribute('aria-selected', 'true');
+            loginTab.setAttribute('aria-selected', 'false');
+            
+            signupForm.classList.add('active');
+            loginForm.classList.remove('active');
+        });
+    } else {
+        console.error("Some tab/form elements not found");
+    }
+    
+    // Check if there are form errors and show the appropriate tab
+    const hasLoginErrors = document.querySelector('#loginForm .error-message');
+    const hasSignupErrors = document.querySelector('#signupForm .error-message');
+    
+    if (hasSignupErrors && signupTab && signupForm) {
+        // Show signup tab if there are signup form errors
+        signupTab.setAttribute('aria-selected', 'true');
         loginTab.setAttribute('aria-selected', 'false');
-        
-        registerForm.classList.add('active');
+        signupForm.classList.add('active');
         loginForm.classList.remove('active');
-    });
-    
-    // Ensure forms submit to the right place
-    loginForm.addEventListener('submit', function(e) {
-        // Regular form submission
-    });
-    
-    registerForm.addEventListener('submit', function(e) {
-        // Regular form submission to signup URL
-    });
+    }
 });
