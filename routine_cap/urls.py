@@ -16,11 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', RedirectView.as_view(pattern_name='authentication:login'), name='root'),
     path('summernote/', include('django_summernote.urls')),
-    path('', include('home.urls', namespace='home')),
+    path('home/', include('home.urls', namespace='home')),
     path('auth/', include('authentication.urls', namespace='authentication')),
     path('routine/', include('routine.urls', namespace='routine')),
 ]

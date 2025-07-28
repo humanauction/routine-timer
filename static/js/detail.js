@@ -14,9 +14,10 @@ document.addEventListener('DOMContentLoaded', function() {
             fetch(startUrl, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': '{{ csrf_token }}'
                 },
+                credentials: 'same-origin',
                 body: JSON.stringify({ routine_id: routineId })
             })
             .then(response => response.json())
