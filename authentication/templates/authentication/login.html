@@ -1,22 +1,26 @@
-{% extends "base_no_nav.html" %} {% load static %} {% block content %}
-<title>Login & Register</title>
+{% extends "base_no_nav.html" %}
+{% load static %}
+
+{% block title %}Login & Register{% endblock %}
+
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
-<link rel="stylesheet" href="{% static 'css/modal.css' %}" />
-<script
-    defer
-    src="https://kit.fontawesome.com/844d1cd656.js"
-    crossorigin="anonymous"
-></script>
+{% endblock %}
 
-<!-- Trigger Button -->
-<button id="openAuthModal" class="btn">Login / Register</button>
-
-<!-- Modal Overlay -->
-<div id="authModalOverlay" class="modal-overlay" style="display: none">
-    <div class="modal">
-        <button class="close-modal" id="closeAuthModal">&times;</button>
-        <main class="container" aria-labelledby="auth-heading">
-            <h1 id="auth-heading" class="visually-hidden">Authentication</h1>
+{% block content %}
+<div class="auth-landing">
+    <main class="container" aria-labelledby="auth-heading">
+        <h1 id="auth-heading" class="visually-hidden">Authentication</h1>
+        
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div class="auth-box">
             <nav class="tabs" role="tablist">
                 <button
                     role="tab"
@@ -35,13 +39,15 @@
                     Register
                 </button>
             </nav>
+            
             <!-- Login Form -->
             <form
                 id="loginForm"
                 method="post"
+                action="{% url 'authentication:login' %}"
                 class="form active"
                 aria-labelledby="loginTab"
-            >
+        >
                 {% csrf_token %}
                 <fieldset>
                     <legend class="visually-hidden">Login</legend>
@@ -98,6 +104,7 @@
                     </button>
                 </div>
             </form>
+            
             <!-- Register Form -->
             <form
                 id="registerForm"
@@ -109,9 +116,9 @@
                 {% csrf_token %}
                 <fieldset>
                     <legend class="visually-hidden">Register</legend>
-                    <label for="username">Username</label>
+                    <label for="register-username">Username</label>
                     <input
-                        id="username"
+                        id="register-username"
                         name="username"
                         type="text"
                         placeholder="johndoe"
@@ -175,15 +182,15 @@
                     </button>
                 </div>
             </form>
-        </main>
-    </div>
+        </div>
+    </main>
 </div>
-<script src="{% static 'js/auth.js' %}" defer></script>
-<script src="{% static 'js/modal.js' %}" defer></script>
-<script src="{% static 'js/login.js' %}" defer></script>
-{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/auth.css' %}" />
-<link rel="stylesheet" href="{% static 'css/modal.css' %}" />
+<script
+    defer
+    src="https://kit.fontawesome.com/844d1cd656.js"
+    crossorigin="anonymous"
+></script>
+<script src="{% static 'js/auth.js' %}" defer></script>
+<script src="{% static 'js/login.js' %}" defer></script>
 {% endblock %}

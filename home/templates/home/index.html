@@ -1,6 +1,15 @@
 {% extends "base.html" %} {% load static %} 
 {% block content %}
 <div id="grid"></div>
+ <div class="auth-info">
+            <h2>Routine Timer</h2>
+            <p>Create custom routines and track your time effectively.</p>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Save your routines</li>
+                <li><i class="fas fa-check-circle"></i> Track your progress</li>
+                <li><i class="fas fa-check-circle"></i> Improve your productivity</li>
+            </ul>
+        </div>
 <div id="scanline"></div>
 <script src="{% static 'js/tron-grid.js' %}"></script>
 {% endblock %}
