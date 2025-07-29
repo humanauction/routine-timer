@@ -57,26 +57,10 @@
             {% endfor %}
         </ul>
     </div>
-    <div class="routine-items">
-        <h2>Tasks</h2>
-        {% if routine_items %}
-            <ul class="task-list">
-                {% for item in routine_items %}
-                <li class="task-item">
-                    <div class="task-order">{{ item.order }}</div>
-                    <div class="task-info">
-                        <h3 class="task-name">{{ item.task }}</h3>
-                        <span class="task-duration">{{ item.duration }} minutes</span>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>This routine has no tasks yet.</p>
-        {% endif %}
-    </div>
 </div>
 <!-- detail.js at the bottom -->
+{% endblock %} <!-- Close the content block here -->
+
 {% block extra_js %}
 {{ block.super }}
 <script>

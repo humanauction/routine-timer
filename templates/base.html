@@ -40,6 +40,9 @@
                                 <i class="fas fa-user-clock"></i> Guest Mode
                             </div>
                             <!-- Links available to guests -->
+                            <a href="{% url 'standalone_timer' %}" class="nav-item">
+                                <span>Standalone Timer</span><i class="fas fa-clock icon"></i>
+                            </a>
                             <a href="{% url 'routine:builder' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:builder' %}active{% endif %}">
                                 <i class="fas fa-plus-circle icon"></i>
                                 <span>New Routine</span>
@@ -64,7 +67,7 @@
                             </a>
                             <a href="{% url 'routine:timer' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:timer' %}active{% endif %}">
                                 <i class="fas fa-clock icon"></i>
-                                <span>Timer</span>
+                                <span>Start Routine</span>
                             </a>
                             <a href="{% url 'routine:list' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:list' %}active{% endif %}">
                                 <i class="fas fa-list icon"></i>
