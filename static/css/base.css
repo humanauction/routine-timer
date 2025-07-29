@@ -21,7 +21,6 @@
 body {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     color: var(--text-color);
-    line-height: 1.6;
 }
 
 /* Grid Layout */
@@ -130,7 +129,7 @@ header {
 .nav-item:hover,
 .nav-item.active {
     background-color: rgba(36, 36, 36, 0.1);
-    color: var(--primary-color);
+    color: var(--tertiary-color);
 }
 
 .nav-item .icon {
@@ -147,9 +146,7 @@ header {
 /* Main Content */
 main {
     grid-area: main;
-    padding: 20px;
     background-color: white;
-    overflow-y: auto;
 }
 
 /* login and sign up forms */

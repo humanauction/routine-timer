@@ -1,6 +1,11 @@
 
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 body, .ac-bg {
-    min-height: 100vh;
     background: 
         radial-gradient(circle at 50% 50%, rgba(255,255,255,0.7) 0%, rgba(200,200,200,0.5) 60%, rgba(180,180,180,0.7) 100%),
         repeating-linear-gradient(135deg, rgba(255,255,255,0.1) 0 2px, transparent 2px 40px),
@@ -9,7 +14,12 @@ body, .ac-bg {
         repeating-linear-gradient(90deg, rgba(255,255,255,0.07) 0 1px, transparent 1px 60px),
         #eaeaea;
     position: relative;
-    overflow: hidden;
+    overflow: clip;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
 }
 
 .ac-bg {
@@ -45,5 +55,33 @@ body, .ac-bg {
     min-width: 300px;
     min-height: 300px;
     display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.timer-remaining,
+.timer-controls,
+.timer-actions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.timer-controls,
+.timer-actions {
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.standalone-timer {
+    /* Remove height: 100vh or similar if present */
+    min-height: 0;
+    height: auto;
+}
+.timer-display {
+    /* Remove height: 100vh or similar if present */
+    min-height: 0;
+    height: auto;
 }
 
