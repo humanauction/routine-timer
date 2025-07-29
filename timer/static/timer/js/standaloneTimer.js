@@ -4,17 +4,33 @@ document.addEventListener('DOMContentLoaded', function () {
     const MIN_MINUTES = 1;
     const DIAL_RADIUS = 120;
     const CENTER = 120;
+    // Default colors for slices
     const COLORS = [
-        "#e91e63", "#9c27b0", "#3f51b5", "#03a9f4", "#009688",
-        "#8bc34a", "#ffeb3b", "#ff9800", "#f44336"
-    ]; // Use as many as needed, repeat if > COLORS.length
+        "#3f51b5",
+        "#f44336",
+        "#4caf50",
+        "#ff9800",
+        "#00bcd4",
+        "#ffc107",
+        "#673ab7",
+    ];
+
+    const colorPicker = document.getElementById('color-picker');
+    let selectedColor = COLORS[0];
+    if (colorPicker) {
+        colorPicker.value = selectedColor;
+        colorPicker.addEventListener('input', function () {
+            selectedColor = this.value;
+            drawDial();
+        });
+    }
 
     // --- STATE ---
     let totalMinutes = 0;
     let remainingSeconds = totalMinutes * 60;
     let timer = null;
     let isRunning = false;
-    let currentSlice = 0;
+    let currentSlice = 1;
     let slices = [];
 
     // --- ELEMENTS ---
@@ -165,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     function resetTimer() {
         stopTimer();
-        setTime(0);
+        setTime(1);
     }
 
     // --- EVENT LISTENERS ---
@@ -192,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // --- INIT ---
-    setTime(0);
+    setTime(2);
     sliceSize = parseInt(sliceSizeSelect.value, 10);
     drawDial();
     pauseBtn.disabled = true;

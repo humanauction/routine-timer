@@ -28,4 +28,4 @@ urlpatterns = [
     path('auth/', include('authentication.urls', namespace='authentication')),
     path('routine/', include('routine.urls', namespace='routine')),
     path('timer/', include('timer.urls', namespace='timer')),
-]   
+]

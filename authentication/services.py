@@ -17,7 +17,6 @@ def register_user(
     :return: The created user instance.
     """
 
-
     print(f"Creating user: {username}, {email}")
 
     user = User(username=username, email=email)

@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     RoutineBuilderView, SaveRoutineView, RoutineDetailView,
-    routine_list, TimerView, DeleteRoutineView, 
+    routine_list, TimerView, DeleteRoutineView,
     get_current_tasks, StartRoutineView,
     remove_task_from_builder, reorder_tasks_in_builder,
     remove_routine_item, reorder_routine_items
