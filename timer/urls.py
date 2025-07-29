@@ -1,6 +1,8 @@
 from django.urls import path
 from .views import StandaloneTimerView
 
+app_name = 'timer'
+
 urlpatterns = [
-    path('', StandaloneTimerView.as_view(), name='standalone_timer'),
+    path('standalone/', StandaloneTimerView.as_view(), name='standalone'),
 ]

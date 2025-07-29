@@ -19,7 +19,7 @@
             <header>
                 <div class="logo">Routine Timer</div>
                 <div class="mobile-menu-toggle" id="mobileMenuToggle">
-                    <span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span>
                 </div>
             </header>
 
@@ -31,6 +31,10 @@
                         <i class="fas fa-home icon"></i>
                         <span>Home</span>
                     </a>
+                    <a href="{% url 'timer:standalone' %}" class="nav-item {% if request.resolver_match.app_name == 'timer' and request.resolver_match.url_name == 'standalone' %}active{% endif %}">
+                        <i class="fas fa-clock icon"></i>
+                        <span>Standalone Timer</span>
+                    </a>
                     
                     {% if user.is_authenticated %}
                         <!-- If user is authenticated -->
@@ -40,9 +44,6 @@
                                 <i class="fas fa-user-clock"></i> Guest Mode
                             </div>
                             <!-- Links available to guests -->
-                            <a href="{% url 'standalone_timer' %}" class="nav-item">
-                                <span>Standalone Timer</span><i class="fas fa-clock icon"></i>
-                            </a>
                             <a href="{% url 'routine:builder' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:builder' %}active{% endif %}">
                                 <i class="fas fa-plus-circle icon"></i>
                                 <span>New Routine</span>

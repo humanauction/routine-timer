@@ -10,5 +10,6 @@
 #timer-dial {
     width: 240px;
     height: 240px;
+    min-height: 50vh;
 }
 
