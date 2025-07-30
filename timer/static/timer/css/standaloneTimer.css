@@ -5,24 +5,8 @@
     box-sizing: border-box;
 }
 
-body, .ac-bg {
-    background: 
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.7) 0%, rgba(200,200,200,0.5) 60%, rgba(180,180,180,0.7) 100%),
-        repeating-linear-gradient(135deg, rgba(255,255,255,0.1) 0 2px, transparent 2px 40px),
-        repeating-linear-gradient(45deg, rgba(255,255,255,0.08) 0 2px, transparent 2px 40px),
-        repeating-linear-gradient(0deg, rgba(255,255,255,0.07) 0 1px, transparent 1px 60px),
-        repeating-linear-gradient(90deg, rgba(255,255,255,0.07) 0 1px, transparent 1px 60px),
-        #eaeaea;
-    position: relative;
-    overflow: clip;
-}
 
-body {
-    margin: 0;
-    height: 100vh;
-}
-
-.ac-bg {
+.ac-b {
     position: relative;
     width: 100vw;
     height: 100vh;
@@ -32,56 +16,172 @@ body {
 }
 .ac-bg-svg {
     position: absolute;
-    left: 0; top: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
     filter: blur(1px) brightness(1.1);
 }
 
+
 .timer-centerpiece {
-    display: flex;
+    position: relative;
+    z-index: 2;
+    display: flex; /* Add this back */
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    width: 100vw;
-    height: 80vh;
-    max-width: 100vw;
-    max-height: 90vh;
+    justify-content: space-between; /* Changed from center to space-between */
+    gap: 15px; /* Reduced gap for mobile */
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    min-height: 100%; /* Fill the parent */
+    height: 100%;
 }
 
 #timer-dial {
-    width: 60vw;
-    height: 60vw;
-    max-width: 80vh;
-    max-height: 80vh;
-    min-width: 300px;
-    min-height: 300px;
+    width: 50vw; /* Increased slightly for mobile visibility */
+    height: 50vw;
+    max-width: 300px;
+    max-height: 300px;
+    min-width: 120px; /* Increased from 100px */
+    min-height: 120px; /* Increased from 100px */
     display: block;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
-.timer-remaining,
-.timer-controls,
-.timer-actions {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+.timer-remaining {
+    text-align: center;
+    margin: 10px 0;
+    flex-shrink: 0; /* Prevent shrinking */
 }
-.timer-controls,
-.timer-actions {
-    flex-direction: row;
-    gap: 1rem;
+
+.timer-btn {
+    padding: 8px 12px;
+    border: 1px solid var(--secondary-color);
+    background-color: var(--primary-color);
+    color: var(--tertiary-color);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    min-width: 40px;
 }
 
 .standalone-timer {
-    /* Remove height: 100vh or similar if present */
-    min-height: 0;
-    height: auto;
-}
-.timer-display {
-    /* Remove height: 100vh or similar if present */
-    min-height: 0;
-    height: auto;
+    min-height: 100vh; /* fallback for non-grid parents */
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
+.timer-display {
+    position: relative;
+    min-height: 400px; /* Reduced from 500px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1; /* Allow it to grow */
+}
+
+/* Move background to pseudo-element */
+.timer-display::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.7) 0%, rgba(200,200,200,0.5) 60%, rgba(180,180,180,0.7) 100%),
+        repeating-linear-gradient(135deg, rgba(255,255,255,0.1) 0 2px, transparent 2px 40px),
+        repeating-linear-gradient(45deg, rgba(255,255,255,0.08) 0 2px, transparent 2px 40px),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.07) 0 1px, transparent 1px 60px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.07) 0 1px, transparent 1px 60px),
+        #eaeaea;
+    z-index: 0;
+    margin-top: auto;
+}
+
+.timer-actions,
+.timer-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 400px;
+    flex-shrink: 0; /* Prevent shrinking */
+    margin-top: auto; /* Push to bottom */
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .timer-display {
+        min-height: 350px; /* Smaller on mobile */
+    }
+    
+    .timer-centerpiece {
+        gap: 10px; /* Tighter spacing on mobile */
+        padding: 15px;
+    }
+    
+    #timer-dial {
+        width: 60vw; /* Larger percentage on mobile */
+        height: 60vw;
+        max-width: 250px; /* Smaller max for mobile */
+        max-height: 250px;
+        min-width: 120px; /* Ensure it's not too small */
+        min-height: 120px;
+    }
+    
+    .timer-btn {
+        padding: 6px 10px; /* Smaller buttons on mobile */
+        font-size: 0.8rem;
+        min-width: 35px;
+    }
+    
+    .timer-controls {
+        display: none; /* Keep this hidden on mobile */
+    }
+    
+    .timer-actions {
+        gap: 6px; /* Tighter button spacing */
+    }
+}
+
+/* Tablet and up */
+@media (min-width: 769px) {
+    .timer-display {
+        min-height: 450px;
+    }
+    
+    .timer-centerpiece {
+        gap: 20px;
+    }
+    
+    .timer-controls {
+        display: flex;
+    }
+}
+
+/* Large screens */
+@media (min-width: 1024px) {
+    .timer-display {
+        min-height: 500px;
+    }
+    
+    #timer-dial {
+        width: 40vw;
+        height: 40vw;
+    }
+}
