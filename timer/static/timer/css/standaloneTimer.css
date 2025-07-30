@@ -124,6 +124,11 @@
     margin-top: auto; /* Push to bottom */
 }
 
+.timer-slice-active {
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.7));
+    transition: filter 0.2s;
+}
+
 /* Mobile optimizations */
 @media (max-width: 768px) {
     .timer-display {
@@ -158,6 +163,7 @@
         gap: 6px; /* Tighter button spacing */
     }
 }
+
 
 /* Tablet and up */
 @media (min-width: 769px) {

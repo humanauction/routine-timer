@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let remainingSeconds = totalMinutes * 60;
     let timer = null;
     let isRunning = false;
-    let currentSlice = 1;
     let slices = [];
 
     // --- ELEMENTS ---
@@ -116,14 +115,15 @@ document.addEventListener('DOMContentLoaded', function () {
         for (let i = 0; i < numSlices; i++) {
             if (i < completed) {
                 // Faded (completed)
-                slices[i].setAttribute("fill-opacity", "0.2");
+                slices[i].setAttribute("fill-opacity", "0.3");
                 slices[i].setAttribute("stroke", COLORS[i % COLORS.length]);
                 slices[i].setAttribute("stroke-width", "2");
             } else if (i === completed && isRunning) {
                 // Outline (active)
-                slices[i].setAttribute("fill-opacity", "0.0");
+                slices[i].setAttribute("fill-opacity", "0.2");
                 slices[i].setAttribute("stroke", COLORS[i % COLORS.length]);
-                slices[i].setAttribute("stroke-width", "6");
+                slices[i].setAttribute("stroke-width", "1");
+                slices[i].classList.add("timer-slice-active");
             } else {
                 // Solid (not started)
                 slices[i].setAttribute("fill-opacity", "1.0");
