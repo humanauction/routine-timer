@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
         for (let i = 0; i < numSlices; i++) {
             if (i < completed) {
                 // Faded (completed)
-                slices[i].setAttribute("fill-opacity", "0.3");
+                slices[i].setAttribute("fill-opacity", "0.5");
                 slices[i].setAttribute("stroke", COLORS[i % COLORS.length]);
                 slices[i].setAttribute("stroke-width", "2");
             } else if (i === completed && isRunning) {

@@ -125,7 +125,7 @@
 }
 
 .timer-slice-active {
-    filter: drop-shadow(0 0 10px rgba(255,255,255,0.7));
+    filter: brightness(2) rgba(255,255,255,0.7);
     transition: filter 0.2s;
 }
 
