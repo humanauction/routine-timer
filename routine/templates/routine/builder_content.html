@@ -1,3 +1,30 @@
-{% block content %}
-{% extends "builder.html" %}
-{% endblock %}
+<div class="routine-builder">
+    <h1>Build Your Routine</h1>
+    <!-- Live preview section -->
+    <div class="live-preview">
+        <h2>Preview</h2>
+        <div class="preview-name">
+            <strong>Routine:</strong> <span id="preview-routine-name">{{ routine_name }}</span>
+        </div>
+        <div class="task-list">
+            <h3>Tasks</h3>
+            <ul id="preview-tasks" class="tasks sortable">
+                {% for task in tasks %}
+                <li class="task-item" data-index="{{ forloop.counter0 }}">
+                    <span class="task-name">{{ task.task }}</span>
+                    <span class="task-duration">{{ task.duration }} minutes</span>
+                    <button type="button" class="btn-delete" aria-label="Delete task">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <span class="drag-handle" aria-label="Drag to reorder">
+                        <i class="fas fa-grip-lines"></i>
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+            <p class="total-time">
+                Total time: <strong><span id="preview-total-time">{{ total }}</span> minutes</strong>
+            </p>
+        </div>
+    </div>
+</div>

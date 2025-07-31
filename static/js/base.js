@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             url = "/routine/timer/";
                             break;
                         case "list":
-                            url = "/routine/list/";
+                            url = "/routine/";
                             break;
                         case "signup":
                             url = "/accounts/signup/";
@@ -113,9 +113,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         case "contact":
                             url = "/contact/";
                             break;
-                        case "home":
-                            url = "/"; // Home page
-                            break;
+                      //  case "home":
+                      //      url = "/"; Home page
+                      //      break;
                         default:
                             url = "#";
                     }

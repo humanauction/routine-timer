@@ -21,5 +21,6 @@ urlpatterns = [
     path('task/remove/', remove_task_from_builder, name='remove_task'),
     path('task/reorder/', reorder_tasks_in_builder, name='reorder_tasks'),
     path('item/<int:pk>/remove/', remove_routine_item, name='remove_item'),
-    path('<int:routine_pk>/reorder/', reorder_routine_items, name='reorder_items'),
+    path('<int:routine_pk>/reorder/',
+         reorder_routine_items, name='reorder_items'),
 ]

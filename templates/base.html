@@ -99,7 +99,7 @@
                             </div>
                             
                             <div class="nav-item-container">
-                                <a href="{% url 'routine:list' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:list' %}active{% endif %}" data-panel="list">
+                                <a href="{% url 'routine:list' %}" class="nav-item {% if request.resolver_match.url_name == 'routine:list' %}active{% endif %}" data-panel="list">
                                     <i class="fas fa-list icon"></i>
                                     <span>My Routines</span>
                                 </a>
