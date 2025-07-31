@@ -1,16 +1,24 @@
 from django.views.generic import TemplateView, FormView
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.shortcuts import render
 
 
 # Create your views here.
-
 
 class HomePage(TemplateView):
     """
     Displays home page"
     """
     template_name = 'home/index.html'
+    index_content_template = 'home/index_content.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        # AJAX partial support here
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return render(request, self.index_content_template, context)
+        return render(request, self.template_name, context)
 
 
 class ContactFormView(FormView):
@@ -28,7 +36,7 @@ class ContactFormView(FormView):
         messages.success(
             self.request,
             (
-                "Thanks, {}! We will contact you at {}."
+                "Thanks {0}! We will reply to {1}."
                 .format(name, email)
             )
         )
@@ -37,24 +45,28 @@ class ContactFormView(FormView):
 
 class ContactView(TemplateView):
     template_name = 'home/contact.html'
+    contact_content_template = 'home/contact_content.html'
 
     def get(self, request, *args, **kwargs):
-        # Render the contact page
-        return self.render_to_response({})
+        context = self.get_context_data(**kwargs)
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return render(request, self.contact_content_template, context)
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        # Handle POST request - process form submission
         name = request.POST.get('name', '')
         email = request.POST.get('email', '')
         message = request.POST.get('message', '')
 
-        # Form data validation
+        context = self.get_context_data(**kwargs)
+        context.update({'name': name, 'email': email, 'message': message})
+
         if not all([name, email, message]):
             messages.error(request, "Please fill in all fields.")
-            return self.render_to_response({})
+        else:
+            # send_contact_email(name, email, message)
+            messages.success(request, "Thank you! Your message has been sent.")
 
-        # Process form data
-        # send_contact_email(name, email, message)
-
-        messages.success(request, "Thank you! Your message has been sent.")
-        return self.render_to_response({})
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return render(request, self.contact_content_template, context)
+        return render(request, self.template_name, context)

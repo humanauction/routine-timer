@@ -108,30 +108,36 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateDial() {
-        const numSlices = slices.length;
-        const sliceSeconds = sliceSize * 60;
-        let completed = Math.floor((totalMinutes * 60 - remainingSeconds) / sliceSeconds);
+    const numSlices = slices.length;
+    const sliceSeconds = sliceSize * 60;
+    let completed = Math.floor((totalMinutes * 60 - remainingSeconds) / sliceSeconds);
 
-        for (let i = 0; i < numSlices; i++) {
-            if (i < completed) {
-                // Faded (completed)
-                slices[i].setAttribute("fill-opacity", "0.5");
-                slices[i].setAttribute("stroke", COLORS[i % COLORS.length]);
-                slices[i].setAttribute("stroke-width", "2");
-            } else if (i === completed && isRunning) {
-                // Outline (active)
-                slices[i].setAttribute("fill-opacity", "0.2");
-                slices[i].setAttribute("stroke", COLORS[i % COLORS.length]);
-                slices[i].setAttribute("stroke-width", "1");
-                slices[i].classList.add("timer-slice-active");
-            } else {
-                // Solid (not started)
-                slices[i].setAttribute("fill-opacity", "1.0");
-                slices[i].setAttribute("stroke", "#fff");
-                slices[i].setAttribute("stroke-width", "2");
-            }
+    for (let i = 0; i < numSlices; i++) {
+        slices[i].classList.remove("timer-slice-active", "timer-slice-completed");
+
+        if (i < completed) {
+            // Completed (burgundy with low opacity)
+            slices[i].setAttribute("fill", "#8b1538");
+            slices[i].setAttribute("fill-opacity", "0.5");
+            slices[i].setAttribute("stroke", "#ffffff");
+            slices[i].setAttribute("stroke-width", "1");
+            slices[i].classList.add("timer-slice-completed");
+        } else if (i === completed && isRunning) {
+            // Active (white with red outline)
+            slices[i].setAttribute("fill", "#f0f2f7");
+            slices[i].setAttribute("fill-opacity", "1.0");
+            slices[i].setAttribute("stroke", "#c41e3a");
+            slices[i].setAttribute("stroke-width", "2");
+            slices[i].classList.add("timer-slice-active");
+        } else {
+            // Not started (light gray)
+            slices[i].setAttribute("fill", "#ffffff");
+            slices[i].setAttribute("fill-opacity", "1.0");
+            slices[i].setAttribute("stroke", "#e6e8ed");
+            slices[i].setAttribute("stroke-width", "1");
         }
     }
+}
 
     // --- TIMER LOGIC ---
     function setTime(minutes) {

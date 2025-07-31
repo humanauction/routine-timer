@@ -47,6 +47,7 @@ def routine_list(request):
 
 class RoutineBuilderView(LoginRequiredMixin, View):
     template_name = 'routine/builder.html'
+    content_template_name = 'routine/builder_content.html'
     form_class = TaskForm
 
     def get(self, request):
@@ -62,6 +63,9 @@ class RoutineBuilderView(LoginRequiredMixin, View):
             'total': total,
             'routine_name': routine_name
         }
+        # AJAX partial support here
+        if request.headers.get('x-requesed-with') == 'XMLHttpRequest':
+            return render(request, self.content_template_name, context)
         return render(request, self.template_name, context)
 
     def post(self, request):

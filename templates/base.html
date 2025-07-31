@@ -1,4 +1,3 @@
-<!-- filepath: /Users/guns4kids/Documents/vscode-projects/routine-timer/templates/base.html -->
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -26,72 +25,114 @@
             <!-- In your navigation section -->
             <nav class="main-nav">
                 <div class="nav-content">
-                    <!-- Home link -->
-                    <a href="{% url 'home:index' %}" class="nav-item {% if request.resolver_match.view_name == 'home:index' %}active{% endif %}">
-                        <i class="fas fa-home icon"></i>
-                        <span>Home</span>
-                    </a>
-                    <a href="{% url 'timer:standalone' %}" class="nav-item {% if request.resolver_match.app_name == 'timer' and request.resolver_match.url_name == 'standalone' %}active{% endif %}">
-                        <i class="fas fa-clock icon"></i>
-                        <span>Standalone Timer</span>
-                    </a>
-                    
+                    <!-- Each nav item needs to be in a container with its panel -->
+                    <div class="nav-item-container">
+                        <a href="{% url 'home:index' %}" class="nav-item {% if request.resolver_match.view_name == 'home:index' %}active{% endif %}" data-panel="home">
+                            <i class="fas fa-home icon"></i>
+                            <span>Home</span>
+                        </a>
+                        <div class="nav-panel" id="panel-home"></div>
+                    </div>
+
+                    <div class="nav-item-container">
+                        <a href="{% url 'timer:standalone' %}" class="nav-item {% if request.resolver_match.app_name == 'timer' and request.resolver_match.url_name == 'standalone' %}active{% endif %}" data-panel="standalone-timer">
+                            <i class="fas fa-clock icon"></i>
+                            <span>Standalone Timer</span>
+                        </a>
+                        <div class="nav-panel" id="panel-standalone-timer"></div>
+                    </div>
+
                     {% if user.is_authenticated %}
-                        <!-- If user is authenticated -->
                         {% if user.profile.is_guest %}
-                            <!-- Guest user-->
+                            <!-- Guest user -->
                             <div class="guest-indicator">
                                 <i class="fas fa-user-clock"></i> Guest Mode
                             </div>
-                            <!-- Links available to guests -->
-                            <a href="{% url 'routine:builder' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:builder' %}active{% endif %}">
-                                <i class="fas fa-plus-circle icon"></i>
-                                <span>New Routine</span>
-                            </a>
-                            <a href="{% url 'routine:timer' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:timer' %}active{% endif %}">
-                                <i class="fas fa-clock icon"></i>
-                                <span>Timer</span>
-                            </a>
-                            <a href="{% url 'authentication:login' %}" class="nav-item">
-                                <i class="fas fa-save icon"></i>
-                                <span>Sign Up to Save</span>
-                            </a>
-                            <a href="{% url 'authentication:logout' %}" class="nav-item">
-                                <i class="fas fa-sign-out-alt icon"></i>
-                                <span>End Guest Session</span>
-                            </a>
+                            
+                            <div class="nav-item-container">
+                                <a href="{% url 'routine:builder' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:builder' %}active{% endif %}" data-panel="builder">
+                                    <i class="fas fa-plus-circle icon"></i>
+                                    <span>New Routine</span>
+                                </a>
+                                <div class="nav-panel" id="panel-builder"></div>
+                            </div>
+                            
+                            <div class="nav-item-container">
+                                <a href="{% url 'routine:timer' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:timer' %}active{% endif %}" data-panel="timer">
+                                    <i class="fas fa-clock icon"></i>
+                                    <span>Timer</span>
+                                </a>
+                                <div class="nav-panel" id="panel-timer"></div>
+                            </div>
+                            
+                            <div class="nav-item-container">
+                                <a href="{% url 'authentication:login' %}" class="nav-item" data-panel="signup">
+                                    <i class="fas fa-save icon"></i>
+                                    <span>Sign Up to Save</span>
+                                </a>
+                                <div class="nav-panel" id="panel-signup"></div>
+                            </div>
+                            
+                            <div class="nav-item-container">
+                                <a href="{% url 'authentication:logout' %}" class="nav-item" data-panel="logout">
+                                    <i class="fas fa-sign-out-alt icon"></i>
+                                    <span>End Guest Session</span>
+                                </a>
+                                <div class="nav-panel" id="panel-logout"></div>
+                            </div>
                         {% else %}
                             <!-- Regular user -->
-                            <a href="{% url 'routine:builder' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:builder' %}active{% endif %}">
-                                <i class="fas fa-plus-circle icon"></i>
-                                <span>New Routine</span>
-                            </a>
-                            <a href="{% url 'routine:timer' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:timer' %}active{% endif %}">
-                                <i class="fas fa-clock icon"></i>
-                                <span>Start Routine</span>
-                            </a>
-                            <a href="{% url 'routine:list' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:list' %}active{% endif %}">
-                                <i class="fas fa-list icon"></i>
-                                <span>My Routines</span>
-                            </a>
-                            <a href="{% url 'authentication:logout' %}" class="nav-item">
-                                <i class="fas fa-sign-out-alt icon"></i>
-                                <span>Logout</span>
-                            </a>
+                            <div class="nav-item-container">
+                                <a href="{% url 'routine:builder' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:builder' %}active{% endif %}" data-panel="builder">
+                                    <i class="fas fa-plus-circle icon"></i>
+                                    <span>New Routine</span>
+                                </a>
+                                <div class="nav-panel" id="panel-builder"></div>
+                            </div>
+                            
+                            <div class="nav-item-container">
+                                <a href="{% url 'routine:timer' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:timer' %}active{% endif %}" data-panel="timer">
+                                    <i class="fas fa-clock icon"></i>
+                                    <span>Start Routine</span>
+                                </a>
+                                <div class="nav-panel" id="panel-timer"></div>
+                            </div>
+                            
+                            <div class="nav-item-container">
+                                <a href="{% url 'routine:list' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:list' %}active{% endif %}" data-panel="list">
+                                    <i class="fas fa-list icon"></i>
+                                    <span>My Routines</span>
+                                </a>
+                                <div class="nav-panel" id="panel-list"></div>
+                            </div>
+                            
+                            <div class="nav-item-container">
+                                <a href="{% url 'authentication:logout' %}" class="nav-item" data-panel="logout">
+                                    <i class="fas fa-sign-out-alt icon"></i>
+                                    <span>Logout</span>
+                                </a>
+                                <div class="nav-panel" id="panel-logout"></div>
+                            </div>
                         {% endif %}
                     {% else %}
                         <!-- Not authenticated -->
-                        <a href="{% url 'authentication:login' %}" class="nav-item">
-                            <i class="fas fa-sign-in-alt icon"></i>
-                            <span>Login / Register</span>
-                        </a>
+                        <div class="nav-item-container">
+                            <a href="{% url 'authentication:login' %}" class="nav-item" data-panel="login">
+                                <i class="fas fa-sign-in-alt icon"></i>
+                                <span>Login / Register</span>
+                            </a>
+                            <div class="nav-panel" id="panel-login"></div>
+                        </div>
                     {% endif %}
-                    
+
                     <!-- Contact link -->
-                    <a href="{% url 'home:contact' %}" class="nav-item {% if request.resolver_match.view_name == 'home:contact' %}active{% endif %}">
-                        <i class="fas fa-envelope icon"></i>
-                        <span>Contact Us</span>
-                    </a>
+                    <div class="nav-item-container">
+                        <a href="{% url 'home:contact' %}" class="nav-item {% if request.resolver_match.view_name == 'home:contact' %}active{% endif %}" data-panel="contact">
+                            <i class="fas fa-envelope icon"></i>
+                            <span>Contact Us</span>
+                        </a>
+                        <div class="nav-panel" id="panel-contact"></div>
+                    </div>
                 </div>
             </nav>
             <main>
@@ -107,7 +148,6 @@
                 {% endif %}
                 {% block content %}{% endblock %}
             </main>
-
             <footer>
                 <p>&copy; {% now "Y" %} Routine-Timer. All rights reserved.</p>
             </footer>
