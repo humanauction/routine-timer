@@ -144,9 +144,16 @@ document.addEventListener("DOMContentLoaded", function () {
                                 
                                 if (content) {
                                     panel.innerHTML = content.outerHTML;
+                                    // Re-initialize standalone timer JS if this is the standalone-timer panel
+                                    if (target === "standalone-timer" && typeof initStandaloneTimer === "function") {
+                                        initStandaloneTimer();
+                                    }
                                 } else {
-                                    // Fallback if specific content block isn't found
                                     panel.innerHTML = html;
+                                    // Fallback: also try to initialize if standalone-timer
+                                    if (target === "standalone-timer" && typeof initStandaloneTimer === "function") {
+                                        initStandaloneTimer();
+                                    }
                                 }
                                 panel.dataset.loaded = "true";
                             })

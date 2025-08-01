@@ -169,18 +169,19 @@ class SaveRoutineView(LoginRequiredMixin, View):
 
 @method_decorator(require_http_methods(["GET", "POST"]), name='dispatch')
 class StartRoutineView(LoginRequiredMixin, View):
-    def get(self, request):
+    def get(self, request, pk, *args, **kwargs):
+        # Use pk to fetch the routine
         tasks = get_current_routine(request.session)
         total = sum(item['duration'] for item in tasks)
         return render(
-            request, 'routine/start.html',
+            request, 'routine/timer.html',
             {'tasks': tasks, 'total': total}
         )
 
     def post(self, request):
         tasks = get_current_routine(request.session)
         total = sum(item['duration'] for item in tasks)
-        return render(request, 'routine/start.html',
+        return render(request, 'routine/timer.html',
                       {'tasks': tasks, 'total': total})
 
 

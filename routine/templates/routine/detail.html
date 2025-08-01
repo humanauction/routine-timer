@@ -13,7 +13,7 @@
             <a href="{% url 'routine:list' %}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Back to Routines
             </a>
-            <a href="#" class="btn btn-primary start-routine" data-routine-id="{{ routine.id }}">
+            <a href="{% url 'routine:start' routine.id %}" class="btn btn-primary start-routine" data-routine-id="{{ routine.id }}">
                 <i class="fas fa-play"></i> Start Routine
             </a>
             <a href="{% url 'routine:delete' routine.id %}" class="btn btn-danger">
@@ -65,7 +65,7 @@
 {{ block.super }}
 <script>
     window.routineId = {{ routine.id }};
-    window.startRoutineUrl = "{% url 'routine:start' %}";
+    window.startRoutineUrl = "{% url 'routine:start' routine.id %}";
     window.timerRoutineUrl = "{% url 'routine:timer' %}";
     window.csrfToken = "{{ csrf_token }}";
 </script>

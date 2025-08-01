@@ -16,7 +16,7 @@ urlpatterns = [
     path('start/', StartRoutineView.as_view(), name='start'),
     path('detail/<int:pk>/', RoutineDetailView.as_view(), name='detail'),
     path('delete/<int:pk>/', DeleteRoutineView.as_view(), name='delete'),
-    path('timer/', TimerView.as_view(), name='timer'),
+    path('timer/', TimerView.as_view(template_name='timer.html'), name='timer'),
     path('get-current-tasks/', get_current_tasks, name='get_current_tasks'),
     path('task/remove/', remove_task_from_builder, name='remove_task'),
     path('task/reorder/', reorder_tasks_in_builder, name='reorder_tasks'),

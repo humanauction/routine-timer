@@ -164,9 +164,7 @@
         min-width: 35px;
     }
     
-    .timer-controls {
-        display: none; /* Keep this hidden on mobile */
-    }
+    
     
     .timer-actions {
         gap: 10px; /* Tighter button spacing */
