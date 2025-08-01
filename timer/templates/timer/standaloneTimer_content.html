@@ -1,0 +1,18 @@
+<div class="standalone-timer-panel">
+    <h2>Standalone Timer</h2>
+    <div class="timer-display">
+        <svg id="timer-dial" width="200" height="200" viewBox="0 0 200 200">
+            <!-- Example dial graphics -->
+            <circle cx="100" cy="100" r="90" stroke="#ccc" stroke-width="8" fill="none"/>
+            <text x="100" y="110" text-anchor="middle" font-size="2em" fill="#333">{{ time_remaining|default:"00:00" }}</text>
+        </svg>
+        <div class="timer-remaining" id="timer-remaining">
+            {{ time_remaining|default:"00:00" }}
+        </div>
+    </div>
+    <div class="timer-controls">
+        <button class="timer-btn" id="start-timer-btn">Start</button>
+        <button class="timer-btn" id="pause-timer-btn">Pause</button>
+        <button class="timer-btn" id="reset-timer-btn">Reset</button>
+    </div>
+</div>
