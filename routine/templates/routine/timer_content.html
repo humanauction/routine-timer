@@ -1,0 +1,25 @@
+<div class="routine-timer-panel">
+    <h2>{{ title }}</h2>
+    <div class="timer-info">
+        <p>Routine: <strong>{{ routine.name }}</strong></p>
+        <p>Total Time: <strong>{{ total_duration }} minutes</strong></p>
+    </div>
+    <ul class="timer-tasks">
+        {% for item in routine_items %}
+        <li>
+            <span class="task-name">{{ item.name }}</span>
+            <span class="task-duration">{{ item.duration }} min</span>
+        </li>
+        {% empty %}
+        <li>No tasks in this routine.</li>
+        {% endfor %}
+    </ul>
+    <div class="timer-controls">
+        <button class="btn btn-success" id="start-timer-btn">Start</button>
+        <button class="btn btn-secondary" id="pause-timer-btn">Pause</button>
+        <button class="btn btn-danger" id="reset-timer-btn">Reset</button>
+    </div>
+    <div class="timer-display">
+        <span id="timer-remaining">00:00</span>
+    </div>
+</div>

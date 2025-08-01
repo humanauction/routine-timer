@@ -1,0 +1,9 @@
+<div class="routine-delete-panel">
+    <h2>Delete Routine</h2>
+    <p>Are you sure you want to delete the routine <strong>{{ routine.name }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{% url 'routine:detail' routine.id %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

@@ -1,0 +1,25 @@
+<div class="routine-detail-panel">
+    <h2>{{ routine.name }}</h2>
+    <p><strong>Total Time:</strong> {{ routine.total_time }} minutes</p>
+    <ul class="routine-tasks">
+        {% for task in routine.tasks.all %}
+        <li>
+            <span class="task-name">{{ task.name }}</span>
+            <span class="task-duration">{{ task.duration }} min</span>
+        </li>
+        {% empty %}
+        <li>No tasks in this routine.</li>
+        {% endfor %}
+    </ul>
+    <div class="routine-actions">
+        <a href="{% url 'routine:builder' %}?edit={{ routine.id }}" class="btn btn-sm btn-primary">
+            Edit Routine
+        </a>
+        <a href="{% url 'routine:delete' routine.id %}" class="btn btn-sm btn-danger">
+            Delete Routine
+        </a>
+        <a href="{% url 'routine:timer' %}?routine={{ routine.id }}" class="btn btn-sm btn-success">
+            Start Timer
+        </a>
+    </div>
+</div>

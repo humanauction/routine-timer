@@ -20,12 +20,21 @@ from django.db import transaction
 
 class TimerView(TemplateView):
     template_name = 'routine/timer.html'
+    content_template_name = 'routine/timer_content.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Add any required context variables here
         context['title'] = 'Routine Timer'
         return context
+
+    # AJAX partial support here
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return render(request, self.content_template_name, context)
+        return render(request, self.template_name, context)
 
 
 @login_required
@@ -42,7 +51,10 @@ def get_current_tasks(request):
 @login_required
 def routine_list(request):
     routines = Routine.objects.filter(user=request.user)
-    return render(request, 'routine/list.html', {'routines': routines})
+    context = {'routines': routines}
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render(request, 'routine/routine_list_content.html', context)
+    return render(request, 'routine/routine_list.html', context)
 
 
 class RoutineBuilderView(LoginRequiredMixin, View):
@@ -64,7 +76,7 @@ class RoutineBuilderView(LoginRequiredMixin, View):
             'routine_name': routine_name
         }
         # AJAX partial support here
-        if request.headers.get('x-requesed-with') == 'XMLHttpRequest':
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return render(request, self.content_template_name, context)
         return render(request, self.template_name, context)
 
@@ -190,7 +202,16 @@ class RoutineDetailView(LoginRequiredMixin, View):
 class DeleteRoutineView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Routine
     template_name = 'routine/routine_confirm_delete.html'
+    content_template_name = 'routine/routine_confirm_delete_content.html'
     success_url = reverse_lazy('routine:list')
+
+    # AJAX partial support here
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        content = self.get_content_data(object=self.object)
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return render(request, self.content_template_name, content)
+        return render(request, self.template_name, content)
 
     def test_func(self):
         # Security check: only allow users to delete their own routines
