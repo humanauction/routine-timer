@@ -31,7 +31,7 @@
 .timer-centerpiece {
     position: relative;
     z-index: 2;
-    display: flex; /* Add this back */
+    display: ;
     flex-direction: column;
     align-items: center;
     justify-content: space-between; /* Changed from center to space-between */
@@ -41,6 +41,7 @@
     padding: 20px;
     min-height: 100%; /* Fill the parent */
     height: 100%;
+    overflow: visible
 }
 
 #timer-dial {
@@ -52,7 +53,7 @@
     min-height: 120px; /* Increased from 100px */
     display: block;
     margin: 0 auto;
-    flex-shrink: 0; /* Prevent shrinking */
+    flex-shrink: 1; /* Prevent shrinking */
 }
 
 .timer-remaining {
@@ -131,26 +132,34 @@
 
 /* Mobile optimizations */
 @media (max-width: 768px) {
+
+    .ac-bg{
+        margin-top: 5rem;
+        width: 100vw;
+        height: 100vh;
+    }
+
     .timer-display {
-        min-height: 350px; /* Smaller on mobile */
+        min-height: 300px; /* Smaller on mobile */
     }
     
     .timer-centerpiece {
         gap: 10px; /* Tighter spacing on mobile */
-        padding: 15px;
+        padding: 5px;
     }
     
     #timer-dial {
-        width: 60vw; /* Larger percentage on mobile */
-        height: 60vw;
-        max-width: 250px; /* Smaller max for mobile */
-        max-height: 250px;
-        min-width: 120px; /* Ensure it's not too small */
+        width: 100vw; /* Larger percentage on mobile */
+        height: 100vw;
+        max-width: 230px; /* Smaller max for mobile */
+        max-height: 230px;
+        min-width: 120px; /* not too small */
         min-height: 120px;
+        margin-bottom: 5px;
     }
     
     .timer-btn {
-        padding: 6px 10px; /* Smaller buttons on mobile */
+        padding: 10px 10px; /* Smaller buttons on mobile */
         font-size: 0.8rem;
         min-width: 35px;
     }
@@ -160,7 +169,7 @@
     }
     
     .timer-actions {
-        gap: 6px; /* Tighter button spacing */
+        gap: 10px; /* Tighter button spacing */
     }
 }
 

@@ -113,9 +113,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         case "contact":
                             url = "/contact/";
                             break;
-                      //  case "home":
-                      //      url = "/"; Home page
-                      //      break;
+                        case "home":
+                            url = "/"; // Home page
+                            break;
                         default:
                             url = "#";
                     }

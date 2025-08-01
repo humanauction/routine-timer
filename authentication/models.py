@@ -32,13 +32,13 @@ class Profile(models.Model):
 
 
 @receiver(post_save, sender=CustomUser)
-def create_user_profile(_sender, instance, created, **kwargs):
+def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
 
 
 @receiver(post_save, sender=CustomUser)
-def save_user_profile(_sender, instance, **kwargs):
+def save_user_profile(sender, instance, **kwargs):
     if hasattr(instance, 'profile'):
         instance.profile.save()
 
