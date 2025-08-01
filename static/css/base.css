@@ -289,7 +289,9 @@ footer {
 
     main, .main-content {
         flex: 1 1 auto;
+        display: none;
     }
+    
     footer {
         margin-top: auto;
     }

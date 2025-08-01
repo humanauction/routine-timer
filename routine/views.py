@@ -53,8 +53,8 @@ def routine_list(request):
     routines = Routine.objects.filter(user=request.user)
     context = {'routines': routines}
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        return render(request, 'routine/routine_list_content.html', context)
-    return render(request, 'routine/routine_list.html', context)
+        return render(request, 'routine/list_content.html', context)
+    return render(request, 'routine/list.html', context)
 
 
 class RoutineBuilderView(LoginRequiredMixin, View):
