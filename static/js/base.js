@@ -20,13 +20,13 @@ document.addEventListener("DOMContentLoaded", function () {
             // Store preference in localStorage
             const isCollapsed =
                 gridContainer.classList.contains("nav-collapsed");
-            localStorage.setItem("navCollapsed", isCollapsed);
+            localStorage.setItem("navCollapsed", String(isCollapsed));
         });
     }
 
     // Restore collapsed state from localStorage
     const savedCollapsedState = localStorage.getItem("navCollapsed");
-    if (savedCollapsedState === "true") {
+    if (savedCollapsedState === "true" && gridContainer) {
         gridContainer.classList.add("nav-collapsed");
     }
 
@@ -49,16 +49,27 @@ document.addEventListener("DOMContentLoaded", function () {
         button.addEventListener("click", function () {
             const message = this.parentElement;
             message.style.opacity = "0";
+            const computedStyle = window.getComputedStyle(message);
+            let duration = computedStyle.transitionDuration || "0s";
+            // Convert duration to milliseconds
+            let ms = 0;
+            if (duration.endsWith("ms")) {
+                ms = parseFloat(duration);
+            } else if (duration.endsWith("s")) {
+                ms = parseFloat(duration) * 1000;
+            }
             setTimeout(() => {
                 message.style.display = "none";
-            }, 300);
+            }, ms);
         });
     });
 
-    document.querySelectorAll('.nav-item[data-panel]').forEach(item => {
-        item.addEventListener('click', function(e) {
-            // Only apply on mobile
-            if (window.innerWidth > 768) return;
+    const navElement = document.querySelector('.main-nav');
+    if (navElement) {
+        navElement.querySelectorAll('.nav-item[data-panel]').forEach(item => {
+            item.addEventListener('click', function(e) {
+                // Only apply on mobile
+                if (window.innerWidth > 768) return;
 
             e.preventDefault();
             
@@ -68,7 +79,10 @@ document.addEventListener("DOMContentLoaded", function () {
             
             // If the panel is already active, just follow the link
             if (panel && panel.classList.contains('active')) {
-                window.location.href = this.getAttribute('href');
+                const href = this.getAttribute('href');
+                if (href) {
+                    window.location.href = href;
+                }
                 return;
             }
             
@@ -83,11 +97,8 @@ document.addEventListener("DOMContentLoaded", function () {
             
             if (panel) {
                 panel.classList.add('active');
-                
-                // Load content if not already loaded
-                if (!panel.dataset.loaded) {
                     // Map panel names to URLs
-                    let url = "#";
+                    let url = null;
                     switch (target) {
                         case "standalone-timer":
                             url = "/timer/standalone/";
@@ -111,16 +122,15 @@ document.addEventListener("DOMContentLoaded", function () {
                             url = "/accounts/login/";
                             break;
                         case "contact":
-                            url = "/contact/";
+                            url = "/home/contact/";
                             break;
                         case "home":
                             url = "/"; // Home page
                             break;
                         default:
-                            url = "#";
+                            url = null;
                     }
-                    
-                    if (url !== "#") {
+                    if (url) {
                         fetch(url)
                             .then(res => res.text())
                             .then(html => {
@@ -139,10 +149,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                     panel.innerHTML = html;
                                 }
                                 panel.dataset.loaded = "true";
+                            })
+                            .catch(error => {
+                                console.error("Fetch error:", error);
+                                panel.dataset.loaded = "true";
                             });
                     }
                 }
-            }
+            });
         });
-    });
+    }
 });

@@ -31,7 +31,7 @@
 .timer-centerpiece {
     position: relative;
     z-index: 2;
-    display: ;
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between; /* Changed from center to space-between */
