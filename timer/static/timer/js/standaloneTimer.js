@@ -1,20 +1,19 @@
 document.addEventListener('DOMContentLoaded', function () {
+    initStandaloneTimer();
+});
+
+function initStandaloneTimer() {
     // --- CONFIG ---
     const MAX_MINUTES = 90;
     const MIN_MINUTES = 1;
     const DIAL_RADIUS = 120;
     const CENTER = 120;
-    // Default colors for slices
     const COLORS = [
-        "#3f51b5",
-        "#f44336",
-        "#4caf50",
-        "#ff9800",
-        "#00bcd4",
-        "#ffc107",
-        "#673ab7",
+        "#3f51b5", "#f44336", "#4caf50", "#ff9800",
+        "#00bcd4", "#ffc107", "#673ab7"
     ];
 
+    // --- ELEMENTS ---
     const colorPicker = document.getElementById('color-picker');
     let selectedColor = COLORS[0];
     if (colorPicker) {
@@ -25,14 +24,13 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- STATE ---
-    let totalMinutes = 0;
+    let totalMinutes = MIN_MINUTES;
     let remainingSeconds = totalMinutes * 60;
     let timer = null;
     let isRunning = false;
     let slices = [];
+    let sliceSize = 1; // default 1 minute per slice
 
-    // --- ELEMENTS ---
     const timeDisplay = document.getElementById('time-remaining-display');
     const dial = document.getElementById('timer-dial');
     const incrementBtns = [
@@ -52,9 +50,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const totalDurationInput = document.getElementById('total-duration-input');
     const sliceSizeSelect = document.getElementById('slice-size-select');
 
-    // --- NEW: Slice Size State ---
-    let sliceSize = 1; // default 1 minute per slice
-
     // --- UTILS ---
     function clamp(val, min, max) {
         return Math.max(min, Math.min(max, val));
@@ -64,10 +59,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const s = (sec % 60).toString().padStart(2, '0');
         return `${m}:${s}`;
     }
-
-    // --- SVG PIE SLICE GENERATOR ---
+    function polarToCartesian(cx, cy, r, angleInDegrees) {
+        const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+        return {
+            x: cx + (r * Math.cos(angleInRadians)),
+            y: cy + (r * Math.sin(angleInRadians))
+        };
+    }
     function describeArc(cx, cy, r, startAngle, endAngle) {
-        // MODIFIED VERSION of https://stackoverflow.com/a/18473154
         const start = polarToCartesian(cx, cy, r, endAngle);
         const end = polarToCartesian(cx, cy, r, startAngle);
         const angleDiff = ((endAngle - startAngle + 360) % 360);
@@ -79,15 +78,9 @@ document.addEventListener('DOMContentLoaded', function () {
             "Z"
         ].join(" ");
     }
-    function polarToCartesian(cx, cy, r, angleInDegrees) {
-        const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
-        return {
-            x: cx + (r * Math.cos(angleInRadians)),
-            y: cy + (r * Math.sin(angleInRadians))
-        };
-    }
 
     function drawDial() {
+        if (!dial) return;
         dial.innerHTML = '';
         slices = [];
         const numSlices = Math.ceil(totalMinutes / sliceSize);
@@ -108,47 +101,42 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateDial() {
-    const numSlices = slices.length;
-    const sliceSeconds = sliceSize * 60;
-    let completed = Math.floor((totalMinutes * 60 - remainingSeconds) / sliceSeconds);
+        const numSlices = slices.length;
+        const sliceSeconds = sliceSize * 60;
+        let completed = Math.floor((totalMinutes * 60 - remainingSeconds) / sliceSeconds);
 
-    for (let i = 0; i < numSlices; i++) {
-        slices[i].classList.remove("timer-slice-active", "timer-slice-completed");
-
-        if (i < completed) {
-            // Completed (burgundy with low opacity)
-            slices[i].setAttribute("fill", "#8b1538");
-            slices[i].setAttribute("fill-opacity", "0.5");
-            slices[i].setAttribute("stroke", "#ffffff");
-            slices[i].setAttribute("stroke-width", "1");
-            slices[i].classList.add("timer-slice-completed");
-        } else if (i === completed && isRunning) {
-            // Active (white with red outline)
-            slices[i].setAttribute("fill", "#f0f2f7");
-            slices[i].setAttribute("fill-opacity", "1.0");
-            slices[i].setAttribute("stroke", "#c41e3a");
-            slices[i].setAttribute("stroke-width", "2");
-            slices[i].classList.add("timer-slice-active");
-        } else {
-            // Not started (light gray)
-            slices[i].setAttribute("fill", "#ffffff");
-            slices[i].setAttribute("fill-opacity", "1.0");
-            slices[i].setAttribute("stroke", "#e6e8ed");
-            slices[i].setAttribute("stroke-width", "1");
+        for (let i = 0; i < numSlices; i++) {
+            slices[i].classList.remove("timer-slice-active", "timer-slice-completed");
+            if (i < completed) {
+                slices[i].setAttribute("fill", "#8b1538");
+                slices[i].setAttribute("fill-opacity", "0.5");
+                slices[i].setAttribute("stroke", "#ffffff");
+                slices[i].setAttribute("stroke-width", "1");
+                slices[i].classList.add("timer-slice-completed");
+            } else if (i === completed && isRunning) {
+                slices[i].setAttribute("fill", "#f0f2f7");
+                slices[i].setAttribute("fill-opacity", "1.0");
+                slices[i].setAttribute("stroke", "#c41e3a");
+                slices[i].setAttribute("stroke-width", "2");
+                slices[i].classList.add("timer-slice-active");
+            } else {
+                slices[i].setAttribute("fill", "#ffffff");
+                slices[i].setAttribute("fill-opacity", "1.0");
+                slices[i].setAttribute("stroke", "#e6e8ed");
+                slices[i].setAttribute("stroke-width", "1");
+            }
         }
     }
-}
 
-    // --- TIMER LOGIC ---
     function setTime(minutes) {
         totalMinutes = clamp(minutes, MIN_MINUTES, MAX_MINUTES);
-        totalDurationInput.value = totalMinutes;
+        if (totalDurationInput) totalDurationInput.value = totalMinutes;
         remainingSeconds = totalMinutes * 60;
         updateDisplay();
         drawDial();
     }
     function updateDisplay() {
-        timeDisplay.textContent = formatTime(remainingSeconds);
+        if (timeDisplay) timeDisplay.textContent = formatTime(remainingSeconds);
         updateDial();
     }
     function tick() {
@@ -164,59 +152,59 @@ document.addEventListener('DOMContentLoaded', function () {
         isRunning = true;
         timer = setInterval(tick, 1000);
         updateDial();
-        startBtn.disabled = true;
-        pauseBtn.disabled = false;
-        stopBtn.disabled = false;
+        if (startBtn) startBtn.disabled = true;
+        if (pauseBtn) pauseBtn.disabled = false;
+        if (stopBtn) stopBtn.disabled = false;
     }
     function pauseTimer() {
         if (!isRunning) return;
         isRunning = false;
         clearInterval(timer);
         updateDial();
-        startBtn.disabled = false;
-        pauseBtn.disabled = true;
+        if (startBtn) startBtn.disabled = false;
+        if (pauseBtn) pauseBtn.disabled = true;
     }
     function stopTimer() {
         isRunning = false;
         clearInterval(timer);
         remainingSeconds = totalMinutes * 60;
         updateDisplay();
-        startBtn.disabled = false;
-        pauseBtn.disabled = true;
-        stopBtn.disabled = true;
+        if (startBtn) startBtn.disabled = false;
+        if (pauseBtn) pauseBtn.disabled = true;
+        if (stopBtn) stopBtn.disabled = true;
     }
     function resetTimer() {
         stopTimer();
-        setTime(1);
+        setTime(totalMinutes);
     }
 
     // --- EVENT LISTENERS ---
     incrementBtns.forEach(btn => {
-        btn.el.addEventListener('click', () => {
+        if (btn.el) btn.el.addEventListener('click', () => {
             setTime(totalMinutes + btn.val);
         });
     });
     decrementBtns.forEach(btn => {
-        btn.el.addEventListener('click', () => {
+        if (btn.el) btn.el.addEventListener('click', () => {
             setTime(totalMinutes + btn.val);
         });
     });
-    startBtn.addEventListener('click', startTimer);
-    pauseBtn.addEventListener('click', pauseTimer);
-    stopBtn.addEventListener('click', stopTimer);
-    resetBtn.addEventListener('click', resetTimer);
-    totalDurationInput.addEventListener('change', function () {
+    if (startBtn) startBtn.addEventListener('click', startTimer);
+    if (pauseBtn) pauseBtn.addEventListener('click', pauseTimer);
+    if (stopBtn) stopBtn.addEventListener('click', stopTimer);
+    if (resetBtn) resetBtn.addEventListener('click', resetTimer);
+    if (totalDurationInput) totalDurationInput.addEventListener('change', function () {
         setTime(parseInt(this.value, 10));
     });
-    sliceSizeSelect.addEventListener('change', function () {
+    if (sliceSizeSelect) sliceSizeSelect.addEventListener('change', function () {
         sliceSize = parseInt(this.value, 10);
         drawDial();
     });
 
     // --- INIT ---
+    if (sliceSizeSelect) sliceSize = parseInt(sliceSizeSelect.value, 10);
     setTime(2);
-    sliceSize = parseInt(sliceSizeSelect.value, 10);
     drawDial();
-    pauseBtn.disabled = true;
-    stopBtn.disabled = true;
-});
+    if (pauseBtn) pauseBtn.disabled = true;
+    if (stopBtn) stopBtn.disabled = true;
+}

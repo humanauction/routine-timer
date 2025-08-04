@@ -77,7 +77,7 @@
             {% csrf_token %} 
             <button type="submit" class="btn btn-primary">Save Routine</button>
         </form>
-        <form action="{% url 'routine:start' %}" method="post" class="start-form">
+        <form action="{% url 'routine:start_builder' %}" method="post" class="start-form">
             {% csrf_token %}
             <button type="submit" class="btn btn-success">Start Routine</button>
         </form>
@@ -89,8 +89,7 @@
 {{ block.super }}
 <script>
 // Set global variables for AJAX requests
-window.startRoutineUrl = "{% url 'routine:start' %}";
-window.timerRoutineUrl = "{% url 'routine:timer' %}";
+window.startRoutineUrl = "{% url 'routine:start_builder' %}";
 window.csrfToken = "{{ csrf_token }}";
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -301,6 +300,9 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    // Set the timer URL using the new routine ID
+                    window.timerRoutineUrl = `/routine/timer/${data.routine_id}/`;
+                    // Optionally, redirect:
                     window.location.href = window.timerRoutineUrl;
                 } else {
                     alert('Error starting routine: ' + data.error);

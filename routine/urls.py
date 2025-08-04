@@ -4,7 +4,7 @@ from .views import (
     routine_list, TimerView, DeleteRoutineView,
     get_current_tasks, StartRoutineView,
     remove_task_from_builder, reorder_tasks_in_builder,
-    remove_routine_item, reorder_routine_items
+    remove_routine_item, reorder_routine_items, StartRoutineBuilderView
 )
 
 app_name = 'routine'
@@ -12,11 +12,13 @@ app_name = 'routine'
 urlpatterns = [
     path('', routine_list, name='list'),
     path('builder/', RoutineBuilderView.as_view(), name='builder'),
+    path('start-builder/', StartRoutineBuilderView.as_view(),
+         name='start_builder'),
     path('save/', SaveRoutineView.as_view(), name='save'),
-    path('start/', StartRoutineView.as_view(), name='start'),
+    path('start/<int:pk>/', StartRoutineView.as_view(), name='start'),
     path('detail/<int:pk>/', RoutineDetailView.as_view(), name='detail'),
     path('delete/<int:pk>/', DeleteRoutineView.as_view(), name='delete'),
-    path('timer/', TimerView.as_view(template_name='timer.html'), name='timer'),
+    path('timer/<int:routine_pk>/', TimerView.as_view(), name='timer'),
     path('get-current-tasks/', get_current_tasks, name='get_current_tasks'),
     path('task/remove/', remove_task_from_builder, name='remove_task'),
     path('task/reorder/', reorder_tasks_in_builder, name='reorder_tasks'),

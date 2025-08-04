@@ -18,7 +18,7 @@
         <a href="{% url 'routine:delete' routine.id %}" class="btn btn-sm btn-danger">
             Delete Routine
         </a>
-        <a href="{% url 'routine:timer' %}?routine={{ routine.id }}" class="btn btn-sm btn-success">
+        <a href="{% url 'routine:timer' routine.id %}?routine={{ routine.id }}" class="btn btn-sm btn-success">
             Start Timer
         </a>
     </div>

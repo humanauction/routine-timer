@@ -132,6 +132,13 @@
 
 /* Mobile optimizations */
 @media (max-width: 768px) {
+    .ac-bg,
+    .ac-bg-svg,
+    .timer-display::before {
+        display: none !important;
+        background: none !important;
+    }
+
 
     .ac-bg{
         margin-top: 5rem;

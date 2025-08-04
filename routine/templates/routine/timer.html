@@ -79,6 +79,9 @@
 {% endblock %}
 <!-- Timer script -->
 {% block extra_js %}
+<!-- Pass the API URL to JS using a hidden element -->
+<input type="hidden" id="get-tasks-url" value="{% url 'routine:get_current_tasks' %}" />
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Timer elements
@@ -109,18 +112,19 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentSeconds = 0;
     let tasks = [];
     let currentTaskIndex = -1;
-    let totalDuration = 0;
-    
-    // Load routine tasks if they exist in session
     function loadTasks() {
-        // For now, fetch from an API endpoint or use example data
-        fetch('{% url "routine:get_current_tasks" %}')
+        // Get the API endpoint URL from the hidden input
+        const apiUrl = document.getElementById('get-tasks-url').value;
+        fetch(apiUrl)
             .then(response => response.json())
             .then(data => {
                 if (data.tasks && data.tasks.length > 0) {
                     tasks = data.tasks;
                     totalDuration = data.total || 0;
                     updateTasksDisplay();
+                        tasks = data.tasks;
+                        totalDuration = data.total || 0;
+                        updateTasksDisplay();
                 } else {
                     // Example data if no tasks are found
                     tasks = [
