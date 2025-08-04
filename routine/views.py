@@ -148,10 +148,19 @@ class RoutineBuilderView(LoginRequiredMixin, View):
 class StartRoutineBuilderView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         # Save session routine as real Routine, return its ID
-        routine_name = request.POST.get('routine_name') or request.body and json.loads(request.body).get('routine_name')
+        routine_name = (
+            request.POST.get('routine_name')
+            or (
+                request.body
+                and json.loads(request.body).get('routine_name')
+            )
+        )
         tasks = get_current_tasks(request.session)
         if not tasks:
-            return JsonResponse({'success': False, 'error': 'No tasks in routine'}, status=400)
+            return JsonResponse(
+                {'success': False, 'error': 'No tasks in routine'},
+                status=400
+            )
         routine = save_routine_to_db(request.user, routine_name, tasks)
         clear_routine(request.session)
         return JsonResponse({'success': True, 'routine_id': routine.pk})
@@ -183,22 +192,30 @@ class SaveRoutineView(LoginRequiredMixin, View):
 @method_decorator(require_http_methods(["GET", "POST"]), name='dispatch')
 class StartRoutineView(LoginRequiredMixin, View):
     def get(self, request, pk=None, *args, **kwargs):
-        # Fetch the routine by pk and user
         routine = get_object_or_404(Routine, pk=pk, user=request.user)
         routine_items = routine.items.all().order_by('order')
         total = sum(item.duration for item in routine_items)
+        # Serialize tasks for JS
+        tasks = [
+            {'task': item.task, 'duration': item.duration}
+            for item in routine_items
+        ]
         return render(
             request, 'routine/timer.html',
-            {'routine': routine, 'tasks': routine_items, 'total': total}
+            {'routine': routine, 'tasks': tasks, 'total': total}
         )
 
     def post(self, request, pk=None, *args, **kwargs):
         routine = get_object_or_404(Routine, pk=pk, user=request.user)
         routine_items = routine.items.all().order_by('order')
         total = sum(item.duration for item in routine_items)
+        tasks = [
+            {'task': item.task, 'duration': item.duration}
+            for item in routine_items
+        ]
         return render(
             request, 'routine/timer.html',
-            {'routine': routine, 'tasks': routine_items, 'total': total}
+            {'routine': routine, 'tasks': tasks, 'total': total}
         )
 
 

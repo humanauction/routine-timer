@@ -72,16 +72,23 @@
         </ul>
     </div>
 </div>
-
 <!-- Sound files -->
 <audio id="task-complete-sound" src="{% static 'sounds/complete.mp3' %}" preload="auto"></audio>
 <audio id="timer-finish-sound" src="{% static 'sounds/finish.mp3' %}" preload="auto"></audio>
+{% if tasks %}
+<script id="routine-tasks-data" type="application/json">
+{{ tasks|json_script:"routine-tasks-data" }}
+</script>
+<script>
+    window.routineTotal = {{ total|default:0 }};
+</script>
+{% endif %}
 {% endblock %}
 <!-- Timer script -->
 {% block extra_js %}
-<!-- Pass the API URL to JS using a hidden element -->
+<!-- Pass the API URL to JS using a hidden element 
 <input type="hidden" id="get-tasks-url" value="{% url 'routine:get_current_tasks' %}" />
-
+-->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Timer elements
@@ -111,7 +118,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let totalSeconds = 0;
     let currentSeconds = 0;
     let tasks = [];
+    let totalDuration = 0;
     let currentTaskIndex = -1;
+
     function loadTasks() {
         // Get the API endpoint URL from the hidden input
         const apiUrl = document.getElementById('get-tasks-url').value;
@@ -362,8 +371,14 @@ document.addEventListener('DOMContentLoaded', function() {
     resetBtn.addEventListener('click', resetTimer);
     
     // Initialize
-    loadTasks();
-    resetTimer();
+    const routineTasksScript = document.getElementById('routine-tasks-data');
+    if (routineTasksScript && routineTasksScript.textContent.trim()) {
+        tasks = JSON.parse(routineTasksScript.textContent);
+        totalDuration = window.routineTotal || 0;
+        resetTimer();
+    } else {
+        loadTasks();
+    }
 });
 </script>
 {% endblock %}
