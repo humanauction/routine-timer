@@ -80,6 +80,8 @@
 <script>
     window.routineTotal = {{ total|default:0 }};
 </script>
+{% else %}
+<input type="hidden" id="get-tasks-url" value="{% url 'routine:get_current_tasks' %}" />
 {% endif %}
 {% endblock %}
 <!-- Timer script -->

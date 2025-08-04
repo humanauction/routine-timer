@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (startButton) {
         startButton.addEventListener('click', function(e) {
             e.preventDefault();
-            
+
             fetch(window.startRoutineUrl, {
                 method: 'POST',
                 headers: {
@@ -295,17 +295,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     'Content-Type': 'application/json'
                 },
                 credentials: 'same-origin',
-                body: JSON.stringify({ routine_name: routineNameInput.value })
+                body: JSON.stringify({
+                    routine_name: document.getElementById('routine-name').value
+                })
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    // Set the timer URL using the new routine ID
-                    window.timerRoutineUrl = `/routine/timer/${data.routine_id}/`;
-                    // Optionally, redirect:
-                    window.location.href = window.timerRoutineUrl;
+                if (data.success && data.routine_id) {
+                    window.location.href = `/routine/timer/${data.routine_id}/`;
                 } else {
-                    alert('Error starting routine: ' + data.error);
+                    alert('Error starting routine: ' + (data.error || 'Unknown error'));
                 }
             })
             .catch(error => {

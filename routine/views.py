@@ -155,7 +155,7 @@ class StartRoutineBuilderView(LoginRequiredMixin, View):
                 and json.loads(request.body).get('routine_name')
             )
         )
-        tasks = get_current_tasks(request.session)
+        tasks = get_current_routine(request.session)
         if not tasks:
             return JsonResponse(
                 {'success': False, 'error': 'No tasks in routine'},
@@ -305,7 +305,7 @@ def reorder_tasks_in_builder(request):
                 )
     return JsonResponse(
         {'success': False, 'error': 'Invalid method'}, status=405
-        )
+    )
 
 
 @login_required
@@ -386,3 +386,18 @@ def reorder_routine_items(request, routine_pk):
         {'success': False, 'error': 'Invalid method'},
         status=405
     )
+
+
+def timer(request, routine_pk):
+    routine = get_object_or_404(Routine, pk=routine_pk, user=request.user)
+    items = routine.items.all().order_by('order')
+    tasks = [
+        {'task': item.task, 'duration': item.duration}
+        for item in items
+    ]
+    total = sum(item['duration'] for item in tasks)
+    return render(request, 'routine/timer.html', {
+        'routine': routine,
+        'tasks': tasks,
+        'total': total,
+    })
