@@ -76,9 +76,7 @@
 <audio id="task-complete-sound" src="{% static 'sounds/complete.mp3' %}" preload="auto"></audio>
 <audio id="timer-finish-sound" src="{% static 'sounds/finish.mp3' %}" preload="auto"></audio>
 {% if tasks %}
-<script id="routine-tasks-data" type="application/json">
 {{ tasks|json_script:"routine-tasks-data" }}
-</script>
 <script>
     window.routineTotal = {{ total|default:0 }};
 </script>
