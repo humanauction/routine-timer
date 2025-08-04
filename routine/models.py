@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 
 
@@ -48,3 +48,15 @@ class RoutineItem(models.Model):
             f"in {self.routine.name})",
             f"{self.task} ({self.duration} min)"
         )
+
+
+class TimerState(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    routine = models.ForeignKey(Routine, on_delete=models.CASCADE)
+    current_task_index = models.PositiveIntegerField(default=0)
+    current_seconds = models.PositiveIntegerField(default=0)
+    is_paused = models.BooleanField(default=True)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'TimerState for {self.user.username} - {self.routine.name}'

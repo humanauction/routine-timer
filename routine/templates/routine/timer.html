@@ -303,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isPaused) {
             isPaused = false;
             
-            if (currentTaskIndex === -1) {
+            if currentTaskIndex === -1 {
                 startNextTask();
             }
             
@@ -364,6 +364,22 @@ document.addEventListener('DOMContentLoaded', function() {
         updateTasksDisplay();
     }
     
+    // Save timer state
+    function saveTimerState() {
+        fetch(`/routine/timer/${routineId}/state/save/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': window.csrfToken,
+            },
+            body: JSON.stringify({
+                current_task_index: currentTaskIndex,
+                current_seconds: currentSeconds,
+                is_paused: isPaused
+            })
+        });
+    }
+    
     // Event listeners
     startBtn.addEventListener('click', startTimer);
     pauseBtn.addEventListener('click', pauseTimer);
@@ -379,6 +395,19 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         loadTasks();
     }
+    
+    // Fetch routine state
+    const routineId = '{{ routine.id }}';  // Assuming routine ID is available in the template
+    fetch(`/routine/timer/${routineId}/state/`)
+      .then(res => res.json())
+      .then(state => {
+          currentTaskIndex = state.current_task_index;
+          currentSeconds = state.current_seconds;
+          isPaused = state.is_paused;
+          // Optionally, adjust for elapsed time using state.last_updated
+          updateTimerDisplay();
+          updateTasksDisplay();
+      });
 });
 </script>
 {% endblock %}
