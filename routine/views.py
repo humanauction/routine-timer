@@ -244,10 +244,10 @@ class DeleteRoutineView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     # AJAX partial support here
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        content = self.get_content_data(object=self.object)
+        context = self.get_context_data(object=self.object)
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return render(request, self.content_template_name, content)
-        return render(request, self.template_name, content)
+            return render(request, self.content_template_name, context)
+        return render(request, self.template_name, context)
 
     def test_func(self):
         # Security check: only allow users to delete their own routines
