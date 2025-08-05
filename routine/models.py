@@ -51,7 +51,10 @@ class RoutineItem(models.Model):
 
 
 class TimerState(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
     routine = models.ForeignKey(Routine, on_delete=models.CASCADE)
     current_task_index = models.PositiveIntegerField(default=0)
     current_seconds = models.PositiveIntegerField(default=0)

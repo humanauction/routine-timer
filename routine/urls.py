@@ -25,6 +25,14 @@ urlpatterns = [
     path('item/<int:pk>/remove/', remove_routine_item, name='remove_item'),
     path('<int:routine_pk>/reorder/',
          reorder_routine_items, name='reorder_items'),
-    path('timer/<int:routine_pk>/state/', views.get_timer_state, name='get_timer_state'),
-    path('timer/<int:routine_pk>/state/save/', views.save_timer_state, name='save_timer_state'),
+    path(
+        'timer/<int:routine_pk>/state/',
+        views.get_timer_state,
+        name='get_timer_state'
+    ),
+    path(
+        'timer/<int:routine_pk>/state/save/',
+        views.save_timer_state,
+        name='save_timer_state'
+        ),
 ]

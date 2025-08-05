@@ -9,24 +9,35 @@ from .services import (
     get_routine_name, set_routine_name, reorder_tasks, remove_task
 )
 from .models import Routine, RoutineItem, TimerState
-from django.views.generic import TemplateView, DeleteView
+from django.views.generic import TemplateView, DeleteView, DetailView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods, require_POST
+from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 from django.db import transaction
 
 
-class TimerView(TemplateView):
+class TimerView(DetailView):
+    model = Routine
     template_name = 'routine/timer.html'
     content_template_name = 'routine/timer_content.html'
+    context_object_name = 'routine'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Add any required context variables here
+        # Add more context variables here later
+        items = self.object.items.all().order_by('order')
+        tasks = [
+            {'task': item.task, 'duration': item.duration}
+            for item in items
+        ]
+        total = sum(item['duration'] for item in tasks)
         context['title'] = 'Routine Timer'
+        context['tasks'] = tasks
+        context['total'] = total
+        context['routine'] = self.object
         return context
 
     # AJAX partial support here
@@ -404,7 +415,29 @@ def timer(request, routine_pk):
     })
 
 
-@csrf_exempt
+@csrf_protect
+def get_timer_state(request, routine_pk):
+    try:
+        state = TimerState.objects.get(
+            user=request.user,
+            routine_id=routine_pk
+        )
+        return JsonResponse({
+            'current_task_index': state.current_task_index,
+            'current_seconds': state.current_seconds,
+            'is_paused': state.is_paused,
+            'last_updated': state.last_updated.timestamp(),
+        })
+    except TimerState.DoesNotExist:
+        return JsonResponse({
+            'current_task_index': 0,
+            'current_seconds': 0,
+            'is_paused': True
+        })
+
+
+@csrf_protect
+@require_POST
 def save_timer_state(request, routine_pk):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -416,16 +449,3 @@ def save_timer_state(request, routine_pk):
         state.is_paused = data['is_paused']
         state.save()
         return JsonResponse({'success': True})
-
-
-def get_timer_state(request, routine_pk):
-    try:
-        state = TimerState.objects.get(user=request.user, routine_id=routine_pk)
-        return JsonResponse({
-            'current_task_index': state.current_task_index,
-            'current_seconds': state.current_seconds,
-            'is_paused': state.is_paused,
-            'last_updated': state.last_updated.timestamp(),
-        })
-    except TimerState.DoesNotExist:
-        return JsonResponse({'current_task_index': 0, 'current_seconds': 0, 'is_paused': True})
