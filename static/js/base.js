@@ -176,4 +176,49 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
     });
+
+    // Only run on mobile
+    if (window.innerWidth > 768) return;
+
+    document.querySelectorAll('.nav-item[data-panel]').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            // Remove .active from all nav-panels and nav-items
+            document.querySelectorAll('.nav-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+
+            // Add .active to clicked nav-item
+            this.classList.add('active');
+
+            // Find the corresponding panel
+            const panelId = 'panel-' + this.getAttribute('data-panel');
+            const panel = document.getElementById(panelId);
+
+            if (panel) {
+                panel.classList.add('active');
+                // Only fetch if not already loaded
+                if (!panel.dataset.loaded) {
+                    fetch(this.href, {
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    })
+                        .then(res => res.text())
+                        .then(html => {
+                            // Try to extract main content from AJAX response
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = html;
+                            // Try to find a main content block (customize as needed)
+                            const content = tempDiv.querySelector('.standalone-timer, .routine-builder, .panel-content, main > div');
+                            panel.innerHTML = content ? content.outerHTML : html;
+                            panel.dataset.loaded = "true";
+                            // Optionally, re-init any JS for loaded content
+                            if (panelId === "panel-standalone-timer" && typeof initStandaloneTimer === "function") {
+                                initStandaloneTimer();
+                            }
+                        });
+                }
+            }
+        });
+    });
 });
