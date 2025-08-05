@@ -63,7 +63,8 @@ def get_current_tasks(request):
 @login_required
 def routine_list(request):
     routines = Routine.objects.filter(user=request.user)
-    context = {'routines': routines}
+    routine = routines.order_by('-updated_at').first() if routines.exists() else None
+    context = {'routines': routines, 'routine': routine}
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return render(request, 'routine/list_content.html', context)
     return render(request, 'routine/list.html', context)
