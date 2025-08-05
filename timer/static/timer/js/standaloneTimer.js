@@ -33,6 +33,9 @@ function initStandaloneTimer() {
 
     const timeDisplay = document.getElementById('time-remaining-display');
     const dial = document.getElementById('timer-dial');
+    if (dial) {
+        dial.setAttribute('viewBox', '0 0 240 240');
+    }
     const incrementBtns = [
         { el: document.getElementById('increment-1'), val: 1 },
         { el: document.getElementById('increment-5'), val: 5 },
