@@ -25,6 +25,10 @@ class TimerView(DetailView):
     content_template_name = 'routine/timer_content.html'
     context_object_name = 'routine'
 
+    def get_object(self, queryset=None):
+        routine_pk = self.kwargs.get('routine_pk')
+        return get_object_or_404(Routine, pk=routine_pk)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Add more context variables here later
@@ -43,6 +47,7 @@ class TimerView(DetailView):
     # AJAX partial support here
 
     def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
         context = self.get_context_data(**kwargs)
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return render(request, self.content_template_name, context)

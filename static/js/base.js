@@ -69,8 +69,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 item.addEventListener('click', function (e) {
                     // Only apply on mobile
                     if (window.innerWidth > 768) return;
-
                     e.preventDefault();
+                    e.stopImmediatePropagation();
+
 
                     // Get the panel associated with this item
                     const target = this.getAttribute('data-panel');
