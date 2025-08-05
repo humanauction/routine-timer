@@ -222,6 +222,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     currentSeconds--;
                     updateTimerDisplay();
                     saveTimerState();
+                    if (currentSeconds === 0) {
+                        completeCurrentTask();
+                    }
                 }
             }, 1000);
 
