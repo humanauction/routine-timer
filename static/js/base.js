@@ -122,4 +122,52 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     }
+
+    // Routine name input handler
+    const routineNameInput = document.getElementById('routineName');
+    if (routineNameInput) {
+        routineNameInput.addEventListener('input', function () {
+            const value = this.value.trim();
+            const submitButton = document.getElementById('submitRoutine');
+            if (submitButton) {
+                // Enable or disable the button based on input
+                submitButton.disabled = value.length === 0;
+            }
+        });
+    }
+
+    // Submit routine form
+    const routineForm = document.getElementById('routineForm');
+    if (routineForm) {
+        routineForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const routineName = formData.get('routine_name');
+
+            // Basic validation
+            if (!routineName) {
+                alert('Routine name is required');
+                return;
+            }
+
+            // AJAX request to save the routine
+            fetch(this.action, {
+                method: this.method,
+                body: JSON.stringify({
+                    routine_name: routineNameInput.value
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    // Optionally, update the UI or redirect
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        });
+    }
 });

@@ -169,13 +169,17 @@ class RoutineBuilderView(LoginRequiredMixin, View):
 class StartRoutineBuilderView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         # Save session routine as real Routine, return its ID
-        routine_name = (
-            request.POST.get('routine_name')
-            or (
-                request.body
-                and json.loads(request.body).get('routine_name')
-            )
-        )
+        if request.headers.get('Content-Type') == 'application/json':
+            try:
+                data = json.loads(request.body)
+                routine_name = data.get('routine_name')
+            except Exception:
+                return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
+        else:
+            routine_name = request.POST.get('routine_name')
+        if not routine_name:
+            routine_name = 'My Routine'
+
         tasks = get_current_routine(request.session)
         if not tasks:
             return JsonResponse(

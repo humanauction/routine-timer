@@ -157,7 +157,7 @@ function initRoutineBuilder() {
                 },
                 credentials: 'same-origin',
                 body: JSON.stringify({
-                    routine_name: routineNameInput?.value
+                    routine_name: routineNameInput.value
                 })
             })
                 .then(response => response.json())
