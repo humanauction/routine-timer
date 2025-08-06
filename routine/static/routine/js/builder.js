@@ -143,7 +143,7 @@ function initRoutineBuilder() {
         button.addEventListener('click', handleDeleteTask);
     });
 
-    // Start routine button
+    // Start routine button (AJAX inject timer panel)
     const startButton = document.querySelector('.btn.btn-success');
     if (startButton) {
         startButton.addEventListener('click', function (e) {
@@ -163,7 +163,34 @@ function initRoutineBuilder() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.routine_id) {
-                        window.location.href = `/routine/timer/${data.routine_id}/`;
+                        // AJAX inject timer panel instead of redirect
+                        const timerNavItem = document.querySelector('.nav-item[data-panel="timer"]');
+                        const timerPanel = document.getElementById('panel-timer');
+                        if (timerNavItem && timerPanel) {
+                            const timerUrl = `/routine/timer/${data.routine_id}/`;
+                            timerNavItem.dataset.reload = "true";
+                            fetch(timerUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                                .then(res => res.text())
+                                .then(html => {
+                                    const tempDiv = document.createElement('div');
+                                    tempDiv.innerHTML = html;
+                                    const content =
+                                        tempDiv.querySelector('.standalone-timer') ||
+                                        tempDiv.querySelector('.panel-content') ||
+                                        tempDiv.querySelector('.timer-container') ||
+                                        tempDiv.querySelector('main > div');
+                                    timerPanel.innerHTML = content ? content.outerHTML : html;
+                                    timerPanel.classList.add('active');
+                                    timerPanel.dataset.loaded = "true";
+                                    if (typeof initRoutineTimer === "function") {
+                                        initRoutineTimer();
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error("Fetch error:", error);
+                                    timerPanel.dataset.loaded = "true";
+                                });
+                        }
                     } else {
                         alert('Error starting routine: ' + (data.error || 'Unknown error'));
                     }
@@ -183,7 +210,6 @@ function initRoutineBuilder() {
             handle: '.drag-handle',
             ghostClass: 'sortable-ghost',
             onEnd: function (evt) {
-                // Get the new order of tasks by their DOM position
                 const items = Array.from(taskList.querySelectorAll('.task-item'));
                 const newOrder = items.map(item => parseInt(item.dataset.index));
                 fetch('/routine/reorder_tasks/', {
@@ -198,7 +224,6 @@ function initRoutineBuilder() {
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            // Update data-index attributes to match new order
                             items.forEach((item, idx) => {
                                 item.dataset.index = idx;
                             });

@@ -1,7 +1,9 @@
-document.addEventListener('DOMContentLoaded', function () {
+function initRoutineTimer() {
     console.log("TIMER JS LOADED");
     // Initialize timer variables
     const timerRoot = document.getElementById('timer-root');
+    if (!timerRoot) return; // Prevent errors if not present
+
     const routineId = timerRoot.dataset.routineId;
     const csrfToken = timerRoot.dataset.csrfToken;
     // Timer elements
@@ -35,8 +37,9 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentTaskIndex = -1;
 
     function loadTasks() {
-        // Get the API endpoint URL from the hidden input
-        const apiUrl = document.getElementById('get-tasks-url').value;
+        const apiUrlInput = document.getElementById('get-tasks-url');
+        const apiUrl = apiUrlInput ? apiUrlInput.value : null;
+        if (!apiUrl) return;
         fetch(apiUrl)
             .then(response => response.json())
             .then(data => {
@@ -44,11 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     tasks = data.tasks;
                     totalDuration = data.total || 0;
                     updateTasksDisplay();
-                    tasks = data.tasks;
-                    totalDuration = data.total || 0;
-                    updateTasksDisplay();
                 } else {
-                    // Example data if no tasks are found
                     tasks = [
                         { task: 'Wake up', duration: 3 },
                         { task: 'evacuate', duration: 2 },
@@ -61,7 +60,6 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 console.error('Error loading tasks:', error);
-                // Use example data if fetch fails
                 tasks = [
                     { task: 'Wake up', duration: 3 },
                     { task: 'evacuate', duration: 2 },
@@ -73,14 +71,11 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
-    // Update the tasks display
     function updateTasksDisplay() {
-        // Update info panel
         totalTimeEl.textContent = `${totalDuration} minutes`;
         taskCountEl.textContent = `${tasks.length} tasks`;
         currentTaskNumberEl.textContent = currentTaskIndex >= 0 ? `${currentTaskIndex + 1}/${tasks.length}` : '0/0';
 
-        // Update upcoming tasks list
         upcomingTasksList.innerHTML = '';
         if (currentTaskIndex < tasks.length - 1) {
             for (let i = currentTaskIndex + 1; i < tasks.length; i++) {
@@ -94,7 +89,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 upcomingTasksList.appendChild(li);
             }
         } else if (tasks.length > 0 && currentTaskIndex === -1) {
-            // Show all tasks as upcoming when not started
             tasks.forEach(task => {
                 const li = document.createElement('li');
                 li.className = 'task-item';
@@ -108,7 +102,6 @@ document.addEventListener('DOMContentLoaded', function () {
             upcomingTasksList.innerHTML = '<li class="empty-message">No tasks in queue</li>';
         }
 
-        // Update completed tasks list
         completedTasksList.innerHTML = '';
         if (currentTaskIndex >= 0) {
             for (let i = 0; i < currentTaskIndex; i++) {
@@ -128,7 +121,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Format time as MM:SS
     function formatTime(seconds) {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
@@ -138,13 +130,11 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     }
 
-    // Update timer display
     function updateTimerDisplay() {
         const formatted = formatTime(currentSeconds);
         minutesEl.textContent = formatted.minutes;
         secondsEl.textContent = formatted.seconds;
 
-        // Update progress bar
         if (currentTaskIndex >= 0 && currentTaskIndex < tasks.length) {
             const taskDuration = tasks[currentTaskIndex].duration * 60;
             const progress = 100 - ((currentSeconds / taskDuration) * 100);
@@ -154,7 +144,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Start next task
     function startNextTask() {
         if (currentTaskIndex < tasks.length - 1) {
             currentTaskIndex++;
@@ -168,19 +157,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Task complete
     function completeCurrentTask() {
         if (currentTaskIndex >= 0 && currentTaskIndex < tasks.length) {
-            try {
-                taskCompleteSound.play();
-            } catch (e) {
-                console.log('Could not play sound', e);
-            }
+            try { taskCompleteSound.play(); } catch (e) { }
             startNextTask();
         }
     }
 
-    // Finish all tasks
     function finishRoutine() {
         clearInterval(timer);
         taskNameEl.textContent = 'Complete!';
@@ -188,35 +171,24 @@ document.addEventListener('DOMContentLoaded', function () {
         secondsEl.textContent = '00';
         progressBar.style.width = '100%';
 
-        // Update controls
         startBtn.disabled = false;
         pauseBtn.disabled = true;
         skipBtn.disabled = true;
         resetBtn.disabled = false;
 
-        // Update display
         currentTaskIndex = tasks.length;
         updateTasksDisplay();
 
-        try {
-            timerFinishSound.play();
-        } catch (e) {
-            console.log('Could not play sound', e);
-        }
-
-        // Show completion message
+        try { timerFinishSound.play(); } catch (e) { }
         alert('Congratulations! You have completed all tasks.');
     }
 
-    // Start timer
     function startTimer() {
         if (isPaused) {
             isPaused = false;
-
             if (currentTaskIndex === -1 && tasks.length > 0) {
                 startNextTask();
             }
-
             timer = setInterval(() => {
                 if (currentSeconds > 0) {
                     currentSeconds--;
@@ -228,7 +200,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }, 1000);
 
-            // Update controls
             startBtn.disabled = true;
             pauseBtn.disabled = false;
             skipBtn.disabled = false;
@@ -236,13 +207,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Pause timer
     function pauseTimer() {
         if (!isPaused) {
             clearInterval(timer);
             isPaused = true;
-
-            // Update controls
             startBtn.disabled = false;
             pauseBtn.disabled = true;
             skipBtn.disabled = false;
@@ -251,7 +219,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Skip current task
     function skipTask() {
         if (currentTaskIndex >= 0 && currentTaskIndex < tasks.length) {
             completeCurrentTask();
@@ -259,7 +226,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Reset timer
     function resetTimer() {
         clearInterval(timer);
         isPaused = true;
@@ -269,7 +235,6 @@ document.addEventListener('DOMContentLoaded', function () {
         secondsEl.textContent = '00';
         progressBar.style.width = '100%';
 
-        // Update controls
         startBtn.disabled = false;
         pauseBtn.disabled = true;
         skipBtn.disabled = true;
@@ -279,7 +244,6 @@ document.addEventListener('DOMContentLoaded', function () {
         saveTimerState();
     }
 
-    // Save timer state
     function saveTimerState() {
         fetch(`/routine/timer/${routineId}/state/save/`, {
             method: 'POST',
@@ -295,17 +259,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Event listeners
-    startBtn.addEventListener('click', startTimer);
-    pauseBtn.addEventListener('click', pauseTimer);
-    skipBtn.addEventListener('click', skipTask);
-    resetBtn.addEventListener('click', resetTimer);
+    // Attach event listeners
+    if (startBtn) startBtn.addEventListener('click', startTimer);
+    if (pauseBtn) pauseBtn.addEventListener('click', pauseTimer);
+    if (skipBtn) skipBtn.addEventListener('click', skipTask);
+    if (resetBtn) resetBtn.addEventListener('click', resetTimer);
 
-    // Initialize
+    // Initialize tasks
     const routineTasksScript = document.getElementById('routine-tasks-data');
     if (routineTasksScript && routineTasksScript.textContent.trim()) {
         tasks = JSON.parse(routineTasksScript.textContent);
-        console.log("Loaded tasks:", tasks);
         totalDuration = Number(timerRoot.dataset.routineTotal) || 0;
         resetTimer();
     } else {
@@ -313,15 +276,23 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Fetch routine state
-    //    fetch(`/routine/timer/${routineId}/state/`)
-    //        .then(res => res.json())
-    //        .then(state => {
-    //            if (typeof state.current_task_index === 'number' && state.current_task_index >= 0)
-    //            currentTaskIndex = state.current_task_index;
-    //            currentSeconds = state.current_seconds;
-    //            isPaused = state.is_paused;
-    // Optionally, adjust for elapsed time using state.last_updated
-    //            updateTimerDisplay();
-    //            updateTasksDisplay();
-    //        });
+    fetch(`/routine/timer/${routineId}/state/`)
+        .then(res => res.json())
+        .then(state => {
+            if (typeof state.current_task_index === 'number' && state.current_task_index >= 0) {
+                currentTaskIndex = state.current_task_index;
+            }
+            currentSeconds = state.current_seconds;
+            isPaused = state.is_paused;
+            updateTimerDisplay();
+            updateTasksDisplay();
+        });
+}
+
+// Auto-initialize on full page load
+document.addEventListener('DOMContentLoaded', function () {
+    if (document.getElementById('timer-root')) {
+        initRoutineTimer();
+    }
 });
+

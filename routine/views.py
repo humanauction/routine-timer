@@ -9,7 +9,7 @@ from .services import (
     get_routine_name, set_routine_name, reorder_tasks, remove_task
 )
 from .models import Routine, RoutineItem, TimerState
-from django.views.generic import TemplateView, DeleteView, DetailView
+from django.views.generic import DeleteView, DetailView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -174,7 +174,10 @@ class StartRoutineBuilderView(LoginRequiredMixin, View):
                 data = json.loads(request.body)
                 routine_name = data.get('routine_name')
             except Exception:
-                return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
+                return JsonResponse(
+                    {'success': False, 'error': 'Invalid JSON'},
+                    status=400
+                )
         else:
             routine_name = request.POST.get('routine_name')
         if not routine_name:
