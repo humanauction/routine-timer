@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Use href for URL (recommended)
                 let url = this.getAttribute('href');
-                if (panel && url) {
+                if (panel && url && (!panel.dataset.loaded || this.dataset.reload === 'true')) {
                     panel.classList.add('active');
                     fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
                         .then(res => res.text())
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             const tempDiv = document.createElement('div');
                             tempDiv.innerHTML = html;
                             const content =
-                                tempDiv.querySelector('.standalone-timer-panel') ||
+                                tempDiv.querySelector('.standalone-timer') ||
                                 tempDiv.querySelector('.panel-content') ||
                                 tempDiv.querySelector('.routine-builder') ||
                                 tempDiv.querySelector('.timer-container') ||
@@ -103,6 +103,16 @@ document.addEventListener("DOMContentLoaded", function () {
                             if (target === "standalone-timer" && typeof initStandaloneTimer === "function") {
                                 initStandaloneTimer();
                             }
+                            if (target === "builder" && typeof initRoutineBuilder === "function") {
+                                initRoutineBuilder();
+                            }
+                            if (target === "timer" && typeof initRoutineTimer === "function") {
+                                initRoutineTimer();
+                            }
+                            if (target === "detail" && typeof initRoutineDetail === "function") {
+                                initRoutineDetail();
+                            }
+
                         })
                         .catch(error => {
                             console.error("Fetch error:", error);
