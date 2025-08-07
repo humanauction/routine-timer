@@ -424,11 +424,19 @@ def timer(request, routine_pk):
         for item in items
     ]
     total = sum(item['duration'] for item in tasks)
-    return render(request, 'routine/timer.html', {
-        'routine': routine,
-        'tasks': tasks,
-        'total': total,
-    })
+   
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render(request, 'routine/timer_content.html', {
+            'routine': routine,
+            'tasks': tasks,
+            'total': total,
+        })
+    else:
+        return render(request, 'routine/timer.html', {
+            'routine': routine,
+            'tasks': tasks,
+            'total': total,
+        })
 
 
 @csrf_protect

@@ -1,25 +1,85 @@
-<div class="routine-timer">
-    <h2>{{ title }}</h2>
-    <div class="timer-info">
-        <p>Routine: <strong>{{ routine.name }}</strong></p>
-        <p>Total Time: <strong>{{ total_duration }} minutes</strong></p>
+{% load static %}
+<div class="timer-container">
+    <div id="timer-root"
+        data-routine-id="{{ routine.pk }}"
+        data-csrf-token="{{ csrf_token }}"
+        data-routine-total="{{ total|default:0 }}">
     </div>
-    <ul class="timer-tasks">
-        {% for item in routine_items %}
-        <li>
-            <span class="task-name">{{ item.name }}</span>
-            <span class="task-duration">{{ item.duration }} min</span>
-        </li>
-        {% empty %}
-        <li>No tasks in this routine.</li>
-        {% endfor %}
-    </ul>
-    <div class="timer-controls">
-        <button class="btn btn-success" id="start-timer-btn">Start</button>
-        <button class="btn btn-secondary" id="pause-timer-btn">Pause</button>
-        <button class="btn btn-danger" id="reset-timer-btn">Reset</button>
-    </div>
+    <h1>Routine Timer</h1>
+    
+    <!-- Timer Display -->
     <div class="timer-display">
-        <span id="timer-remaining">00:00</span>
+        <div class="current-task">
+            <h2 id="task-name">Get Ready...</h2>
+            <div class="task-duration">
+                <span id="minutes">00</span>:<span id="seconds">00</span>
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar"></div>
+        </div>
+        
+        <div class="timer-info">
+            <div class="info-item">
+                <span class="info-label">Total Time:</span>
+                <span id="total-time" class="info-value">{{ total|default:0 }} minutes</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Tasks:</span>
+                <span id="task-count" class="info-value">{{ routine_items|length|default:"0" }} tasks</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Current:</span>
+                <span id="current-task-number" class="info-value">0/0</span>
+            </div>
+        </div>
     </div>
+    
+    <!-- Timer Controls -->
+    <div class="timer-controls">
+        <button id="start-btn" class="btn btn-primary">
+            <i class="fas fa-play"></i> Start
+        </button>
+        <button id="pause-btn" class="btn btn-secondary" disabled>
+            <i class="fas fa-pause"></i> Pause
+        </button>
+        <button id="skip-btn" class="btn btn-info" disabled>
+            <i class="fas fa-forward"></i> Skip
+        </button>
+        <button id="reset-btn" class="btn btn-danger" disabled>
+            <i class="fas fa-redo"></i> Reset
+        </button>
+    </div>
+    
+    <!-- Upcoming Tasks -->
+    <div class="upcoming-tasks">
+        <h3>Upcoming Tasks</h3>
+        <ul id="upcoming-tasks-list" class="tasks-list">
+            {% for item in routine_items %}
+            <li>
+                <span class="task-name">{{ item.name }}</span>
+                <span class="task-duration">{{ item.duration }} min</span>
+            </li>
+            {% empty %}
+            <li class="empty-message">No tasks in queue</li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <!-- Completed Tasks -->
+    <div class="completed-tasks">
+        <h3>Completed Tasks</h3>
+        <ul id="completed-tasks-list" class="tasks-list">
+            <li class="empty-message">No tasks completed</li>
+        </ul>
+    </div>
+    <!-- Sound files -->
+    <audio id="task-complete-sound" src="{% static 'sounds/slice.mp3' %}" preload="auto"></audio>
+    <audio id="timer-finish-sound" src="{% static 'sounds/finish.mp3' %}" preload="auto"></audio>
+    {% if tasks %}
+    {{ tasks|json_script:"routine-tasks-data" }}
+    {% else %}
+    <input type="hidden" id="get-tasks-url" value="{% url 'routine:get_current_tasks' %}" />
+    {% endif %}
 </div>

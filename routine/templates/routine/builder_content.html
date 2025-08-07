@@ -1,3 +1,4 @@
+{% load static %}
 <div class="routine-builder">
     <h1>Build Your Routine</h1>
     <!-- Live preview section -->
@@ -67,7 +68,7 @@
             {% csrf_token %} 
             <button type="submit" class="btn btn-primary">Save Routine</button>
         </form>
-        <form action="{% url 'routine:start_builder' %}" method="post" class="start-form">
+        <form id="start-routine-form" action="{% url 'routine:start_builder' %}" method="post" class="start-form">
             {% csrf_token %}
             <button type="submit" class="btn btn-success">Start Routine</button>
         </form>

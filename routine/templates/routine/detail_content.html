@@ -1,25 +1,55 @@
+{% load static %}
 <div class="routine-detail">
-    <h2>{{ routine.name }}</h2>
-    <p><strong>Total Time:</strong> {{ routine.total_time }} minutes</p>
-    <ul class="routine-tasks">
-        {% for task in routine.tasks.all %}
-        <li>
-            <span class="task-name">{{ task.name }}</span>
-            <span class="task-duration">{{ task.duration }} min</span>
-        </li>
-        {% empty %}
-        <li>No tasks in this routine.</li>
-        {% endfor %}
-    </ul>
-    <div class="routine-actions">
-        <a href="{% url 'routine:builder' %}?edit={{ routine.id }}" class="btn btn-sm btn-primary">
-            Edit Routine
-        </a>
-        <a href="{% url 'routine:delete' routine.id %}" class="btn btn-sm btn-danger">
-            Delete Routine
-        </a>
-        <a href="{% url 'routine:timer' routine.id %}?routine={{ routine.id }}" class="btn btn-sm btn-success">
-            Start Timer
-        </a>
+    <div class="routine-header">
+        <h1>{{ routine.name }}</h1>
+        <div class="routine-actions">
+            <a href="{% url 'routine:list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Routines
+            </a>
+            <a href="{% url 'routine:start' routine.id %}" class="btn btn-primary start-routine" data-routine-id="{{ routine.id }}">
+                <i class="fas fa-play"></i> Start Routine
+            </a>
+            <a href="{% url 'routine:delete' routine.id %}" class="btn btn-danger">
+                <i class="fas fa-trash"></i> Delete
+            </a>
+        </div>
+    </div>
+
+    <div class="routine-stats">
+        <div class="stat">
+            <span class="stat-label">Total Duration</span>
+            <span class="stat-value">{{ routine.total_time|default:total_duration }} minutes</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Tasks</span>
+            <span class="stat-value">{{ routine.tasks.count|default:routine_items.count }}</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Created</span>
+            <span class="stat-value">{{ routine.created_at|date:"F j, Y" }}</span>
+        </div>
+    </div>
+    <div class="routine-tasks">
+        <ul id="routine-tasks" class="task-list sortable">
+            {% for item in routine.tasks.all %}
+            <li class="task-item" data-item-id="{{ item.id }}">
+                <div class="task-order">{{ forloop.counter }}</div>
+                <div class="task-info">
+                    <h4 class="task-name">{{ item.name }}</h4>
+                    <div class="task-duration">{{ item.duration }} minutes</div>
+                </div>
+                <div class="task-actions">
+                    <button type="button" class="btn-delete" aria-label="Delete task">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <span class="drag-handle" aria-label="Drag to reorder">
+                        <i class="fas fa-grip-lines"></i>
+                    </span>
+                </div>
+            </li>
+            {% empty %}
+            <li>No tasks in this routine.</li>
+            {% endfor %}
+        </ul>
     </div>
 </div>

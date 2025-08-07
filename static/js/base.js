@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll('.nav-item[data-panel]').forEach(item => {
             item.addEventListener('click', function (e) {
                 e.preventDefault();
-                e.stopImmediatePropagation();
+                // e.stopImmediatePropagation();
 
                 // Remove .active from all nav-panels and nav-items
                 document.querySelectorAll('.nav-panel').forEach(p => p.classList.remove('active'));

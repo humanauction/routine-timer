@@ -162,6 +162,7 @@ function initRoutineBuilder() {
             })
                 .then(response => response.json())
                 .then(data => {
+                    console.log('Start routine response:', data);
                     if (data.success && data.routine_id) {
                         // AJAX inject timer panel instead of redirect
                         const timerNavItem = document.querySelector('.nav-item[data-panel="timer"]');
@@ -243,6 +244,56 @@ function initRoutineBuilder() {
 document.addEventListener('DOMContentLoaded', function () {
     if (document.querySelector('.routine-builder')) {
         initRoutineBuilder();
+    }
+    const startForm = document.getElementById('start-routine-form');
+    if (startForm) {
+        startForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const url = startForm.getAttribute('action');
+            const csrfToken = startForm.querySelector('[name="csrfmiddlewaretoken"]').value;
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    routine_name: document.getElementById('routine-name').value,
+                    tasks: Array.from(document.querySelectorAll('.task-item')).map(item => ({
+                        task: item.querySelector('.task-name').textContent,
+                        duration: parseInt(item.querySelector('.task-duration').textContent)
+                    }))
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.routine_id) {
+                        const timerUrl = `/routine/timer/${data.routine_id}/`;
+                        const timerPanel = document.getElementById('panel-timer');
+                        console.log('Fetching timer panel:', timerUrl);
+                        fetch(timerUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                            .then(res => res.text())
+                            .then(html => {
+                                const tempDiv = document.createElement('div');
+                                tempDiv.innerHTML = html;
+                                const content = tempDiv.querySelector('.timer-container');
+                                timerPanel.innerHTML = content ? content.outerHTML : html;
+                                timerPanel.classList.add('active');
+                                timerPanel.dataset.loaded = "true";
+                                if (typeof initRoutineTimer === "function") {
+                                    initRoutineTimer();
+                                }
+                            });
+                    } else {
+                        alert('Error starting routine: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while starting the routine.');
+                });
+        });
     }
 });
 
