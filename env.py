@@ -8,11 +8,11 @@ DATABASE_URL = os.environ.setdefault(
 )
 
 SECRET_KEY = os.environ.setdefault(
-    "SECRET_KEY", 
-    "ybZj_I|o!bvN-}LEb9c~^XU[w4!@PIBDToLD6%vBfgR*7GPC[B)BTUkH(nUWhFA-)q.;bJzs-[PV]&dP#86SYT"
+    "SECRET_KEY",
+    "dUyQ@mXR_PZLi&o>27!Ck46TKN^y*f6w_dohsnXZCeoN,XauUJD?ff_H@RA_HLgq8gA7y0FNK,W:BhB:V}MFv1Q!"
 )
 
 CLOUDINARY_URL = os.environ.setdefault(
     "CLOUDINARY_URL",
-    "cloudinary://914958239669143:jGfe90eL6Zvt-2POkrfq8y0whsk@deui9rkav"
+    "cloudinary://265269448251462:nnYSveHr425Fd7VILmOpHjzxZ3I"
 )
