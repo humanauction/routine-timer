@@ -206,7 +206,10 @@
         </div>
     </main>
 </div>
-
+<script>
+    window.csrfToken = "{{ csrf_token }}";
+</script>
+{% block extra_js %}
 <script
     defer
     src="https://kit.fontawesome.com/844d1cd656.js"
