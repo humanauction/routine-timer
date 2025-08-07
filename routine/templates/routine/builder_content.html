@@ -44,7 +44,7 @@
         <h2>Add Tasks</h2>
         <form id="task-form" method="post" action="{% url 'routine:builder' %}" class="task-form">
             {% csrf_token %}
-            <input type="hidden" name="name" value="{{ routine_name }}">
+            <input type="hidden" name="routine_name" value="{{ routine_name }}">
             <div class="form-group">
                 {{ form.task.label_tag }} 
                 {{ form.task }} 

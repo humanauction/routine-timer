@@ -6,7 +6,6 @@ function initRoutineDetail() {
             e.preventDefault();
             const routineId = this.dataset.routineId;
             const startUrl = window.startRoutineUrl;
-            const timerUrl = window.timerRoutineUrl;
             const csrfToken = window.csrfToken;
 
             fetch(startUrl, {
@@ -21,10 +20,22 @@ function initRoutineDetail() {
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
-                        window.location.href = timerUrl;
+                    if (data.success && data.routine_id) {
+                        const timerUrl = `/routine/timer/${data.routine_id}/`;
+                        const timerPanel = document.getElementById('panel-timer');
+                        fetch(timerUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                            .then(res => res.text())
+                            .then(html => {
+                                // Inject the timer panel HTML
+                                timerPanel.innerHTML = html;
+                                timerPanel.classList.add('active');
+                                timerPanel.dataset.loaded = "true";
+                                if (typeof initRoutineTimer === "function") {
+                                    initRoutineTimer();
+                                }
+                            });
                     } else {
-                        alert('Error starting routine: ' + data.error);
+                        alert('Error starting routine: ' + (data.error || 'Unknown error'));
                     }
                 })
                 .catch(error => {

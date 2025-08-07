@@ -65,9 +65,9 @@
 {{ block.super }}
 <script>
     window.routineId = {{ routine.id }};
-    window.startRoutineUrl = "{% url 'routine:start' routine.id %}";
+    window.startRoutineUrl = "{% url 'routine:start_builder' %}";
     window.timerRoutineUrl = "{% url 'routine:timer' routine.id %}";
     window.csrfToken = "{{ csrf_token }}";
 </script>
-<script src="{% static 'js/detail.js' %}"></script>
+<script src="{% static 'routine/js/detail.js' %}"></script>
 {% endblock %}

@@ -173,14 +173,8 @@ function initRoutineBuilder() {
                             fetch(timerUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
                                 .then(res => res.text())
                                 .then(html => {
-                                    const tempDiv = document.createElement('div');
-                                    tempDiv.innerHTML = html;
-                                    const content =
-                                        tempDiv.querySelector('.standalone-timer') ||
-                                        tempDiv.querySelector('.panel-content') ||
-                                        tempDiv.querySelector('.timer-container') ||
-                                        tempDiv.querySelector('main > div');
-                                    timerPanel.innerHTML = content ? content.outerHTML : html;
+                                    // Inject the timer panel HTML
+                                    timerPanel.innerHTML = html;
                                     timerPanel.classList.add('active');
                                     timerPanel.dataset.loaded = "true";
                                     if (typeof initRoutineTimer === "function") {
@@ -222,7 +216,12 @@ function initRoutineBuilder() {
                     },
                     body: JSON.stringify({ order: newOrder })
                 })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.text().then(text => { throw new Error(text); });
+                        }
+                        return response.json();
+                    })
                     .then(data => {
                         if (data.success) {
                             items.forEach((item, idx) => {
