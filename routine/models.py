@@ -45,10 +45,7 @@ class RoutineItem(models.Model):
         ordering = ['order']
 
     def __str__(self):
-        return (
-            f"in {self.routine.name})",
-            f"{self.task} ({self.duration} min)"
-        )
+        return f"{self.task} ({self.duration} min) in {self.routine.name}"
 
 
 class TimerState(models.Model):

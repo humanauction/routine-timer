@@ -144,58 +144,6 @@ function initRoutineBuilder() {
     });
 
     // Start routine button (AJAX inject timer panel)
-    const startButton = document.querySelector('.btn.btn-success');
-    if (startButton) {
-        startButton.addEventListener('click', function (e) {
-            e.preventDefault();
-            fetch(window.startRoutineUrl, {
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRFToken': window.csrfToken,
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'same-origin',
-                body: JSON.stringify({
-                    routine_name: routineNameInput.value
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Start routine response:', data);
-                    if (data.success && data.routine_id) {
-                        // AJAX inject timer panel instead of redirect
-                        const timerNavItem = document.querySelector('.nav-item[data-panel="timer"]');
-                        const timerPanel = document.getElementById('panel-timer');
-                        if (timerNavItem && timerPanel) {
-                            const timerUrl = `/routine/timer/${data.routine_id}/`;
-                            timerNavItem.dataset.reload = "true";
-                            fetch(timerUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-                                .then(res => res.text())
-                                .then(html => {
-                                    // Inject the timer panel HTML
-                                    timerPanel.innerHTML = html;
-                                    timerPanel.classList.add('active');
-                                    timerPanel.dataset.loaded = "true";
-                                    if (typeof initRoutineTimer === "function") {
-                                        initRoutineTimer();
-                                    }
-                                })
-                                .catch(error => {
-                                    console.error("Fetch error:", error);
-                                    timerPanel.dataset.loaded = "true";
-                                });
-                        }
-                    } else {
-                        alert('Error starting routine: ' + (data.error || 'Unknown error'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while starting the routine.');
-                });
-        });
-    }
 
     // Setup drag and drop reordering with Sortable.js
     const taskList = document.getElementById('preview-tasks');
@@ -244,6 +192,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (document.querySelector('.routine-builder')) {
         initRoutineBuilder();
     }
+
+    // Handle "Start Routine" form submission
     const startForm = document.getElementById('start-routine-form');
     if (startForm) {
         startForm.addEventListener('submit', function (e) {
@@ -268,6 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.routine_id) {
+                        // THIS IS THE AJAX INJECTION FOR THE TIMER PANEL:
                         const timerUrl = `/routine/timer/${data.routine_id}/`;
                         const timerPanel = document.getElementById('panel-timer');
                         console.log('Fetching timer panel:', timerUrl);
@@ -295,5 +246,3 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-
-// After AJAX inject, call initRoutineBuilder() again for new content

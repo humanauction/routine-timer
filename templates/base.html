@@ -57,7 +57,24 @@
                             id="panel-standalone-timer"
                         ></div>
                     </div>
-
+                    <div class="nav-item-container">
+                        {% if routine and routine.id %}
+                            <a
+                                href="{% url 'routine:timer' routine.id %}"
+                                class="nav-item {% if request.resolver_match.view_name == 'routine:timer' %}active{% endif %}"
+                                data-panel="timer"
+                            >
+                                <i class="fas fa-clock icon"></i>
+                                <span>Timer</span>
+                            </a>
+                        {% else %}
+                            <span class="nav-item disabled">
+                                <i class="fas fa-clock icon"></i>
+                                <span>Timer</span>
+                            </span>
+                        {% endif %}
+                        <div class="nav-panel" id="panel-timer"></div>
+                    </div>
                     {% if user.is_authenticated %}
                         {% if user.profile.is_guest %}
                             <!-- Guest user -->
@@ -75,17 +92,7 @@
                                 </a>
                                 <div class="nav-panel" id="panel-builder"></div>
                             </div>
-                            <div class="nav-item-container">
-                                <a
-                                    href="{% url 'routine:timer' routine.id %}"
-                                    class="nav-item {% if request.resolver_match.view_name == 'routine:timer' %}active{% endif %}"
-                                    data-panel="timer"
-                                >
-                                    <i class="fas fa-clock icon"></i>
-                                    <span>Timer</span>
-                                </a>
-                                <div class="nav-panel" id="panel-timer"></div>
-                            </div>
+                            
                             <div class="nav-item-container">
                                 <a
                                     href="{% url 'authentication:login' %}"
@@ -133,12 +140,12 @@
                             <span>Start Routine</span>
                         </a>
                         {% else %}
-                        <span class="nav-item disabled">
+                        <a class="nav-item {% if request.resolver_match.view_name == 'routine:timer' %}active{% endif %}" data-panel="timer">
                             <i class="fas fa-clock icon"></i>
                             <span>Start Routine</span>
-                        </span>
+                        </a>
                         {% endif %}
-                        <!-- <div class="nav-panel" id="panel-start"></div> -->
+                        <div class="nav-panel" id="panel-timer"></div>
                     </div>
 
                     <div class="nav-item-container">

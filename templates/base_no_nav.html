@@ -32,8 +32,17 @@
             <p>&copy; {% now "Y" %} Routine Timer. All rights reserved.</p>
         </footer>
         {% block extra_js %}
+        <script src="{% static 'timer/js/standaloneTimer.js' %}"></script>
+        <script src="{% static 'routine/js/timer.js' %}"></script>
+        <script src="{% static 'routine/js/detail.js' %}"></script>
+        <script src="{% static 'routine/js/list.js' %}"></script>
+        <script src="{% static 'routine/js/builder.js' %}"></script>
         <script src="{% static 'js/base.js' %}"></script>
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+         <script>
+            window.csrfToken = "{{ csrf_token }}";
+            window.startRoutineUrl = '{% url "routine:start_builder" %}';
+        </script>
         {% endblock %}
     </body>
 </html>
