@@ -70,6 +70,8 @@
         </form>
         <form id="start-routine-form" action="{% url 'routine:start_builder' %}" method="post" class="start-form">
             {% csrf_token %}
+            <input type="hidden" name="redirect_to_timer" value="true" />
+            <input type="hidden" name="routine_name" value="{{ routine_name }}" />
             <button type="submit" class="btn btn-success">Start Routine</button>
         </form>
     </div>

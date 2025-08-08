@@ -4,10 +4,11 @@ function initRoutineBuilder() {
     // Get elements
     const routineNameInput = document.getElementById('routine-name');
     const taskInput = document.getElementById('id_task');
-    const durationInput = document.getElementById('id_duration');
+    const durationInput = document.getElementById('duration-input');
     const previewName = document.getElementById('preview-routine-name');
     const previewTasks = document.getElementById('preview-tasks');
     const previewTotalTime = document.getElementById('preview-total-time');
+    const duration = parseInt(durationInput.value, 10);
     let totalDuration = parseInt(previewTotalTime?.textContent) || 0;
 
     // Update preview name when typing
@@ -70,6 +71,21 @@ function initRoutineBuilder() {
         taskForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const formData = new FormData(this);
+            // Check if task limit is reached
+            const tasks = Array.from(document.querySelectorAll('.task-item'));
+            if (tasks.length >= 10) {
+                alert('Maximum 10 tasks per routine.');
+                return;
+            }
+
+            // Check if duration exceeds 30 minutes
+            const durationInput = document.getElementById('duration-input');
+            const duration = parseInt(durationInput.value, 10);
+            if (duration > 30) {
+                alert('Maximum time per task is 30 minutes.');
+                return;
+            }
+
             fetch(this.action, {
                 method: 'POST',
                 body: formData,
@@ -113,7 +129,7 @@ function initRoutineBuilder() {
         const taskItem = this.closest('.task-item');
         const index = parseInt(taskItem.dataset.index);
         if (confirm('Are you sure you want to remove this task?')) {
-            fetch('/routine/remove_task/', {
+            fetch('/routine/task/remove/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -155,7 +171,7 @@ function initRoutineBuilder() {
             onEnd: function (evt) {
                 const items = Array.from(taskList.querySelectorAll('.task-item'));
                 const newOrder = items.map(item => parseInt(item.dataset.index));
-                fetch('/routine/reorder_tasks/', {
+                fetch('/routine/task/reorder/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -197,6 +213,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const startForm = document.getElementById('start-routine-form');
     if (startForm) {
         startForm.addEventListener('submit', function (e) {
+            // Check if form has redirect_to_timer field (mobile form submission)
+            const redirectField = document.querySelector('input[name="redirect_to_timer"]');
+            if (redirectField && redirectField.value === 'true') {
+                // Let the form submit normally (don't prevent default)
+                return;
+            }
+
+            // Otherwise, prevent default and use AJAX
             e.preventDefault();
             const url = startForm.getAttribute('action');
             const csrfToken = startForm.querySelector('[name="csrfmiddlewaretoken"]').value;
@@ -218,23 +242,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.routine_id) {
-                        // THIS IS THE AJAX INJECTION FOR THE TIMER PANEL:
-                        const timerUrl = `/routine/timer/${data.routine_id}/`;
-                        const timerPanel = document.getElementById('panel-timer');
-                        console.log('Fetching timer panel:', timerUrl);
-                        fetch(timerUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-                            .then(res => res.text())
-                            .then(html => {
-                                const tempDiv = document.createElement('div');
-                                tempDiv.innerHTML = html;
-                                const content = tempDiv.querySelector('.timer-container');
-                                timerPanel.innerHTML = content ? content.outerHTML : html;
-                                timerPanel.classList.add('active');
-                                timerPanel.dataset.loaded = "true";
-                                if (typeof initRoutineTimer === "function") {
-                                    initRoutineTimer();
-                                }
-                            });
+                        window.location.href = `/routine/timer/${data.routine_id}/`;
                     } else {
                         alert('Error starting routine: ' + (data.error || 'Unknown error'));
                     }

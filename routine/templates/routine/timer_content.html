@@ -1,5 +1,19 @@
+{% extends "base.html" %}
 {% load static %}
+
+{% block title %}Timer{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'routine/css/timer.css' %}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
 <div class="timer-container">
+    <!-- mobile view back btn -->
+    <button id="mobile-back-btn" class="mobile-back-btn" aria-label="Back to Routine">
+        <i class="fas fa-arrow-left"></i>
+    </button>
     <div id="timer-root"
         data-routine-id="{{ routine.pk }}"
         data-csrf-token="{{ csrf_token }}"
@@ -27,7 +41,7 @@
             </div>
             <div class="info-item">
                 <span class="info-label">Tasks:</span>
-                <span id="task-count" class="info-value">{{ routine_items|length|default:"0" }} tasks</span>
+                <span id="task-count" class="info-value">{{ tasks|length|default:"0" }} tasks</span>
             </div>
             <div class="info-item">
                 <span class="info-label">Current:</span>
@@ -56,10 +70,10 @@
     <div class="upcoming-tasks">
         <h3>Upcoming Tasks</h3>
         <ul id="upcoming-tasks-list" class="tasks-list">
-            {% for item in routine_items %}
-            <li>
-                <span class="task-name">{{ item.name }}</span>
-                <span class="task-duration">{{ item.duration }} min</span>
+            {% for task in tasks %}
+            <li class="task-item">
+                <span class="task-name">{{ task.task }}</span>
+                <span class="task-duration">{{ task.duration }} min</span>
             </li>
             {% empty %}
             <li class="empty-message">No tasks in queue</li>
@@ -83,3 +97,8 @@
     <input type="hidden" id="get-tasks-url" value="{% url 'routine:get_current_tasks' %}" />
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'routine/js/timer.js' %}"></script>
+{% endblock %}
