@@ -5,6 +5,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'routine/css/timer.css' %}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
@@ -40,24 +41,28 @@
             </div>
             <div class="info-item">
                 <span class="info-label">Current:</span>
-                <span id="current-task-number" class="info-value">0/0</span>
+                <span id="current-task-number" class="info-value">{{ tasks|length|default:"0" }} tasks</span>
             </div>
         </div>
     </div>
     
     <!-- Timer Controls -->
     <div class="timer-controls">
-        <button id="start-btn" class="btn btn-primary">
-            <i class="fas fa-play"></i> Start
+        <button id="start-btn" class="btn btn-primary" title="Start">
+            <i class="fas fa-play"></i>
+            <span>Start</span>
         </button>
-        <button id="pause-btn" class="btn btn-secondary" disabled>
-            <i class="fas fa-pause"></i> Pause
+        <button id="pause-btn" class="btn btn-secondary" disabled title="Pause">
+            <i class="fas fa-pause"></i>
+            <span>Pause</span>
         </button>
-        <button id="skip-btn" class="btn btn-info" disabled>
-            <i class="fas fa-forward"></i> Skip
+        <button id="skip-btn" class="btn btn-info" disabled title="Skip">
+            <i class="fas fa-forward"></i>
+            <span>Skip</span>
         </button>
-        <button id="reset-btn" class="btn btn-danger" disabled>
-            <i class="fas fa-redo"></i> Reset
+        <button id="reset-btn" class="btn btn-danger" disabled title="Reset">
+            <i class="fas fa-redo"></i>
+            <span>Reset</span>
         </button>
     </div>
     

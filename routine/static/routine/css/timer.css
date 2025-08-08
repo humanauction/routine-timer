@@ -2,6 +2,7 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    position: relative !important;
 }
 
 .timer-display {
@@ -115,16 +116,315 @@
 }
 
 @media (max-width: 768px) {
-    .timer-info {
-        flex-direction: column;
-        gap: 10px;
+    /* Override base.css hiding main on mobile for timer pages */
+    main {
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
+        min-height: 100vh !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
     
+    /* Override grid layout for timer */
+    .grid-container {
+        grid-template-areas: "main" !important;
+        grid-template-columns: 1fr !important;
+        grid-template-rows: 1fr !important;
+    }
+    
+    /* Hide header, nav, footer on timer pages */
+    header,
+    .main-nav,
+    footer {
+        display: none !important;
+    }
+    
+    /* Reset body styles */
+    body {
+        display: block !important;
+        justify-content: unset !important;
+        align-items: unset !important;
+        min-height: 100vh !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: hidden;
+    }
+    
+    h1 {
+        margin: 1rem;
+        padding: 0 2rem 1rem 1rem;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .mobile-back-btn {
+        background: red !important;
+        display: block !important;
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
+        width: 40px;
+        height: 40px;
+        background: rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        font-size: 1rem;
+        color: #333;
+        cursor: pointer;
+        z-index: 100;
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+    
+    .mobile-back-btn:hover {
+        background: rgba(0, 0, 0, 0.2);
+        transform: scale(1.05);
+    }
+    
+    .mobile-back-btn:active {
+        transform: scale(0.95);
+    }
+
+
+    /* Mobile-optimized timer container */
+    .timer-container {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 100vh !important;
+        padding: 15px !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        background: var(--light-bg);
+        overflow-y: auto;
+    }
+    
+    /* Compact icon-based timer controls */
     .timer-controls {
-        flex-wrap: wrap;
+        display: flex !important;  /* Keep this */
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 15px !important;
+        margin: 20px 0 !important;
+        flex-shrink: 0;
+        flex-wrap: nowrap !important;
+        
+        /* Reset any grid properties */
+        grid-template-columns: unset !important;
+        grid-template-rows: unset !important;
     }
     
     .timer-controls .btn {
+        width: 60px !important;
+        height: 60px !important;
+        border-radius: 50% !important;
+        padding: 0 !important;
+        font-size: 1.2rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+        border: none !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .timer-controls .btn:active {
+        transform: scale(0.95);
+    }
+    
+    /* Icon-only buttons - hide text */
+    .timer-controls .btn span {
+        display: none !important;
+    }
+    
+    /* Specific button colors */
+    .timer-controls .btn-primary {
+        background: linear-gradient(135deg, #28a745, #20c997) !important;
+        color: white !important;
+    }
+    
+    .timer-controls .btn-secondary {
+        background: linear-gradient(135deg, #6c757d, #495057) !important;
+        color: white !important;
+    }
+    
+    .timer-controls .btn-info {
+        background: linear-gradient(135deg, #17a2b8, #138496) !important;
+        color: white !important;
+    }
+    
+    .timer-controls .btn-danger {
+        background: linear-gradient(135deg, #dc3545, #c82333) !important;
+        color: white !important;
+    }
+    
+    /* Disabled state */
+    .timer-controls .btn:disabled {
+        background: #e9ecef !important;
+        color: #6c757d !important;
+        transform: none !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    }
+ 
+
+    /* Compact timer display */
+    .timer-display {
+        padding: 20px 15px !important;
+        margin-bottom: 15px !important;
+        flex-shrink: 0;
+    }
+    
+    /* Smaller task name */
+    .current-task h2 {
+        font-size: 1.8rem !important;
+        margin-bottom: 8px !important;
+        line-height: 1.2;
+    }
+    
+    /* Compact timer duration */
+    .task-duration {
+        font-size: 2.5rem !important;
+        margin-bottom: 15px !important;
+        line-height: 1;
+    }
+    
+    /* Smaller progress bar */
+    .progress-container {
+        height: 6px !important;
+        margin-bottom: 10px !important;
+    }
+    
+    /* Compact timer info */
+    .timer-info {
+        flex-direction: row !important;
+        justify-content: space-around !important;
+        margin-top: 10px !important;
+        gap: 5px;
+    }
+    
+    .info-item {
+        text-align: center;
         flex: 1;
+    }
+    
+    .info-label {
+        font-size: 0.75rem !important;
+        margin-bottom: 2px;
+    }
+    
+    .info-value {
+        font-size: 0.9rem !important;
+        font-weight: 600;
+    }
+    
+    /* Compact timer controls */
+    .timer-controls {
+        display: flex !important;  /* Keep this */
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 15px !important;
+        margin: 20px 0 !important;
+        flex-shrink: 0;
+        flex-wrap: nowrap !important;
+        
+        /* Reset any grid properties */
+        grid-template-columns: unset !important;
+        grid-template-rows: unset !important;
+    }
+    
+    .timer-controls .btn {
+        padding: 12px 8px !important;
+        font-size: 0.9rem !important;
+        white-space: nowrap;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 5px;
+    }
+    
+    /* Hide task lists on mobile or make them compact */
+    .upcoming-tasks,
+    .completed-tasks {
+        margin: 10px 0 !important;
+        flex: 1;
+        overflow-y: auto;
+    }
+    
+    .upcoming-tasks h3,
+    .completed-tasks h3 {
+        font-size: 1rem !important;
+        margin-bottom: 8px !important;
+    }
+    
+    .task-item {
+        padding: 8px 10px !important;
+        margin-bottom: 5px !important;
+        font-size: 0.85rem !important;
+    }
+    
+    .empty-message {
+        padding: 10px !important;
+        font-size: 0.8rem !important;
+    }
+    
+    /* Make task lists scrollable if needed */
+    .tasks-list {
+        max-height: 150px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+    }
+}
+
+/* Even smaller screens (phones in portrait) */
+@media (max-width: 480px) {
+    .timer-container {
+        padding: 10px !important;
+    }
+    
+    .timer-display {
+        padding: 15px 10px !important;
+    }
+    
+    .current-task h2 {
+        font-size: 1.5rem !important;
+    }
+    
+    .task-duration {
+        font-size: 2.2rem !important;
+    }
+    
+    .timer-controls {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+    }
+    
+    .timer-controls .btn {
+        padding: 15px !important;
+        font-size: 1rem !important;
+    }
+    
+    
+}
+
+@media (max-width:250px) {
+    /* Hide task lists on very small screens */
+    .upcoming-tasks,
+    .completed-tasks {
+        display: none !important;
+    }
+}
+
+/* Hide back button on desktop */
+@media (min-width: 769px) {
+    .mobile-back-btn {
+        display: none !important;
     }
 }

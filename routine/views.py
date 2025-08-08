@@ -168,7 +168,7 @@ class RoutineBuilderView(LoginRequiredMixin, View):
 @method_decorator(require_http_methods(['POST']), name="dispatch")
 class StartRoutineBuilderView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-        # Save session routine as real Routine, return its ID
+        # Get routine name and tasks
         if request.headers.get('Content-Type') == 'application/json':
             try:
                 data = json.loads(request.body)
@@ -180,6 +180,7 @@ class StartRoutineBuilderView(LoginRequiredMixin, View):
                 )
         else:
             routine_name = request.POST.get('routine_name')
+        
         if not routine_name:
             routine_name = 'My Routine'
 
@@ -189,9 +190,17 @@ class StartRoutineBuilderView(LoginRequiredMixin, View):
                 {'success': False, 'error': 'No tasks in routine'},
                 status=400
             )
+        
         routine = save_routine_to_db(request.user, routine_name, tasks)
         clear_routine(request.session)
-        return JsonResponse({'success': True, 'routine_id': routine.pk})
+        
+        # Check if this is a form submission (not AJAX)
+        if request.POST.get('redirect_to_timer') == 'true':
+            # Redirect to timer page
+            return redirect('routine:timer', routine_pk=routine.pk)
+        else:
+            # Return JSON for AJAX requests
+            return JsonResponse({'success': True, 'routine_id': routine.pk})
 
 
 class SaveRoutineView(LoginRequiredMixin, View):
@@ -424,19 +433,18 @@ def timer(request, routine_pk):
         for item in items
     ]
     total = sum(item['duration'] for item in tasks)
-   
+
+    context = {
+        'routine': routine,
+        'tasks': tasks,
+        'total': total,
+        'routine_items': items,
+    }
+
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        return render(request, 'routine/timer_content.html', {
-            'routine': routine,
-            'tasks': tasks,
-            'total': total,
-        })
+        return render(request, 'routine/timer_content.html', context)
     else:
-        return render(request, 'routine/timer.html', {
-            'routine': routine,
-            'tasks': tasks,
-            'total': total,
-        })
+        return render(request, 'routine/timer.html', context)
 
 
 @csrf_protect
@@ -454,7 +462,7 @@ def get_timer_state(request, routine_pk):
         })
     except TimerState.DoesNotExist:
         return JsonResponse({
-            'current_task_index': 0,
+            'current_task_index': -1,
             'current_seconds': 0,
             'is_paused': True
         })
@@ -473,3 +481,11 @@ def save_timer_state(request, routine_pk):
         state.is_paused = data['is_paused']
         state.save()
         return JsonResponse({'success': True})
+
+
+def create_routine(request):
+    user = request.user if request.user.is_authenticated else None
+    routine_count = Routine.objects.filter(user=user).count() if user else Routine.objects.filter(user=None).count()
+    max_routines = 5 if user else 1
+    if routine_count >= max_routines:
+        return JsonResponse({'error': 'Routine limit reached.'}, status=400)
