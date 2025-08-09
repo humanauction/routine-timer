@@ -54,7 +54,7 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     overflow: hidden;
-    border: 1px solid #e9ecef;
+    border: 1px solid var(--shadow-dark);
 }
 
 .routine-card:hover {
@@ -234,6 +234,7 @@
 @media (max-width: 480px) {
     .routine-card {
         margin: 0 10px;
+        border: 1px solid black;
     }
     
     .card-header {

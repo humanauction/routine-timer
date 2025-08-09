@@ -75,6 +75,7 @@
                             type="password"
                             placeholder="••••••••"
                             required
+                            autocomplete="current-password"
                         />
                         {% if login_form.password.errors %}
                         <div class="error-message">
@@ -177,6 +178,7 @@
                             name="password1"
                             type="password"
                             required
+                            autocomplete="new-password"
                         />
                         {% if signup_form.password1.errors %}
                         <div class="error-message">
@@ -192,6 +194,7 @@
                             name="password2"
                             type="password"
                             required
+                            autocomplete="new-password"
                         />
                         {% if signup_form.password2.errors %}
                         <div class="error-message">
