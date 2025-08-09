@@ -1,11 +1,11 @@
 {% load static %}
 <div class="routine-builder">
-    <h1>Build Your Routine</h1>
+    <h1>Routine Builder</h1>
     <!-- Live preview section -->
     <div class="live-preview">
         <h2>Preview</h2>
         <div class="preview-name">
-            <strong>Routine:</strong> <span id="preview-routine-name">{{ routine_name }}</span>
+            Routine: <span id="preview-routine-name">{{ routine_name }}</span>
         </div>
         <div class="task-list">
             <h3>Tasks</h3>
@@ -24,7 +24,7 @@
                 {% endfor %}
             </ul>
             <p class="total-time">
-                Total time: <strong><span id="preview-total-time">{{ total }}</span> minutes</strong>
+                Total time: <strong><span id="preview-total-time">{{ total }} minutes</span></strong>
             </p>
         </div>
     </div>
@@ -34,14 +34,14 @@
         {% csrf_token %}
         <div class="form-group">
             <label for="routine-name">Routine Name:</label>
-            <input type="text" name="name" id="routine-name" value="{{ routine_name }}" required />
+            <input type="text" name="name" placeholder="Routine Name" id="routine-name" value="{{ routine_name }}" required />
         </div>
         <button type="submit" class="btn btn-secondary">Set Name</button>
     </form>
 
     <!-- Add task form -->
     <div class="add-task">
-        <h2>Add Tasks</h2>
+        <h3>Add Tasks</h3>
         <form id="task-form" method="post" action="{% url 'routine:builder' %}" class="task-form">
             {% csrf_token %}
             <input type="hidden" name="routine_name" value="{{ routine_name }}">

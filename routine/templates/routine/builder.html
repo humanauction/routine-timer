@@ -9,7 +9,7 @@
 
 {% block content %}
 <div class="routine-builder">
-    <h1>Build Your Routine</h1> 
+    <h1>Routine Builder</h1>
     <!-- Live preview section -->
     <div class="live-preview">
         <h2>Preview</h2>
@@ -33,7 +33,7 @@
                 {% endfor %}
             </ul>
             <p class="total-time">
-                Total time: <strong><span id="preview-total-time">{{ total }}</span> minutes</strong>
+                Total time: <strong><span id="preview-total-time">{{ total }} minutes</span></strong>
             </p>
         </div>
     </div>
@@ -42,10 +42,10 @@
     <form id="routine-name-form" method="post" action="{% url 'routine:builder' %}">
         {% csrf_token %}
         <div class="form-group">
-            <label for="routine-name">Routine Name:</label>
-            <input type="text" name="name" id="routine-name" value="{{ routine_name }}" required />
+            <label for="routine-name" aria-label="Routine Name"></label>
+            <input type="text" name="name" placeholder="Routine Name" id="routine-name" value="{{ routine_name }}" required />
         </div>
-        <button type="submit" class="btn btn-secondary">Set Name</button>
+        <button type="submit" class="btn btn-secondary"></button>
     </form>
 
     <!-- Add task form -->

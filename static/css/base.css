@@ -321,8 +321,18 @@ footer {
         height: 100%;
     }
 
+    .nav-panel h1,
     .nav-panel h2,
-    .nav-item-container h2 {
+    .nav-panel h3,
+    .nav-panel h4,
+    .nav-panel h5,
+    .nav-panel h6,
+    .nav-item-container h1,
+    .nav-item-container h2,
+    .nav-item-container h3,
+    .nav-item-container h4,
+    .nav-item-container h5,
+    .nav-item-container h6 {
         font-size: 1.5rem;
         font-weight: 400;
         letter-spacing: 0.02em;
@@ -368,7 +378,7 @@ footer {
         flex: 1 1 auto;
         display: none;
         width: 100%;
-        background: var(--light-bg);
+        background: var(--primary-color);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
         position: static;
         height: 100%;
