@@ -1,3 +1,24 @@
+// --- fullscreen auth panel helper funct ---
+function enterAuthFullscreen() {
+    const panel = document.querySelector('.nav-panel.active');
+    if (panel && window.innerWidth <= 768) {
+        panel.classList.add('auth-fullscreen');
+        // back btn support
+        if (!panel.querySelector('.back-btn')) {
+            const backBtn = document.createElement('button');
+            backBtn.className = 'back-btn';
+            backBtn.innerHTML = '<i class="fas fa-arrow-left"></i>';
+            backBtn.setAttribute('aria-label', 'Back');
+            backBtn.onclick = function () {
+                panel.classList.remove('auth-fullscreen');
+                panel.classList.remove('active');
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            };
+            panel.prepend(backBtn);
+        }
+    }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     // Mobile menu toggle
     const mobileMenuToggle = document.getElementById("mobileMenuToggle");
@@ -64,6 +85,23 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // Ensure navbar login button navigates on click
+    const loginBtn = document.querySelector('.nav-item.login');
+    if (loginBtn) {
+        loginBtn.addEventListener('click', function (e) {
+            if (this.getAttribute('data-panel') === 'login') {
+                window.location.href = this.getAttribute('href');
+                return;
+            }
+            e.preventDefault();
+            e.stopImmediatePropagation();
+        });
+    }
+    function handleAuthPanelLoad(target) {
+        if (target === 'login' || target === 'signup') {
+            enterAuthFullscreen();
+        }
+    }
     // AJAX nav-panel handler for mobile
     if (window.innerWidth <= 768) {
         document.querySelectorAll('.nav-item[data-panel]').forEach(item => {
@@ -111,6 +149,9 @@ document.addEventListener("DOMContentLoaded", function () {
                             }
                             if (target === "detail" && typeof initRoutineDetail === "function") {
                                 initRoutineDetail();
+                            }
+                            if (target === "login" || target === "signup") {
+                                handleAuthPanelLoad(target);
                             }
 
                         })

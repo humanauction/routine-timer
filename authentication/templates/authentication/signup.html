@@ -12,6 +12,11 @@
     <h2>Sign Up</h2>
     <form id="registerForm" class="form" method="post">
         {% csrf_token %}
+        {% if form.errors %}
+            <div class="form-errors">
+                {{ form.errors }}
+            </div>
+        {% endif %}
         <!-- Register Form -->
         <fieldset>
             <legend class="visually-hidden">Register</legend>
@@ -46,4 +51,14 @@
         </div>
     </form>
 </div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/base.js' %}" defer></script>
+<script src="{% static 'authentication/js/auth.js' %}" defer></script>
+<script
+    defer
+    src="https://kit.fontawesome.com/844d1cd656.js"
+    crossorigin="anonymous"
+></script>
+<script src="{% static 'authentication/js/signup.js' %}" defer></script>
 {% endblock %}

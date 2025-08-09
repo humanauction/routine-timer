@@ -8,7 +8,6 @@ function initRoutineBuilder() {
     const previewName = document.getElementById('preview-routine-name');
     const previewTasks = document.getElementById('preview-tasks');
     const previewTotalTime = document.getElementById('preview-total-time');
-    const duration = parseInt(durationInput.value, 10);
     let totalDuration = parseInt(previewTotalTime?.textContent) || 0;
 
     // Update preview name when typing
@@ -32,7 +31,10 @@ function initRoutineBuilder() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        document.querySelector('input[name="name"]').value = data.routine_name;
+                        const nameInput = document.querySelector('input[name="name"]');
+                        if (nameInput) {
+                            nameInput.value = data.routine_name;
+                        }
                         const message = document.createElement('div');
                         message.className = 'success-message';
                         message.textContent = 'Routine name saved!';

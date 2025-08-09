@@ -34,6 +34,13 @@ class LoginView(DjangoLoginView):
         # Initialize both forms for the template
         login_form = self.form_class()
         signup_form = SignupForm()
+        # --- AJAX support ---
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return render(request, 'authentication/login_content.html', {
+                'login_form': login_form,
+                'signup_form': signup_form
+            })
+        # --- normal page load ---
         return render(request, self.template_name, {
             'login_form': login_form,
             'signup_form': signup_form
@@ -57,36 +64,41 @@ class LoginView(DjangoLoginView):
                 )
                 # Send welcome email
                 send_welcome_mail(user)
-
-                # Log the user in
                 login(request, user)
-
-                # Add success message
                 messages.success(
                     request, f"Welcome to Routine Timer, {user.username}!"
-                    )
-
-                # Redirect to home
+                )
                 return redirect('home:index')
             else:
-                # Form is invalid, re-render with errors
+                # --- AJAX support ---
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return render(request, 'authentication/login_content.html', {
+                        'login_form': login_form,
+                        'signup_form': signup_form
+                    })
+                # --- normal page load ---
                 return render(request, self.template_name, {
                     'login_form': login_form,
                     'signup_form': signup_form
                 })
         else:
-            # This is a login submission
             login_form = self.form_class(request, data=request.POST)
             signup_form = SignupForm()
 
             if login_form.is_valid():
                 return self.form_valid(login_form)
             else:
-                # Form is invalid, re-render with errors
+                # --- AJAX support ---
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return render(request, 'authentication/login_content.html', {
+                        'login_form': login_form,
+                        'signup_form': signup_form
+                    })
+                # --- normal page load ---
                 return render(request, self.template_name, {
                     'login_form': login_form,
                     'signup_form': signup_form
-                })
+                    })
 
 
 class GuestLoginView(View):

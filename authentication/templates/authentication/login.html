@@ -9,208 +9,216 @@
 
 {% block content %}
 <div class="auth-landing">
-    <main class="container" aria-labelledby="auth-heading">
-        <h1 id="auth-heading" class="visually-hidden">Authentication</h1>
-        
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="message {{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        </div>
-        {% endif %}
-        
-        <div class="auth-box">
-            <nav class="tabs" role="tablist">
-                <button
-                    role="tab"
-                    id="loginTab"
-                    type="button"
-                    aria-controls="loginForm"
-                    aria-selected="true"
+    <div class="auth-container">
+        <main class="container" aria-labelledby="auth-heading">
+            <h1 id="auth-heading" class="visually-hidden">Authentication</h1>
+            
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="auth-box">
+                <nav class="tabs" role="tablist">
+                    <button
+                        role="tab"
+                        id="loginTab"
+                        type="button"
+                        aria-controls="loginForm"
+                        aria-selected="true"
+                    >
+                        Login
+                    </button>
+                    <button
+                        id="signupTab"
+                        role="tab"
+                        type="button"
+                        aria-controls="signupForm"
+                    >Sign Up</button>
+                </nav>
+
+                
+                <!-- Login Form -->
+                <form
+                    id="loginForm"
+                    method="post"
+                    action=""
+                    class="form active"
+                    aria-labelledby="loginTab"
                 >
-                    Login
-                </button>
-                <button
-                    id="signupTab"
-                    role="tab"
-                    type="button"
-                    aria-controls="signupForm"
-                >Sign Up</button>
-            </nav>
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="login">
+                    <fieldset>
+                        <legend class="visually-hidden">Login</legend>
+                        <label for="username">Username or Email</label>
+                        <input
+                            id="username"
+                            name="username"
+                            type="text"
+                            required
+                        />
+                        {% if login_form.username.errors %}
+                        <div class="error-message">
+                            {% for error in login_form.username.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
 
-            
-            <!-- Login Form -->
-            <form
-                id="loginForm"
-                method="post"
-                action=""
-                class="form active"
-                aria-labelledby="loginTab"
-            >
-                {% csrf_token %}
-                <input type="hidden" name="form_type" value="login">
-                <fieldset>
-                    <legend class="visually-hidden">Login</legend>
-                    <label for="username">Username or Email</label>
-                    <input
-                        id="username"
-                        name="username"
-                        type="text"
-                        required
-                    />
-                    {% if login_form.username.errors %}
-                    <div class="error-message">
-                        {% for error in login_form.username.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                    {% endif %}
+                        <label for="password">Password</label>
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            placeholder="••••••••"
+                            required
+                        />
+                        {% if login_form.password.errors %}
+                        <div class="error-message">
+                            {% for error in login_form.password.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        {% if login_form.non_field_errors %}
+                        <div class="error-message">
+                            {% for error in login_form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <button type="submit">Login</button>
+                        <!-- Add guest login button -->
+                        <p class="or">Or</p>
+                        <a href="{% url 'authentication:guest_login' %}" class="btn btn-secondary guest-btn">
+                            <i class="fas fa-user-clock"></i> Continue as Guest
+                        </a>
+                    </fieldset>
 
-                    <label for="password">Password</label>
-                    <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        placeholder="••••••••"
-                        required
-                    />
-                    {% if login_form.password.errors %}
-                    <div class="error-message">
-                        {% for error in login_form.password.errors %}
-                            {{ error }}
-                        {% endfor %}
+                    <p class="or">Or continue with</p>
+                    <div class="socials" role="group" aria-label="Social login">
+                        <button
+                            class="social"
+                            aria-label="Login with Google"
+                            type="button"
+                            onclick="window.location.href='https://accounts.google.com/Login'"
+                        >
+                            <i class="fa-brands fa-google"></i>
+                        </button>
+                        <button
+                            class="social"
+                            aria-label="Login with Facebook"
+                            type="button"
+                            onclick="window.location.href='https://accounts.facebook.com/Login'"
+                        >
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </button>
+                        <button
+                            class="social"
+                            aria-label="Login with X (Twitter)"
+                            type="button"
+                            onclick="window.location.href='https://accounts.x.com/Login'"
+                        >
+                            <i class="fa-brands fa-twitter"></i>
+                        </button>
                     </div>
-                    {% endif %}
-                    
-                    {% if login_form.non_field_errors %}
-                    <div class="error-message">
-                        {% for error in login_form.non_field_errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                    
-                    <button type="submit">Login</button>
-                    <!-- Add guest login button -->
-                    <p class="or">Or</p>
-                    <a href="{% url 'authentication:guest_login' %}" class="btn btn-secondary guest-btn">
-                        <i class="fas fa-user-clock"></i> Continue as Guest
-                    </a>
-                </fieldset>
+                </form>
+                
+                <!-- Signup Form -->
+                <form
+                    id="signupForm"
+                    class="form"
+                    aria-labelledby="signupTab"
+                    method="post"
+                    action=""
+                >
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="sign_up">
+                    <fieldset>
+                        <legend class="visually-hidden">Sign Up</legend>
+                        <label for="signup_username">Username</label>
+                        <input
+                            id="signup_username"
+                            name="username"
+                            type="text"
+                            required
+                        />
+                        {% if signup_form.username.errors %}
+                        <div class="error-message">
+                            {% for error in signup_form.username.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
 
-                <p class="or">Or continue with</p>
-                <div class="socials" role="group" aria-label="Social login">
-                    <button
-                        class="social"
-                        aria-label="Login with Google"
-                        type="button"
-                        onclick="window.location.href='https://accounts.google.com/Login'"
-                    >
-                        <i class="fa-brands fa-google"></i>
-                    </button>
-                    <button
-                        class="social"
-                        aria-label="Login with Facebook"
-                        type="button"
-                        onclick="window.location.href='https://accounts.facebook.com/Login'"
-                    >
-                        <i class="fa-brands fa-facebook-f"></i>
-                    </button>
-                    <button
-                        class="social"
-                        aria-label="Login with X (Twitter)"
-                        type="button"
-                        onclick="window.location.href='https://accounts.x.com/Login'"
-                    >
-                        <i class="fa-brands fa-twitter"></i>
-                    </button>
-                </div>
-            </form>
-            
-            <!-- Signup Form -->
-            <form
-                id="signupForm"
-                class="form"
-                aria-labelledby="signupTab"
-                method="post"
-                action=""
-            >
-                {% csrf_token %}
-                <input type="hidden" name="form_type" value="sign_up">
-                <fieldset>
-                    <legend class="visually-hidden">Sign Up</legend>
-                    <label for="signup_username">Username</label>
-                    <input
-                        id="signup_username"
-                        name="username"
-                        type="text"
-                        required
-                    />
-                    {% if signup_form.username.errors %}
-                    <div class="error-message">
-                        {% for error in signup_form.username.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                    {% endif %}
+                        <label for="signup_email">Email</label>
+                        <input
+                            id="signup_email"
+                            name="email"
+                            type="email"
+                            required
+                        />
+                        {% if signup_form.email.errors %}
+                        <div class="error-message">
+                            {% for error in signup_form.email.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
 
-                    <label for="signup_email">Email</label>
-                    <input
-                        id="signup_email"
-                        name="email"
-                        type="email"
-                        required
-                    />
-                    {% if signup_form.email.errors %}
-                    <div class="error-message">
-                        {% for error in signup_form.email.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                    {% endif %}
+                        <label for="signup_password1">Password</label>
+                        <input
+                            id="signup_password1"
+                            name="password1"
+                            type="password"
+                            required
+                        />
+                        {% if signup_form.password1.errors %}
+                        <div class="error-message">
+                            {% for error in signup_form.password1.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
 
-                    <label for="signup_password1">Password</label>
-                    <input
-                        id="signup_password1"
-                        name="password1"
-                        type="password"
-                        required
-                    />
-                    {% if signup_form.password1.errors %}
-                    <div class="error-message">
-                        {% for error in signup_form.password1.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                    {% endif %}
+                        <label for="signup_password2">Confirm Password</label>
+                        <input
+                            id="signup_password2"
+                            name="password2"
+                            type="password"
+                            required
+                        />
+                        {% if signup_form.password2.errors %}
+                        <div class="error-message">
+                            {% for error in signup_form.password2.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
 
-                    <label for="signup_password2">Confirm Password</label>
-                    <input
-                        id="signup_password2"
-                        name="password2"
-                        type="password"
-                        required
-                    />
-                    {% if signup_form.password2.errors %}
-                    <div class="error-message">
-                        {% for error in signup_form.password2.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-
-                    <button type="submit">Sign Up</button>
-                </fieldset>
-            </form>
-        </div>
-    </main>
+                        <button type="submit">Sign Up</button>
+                    </fieldset>
+                </form>
+            </div>
+        </main>
+    </div>
 </div>
 {% endblock  %}
 <script>
     window.csrfToken = "{{ csrf_token }}";
 </script>
 {% block extra_js %}
+<script
+    defer
+    src="https://kit.fontawesome.com/844d1cd656.js"
+    crossorigin="anonymous"
+></script>
+<script src="{% static 'js/base.js' %}" defer></script>
 <script
     defer
     src="https://kit.fontawesome.com/844d1cd656.js"
