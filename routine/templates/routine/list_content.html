@@ -10,7 +10,7 @@
     {% if routines %}
         <div class="routines-grid">
             {% for routine in routines %}
-            <div class="routine-card">
+            <div class="routine-card card">
                 <div class="card-header">
                     <h3 class="routine-name">{{ routine.name }}</h3>
                     <span class="routine-time">
@@ -62,7 +62,7 @@
             <h2>No Routines Yet</h2>
             <p>Create your first routine here.</p>
             <a href="{% url 'routine:builder' %}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Create Your First Routine
+                <i class="fas fa-plus"></i> Create Routine
             </a>
         </div>
     {% endif %}
