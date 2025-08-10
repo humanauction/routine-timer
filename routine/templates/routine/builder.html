@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Build Your Routine{% endblock %}
+{% block title %}Routine Builder - Routine Timer{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'routine/css/builder.css' %}" />
@@ -9,51 +9,64 @@
 
 {% block content %}
 <div class="routine-builder">
-    <h1>Routine Builder</h1>
+    <div class="builder-header">
+        <h1>Routine Builder</h1>
+        <p>Create and customize your routine. Add tasks with specific durations.</p>
+    </div>
+    
     <!-- Live preview section -->
     <div class="live-preview">
         <h2>Preview</h2>
-        <div class="preview-name">
-            <strong>Routine:</strong> <span id="preview-routine-name">{{ routine_name }}</span>
+        <div class="preview-header">
+            <div class="preview-name">
+                Routine: <span id="preview-routine-name">{{ routine_name|default:"New Routine" }}</span>
+            </div>
+            <div class="preview-total">
+                Total Duration: <span id="preview-total-duration">{{ total_duration|default:0 }}</span> minutes
+            </div>
         </div>
-        <div class="task-list">
-            <h3>Tasks</h3>
-            <ul id="preview-tasks" class="tasks sortable">
+        
+        <div class="preview-tasks" id="preview-tasks">
+            {% if tasks %}
                 {% for task in tasks %}
-                <li class="task-item" data-index="{{ forloop.counter0 }}">
+                <div class="preview-task" data-task-id="{{ forloop.counter }}">
+                    <span class="task-number">{{ forloop.counter }}.</span>
                     <span class="task-name">{{ task.task }}</span>
-                    <span class="task-duration">{{ task.duration }} minutes</span>
-                    <button type="button" class="btn-delete" aria-label="Delete task">
-                        <i class="fas fa-trash"></i>
+                    <span class="task-duration">{{ task.duration }} min</span>
+                    <button type="button" class="btn-remove-task" onclick="removeTask({{ forloop.counter0 }})">
+                        <i class="fas fa-times"></i>
                     </button>
-                    <span class="drag-handle" aria-label="Drag to reorder">
-                        <i class="fas fa-grip-lines"></i>
-                    </span>
-                </li>
+                </div>
                 {% endfor %}
-            </ul>
-            <p class="total-time">
-                Total time: <strong><span id="preview-total-time">{{ total }} minutes</span></strong>
-            </p>
+            {% else %}
+                <div class="preview-empty">
+                    <p>No tasks added yet. Add your first task below!</p>
+                </div>
+            {% endif %}
         </div>
     </div>
-    
-    <!-- Routine name form -->
-    <form id="routine-name-form" method="post" action="{% url 'routine:builder' %}">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="routine-name" aria-label="Routine Name"></label>
-            <input type="text" name="name" placeholder="Routine Name" id="routine-name" value="{{ routine_name }}" required />
-        </div>
-        <button type="submit" class="btn btn-secondary"></button>
-    </form>
 
     <!-- Add task form -->
     <div class="add-task">
-        <h2>Add Tasks</h2>
+        <h3>Add Tasks</h3>
         <form id="task-form" method="post" action="{% url 'routine:builder' %}" class="task-form">
             {% csrf_token %}
-            <input type="hidden" name="name" value="{{ routine_name }}">
+            
+            <!-- Routine name input -->
+            <div class="form-group">
+                <label for="routine-name">Routine Name:</label>
+                <input 
+                    type="text" 
+                    name="routine_name" 
+                    placeholder="Enter routine name" 
+                    id="routine-name" 
+                    value="{{ routine_name }}" 
+                    required 
+                    autocomplete="off"
+                />
+            </div>
+            
+            <!-- Task input -->
             <div class="form-group">
                 {{ form.task.label_tag }} 
                 {{ form.task }} 
@@ -61,6 +74,8 @@
                 <div class="form-error">{{ form.task.errors }}</div>
                 {% endif %}
             </div>
+            
+            <!-- Duration input -->
             <div class="form-group">
                 {{ form.duration.label_tag }} 
                 {{ form.duration }} 
@@ -68,26 +83,98 @@
                 <div class="form-error">{{ form.duration.errors }}</div>
                 {% endif %}
             </div>
-            <button type="submit" class="btn btn-primary">Add Task</button>
+            
+            <button type="submit" class="btn btn-outline-default btn-sm">
+                <i class="fas fa-plus"></i> Add Task
+            </button>
         </form>
     </div>
+    
     <!-- Action buttons -->
     <div class="form-actions">
+        {% if tasks %}
         <form action="{% url 'routine:save' %}" method="post" class="save-form">
             {% csrf_token %} 
-            <button type="submit" class="btn btn-primary">Save Routine</button>
+            <input type="hidden" name="routine_name" value="{{ routine_name }}" />
+            <button type="submit" class="btn btn-outline-default btn-sm">
+                <i class="fas fa-save"></i> Save Routine
+            </button>
         </form>
+        
         <form id="start-routine-form" action="{% url 'routine:start_builder' %}" method="post" class="start-form">
             {% csrf_token %}
             <input type="hidden" name="redirect_to_timer" value="true" />
-            <input type="text" name="routine_name" id="routine-name" value="{{ routine_name }}" required />
-            <button type="submit" class="btn btn-success">Start Routine</button>
+            <input type="hidden" name="routine_name" value="{{ routine_name }}" />
+            <button type="submit" class="btn btn-outline-default btn-sm">
+                <i class="fas fa-play"></i> Start Routine
+            </button>
         </form>
+        {% else %}
+        <div class="no-tasks-message">
+            <p>Add at least one task to save or start your routine.</p>
+        </div>
+        {% endif %}
     </div>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
 
 {% block extra_js %}
-{{ block.super }}
-<script src="{% static 'routine/js/builder.js' %}"></script>
+<script src="{% static 'routine/js/builder.js' %}" defer></script>
+<script>
+// Real-time routine name update
+document.addEventListener('DOMContentLoaded', function() {
+    const routineNameInput = document.getElementById('routine-name');
+    const previewName = document.getElementById('preview-routine-name');
+    
+    if (routineNameInput && previewName) {
+        routineNameInput.addEventListener('input', function() {
+            previewName.textContent = this.value || 'New Routine';
+        });
+    }
+    
+    // Auto-focus on task input after page load
+    const taskInput = document.querySelector('input[name="task"]');
+    if (taskInput && !routineNameInput.value) {
+        routineNameInput.focus();
+    } else if (taskInput) {
+        taskInput.focus();
+    }
+});
+
+// Remove task function
+function removeTask(taskIndex) {
+    if (confirm('Remove this task?')) {
+        // Create a form to submit the removal
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = '{% url "routine:remove_task" %}';
+        
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = '{{ csrf_token }}';
+        
+        const taskIndexInput = document.createElement('input');
+        taskIndexInput.type = 'hidden';
+        taskIndexInput.name = 'task_index';
+        taskIndexInput.value = taskIndex;
+        
+        form.appendChild(csrfToken);
+        form.appendChild(taskIndexInput);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
 {% endblock %}

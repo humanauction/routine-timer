@@ -1,6 +1,7 @@
 {% load static %}
 <div class="routine-builder">
     <h1>Routine Builder</h1>
+    
     <!-- Live preview section -->
     <div class="live-preview">
         <h2>Preview</h2>
@@ -29,22 +30,18 @@
         </div>
     </div>
 
-    <!-- Routine name form -->
-    <form id="routine-name-form" method="post" action="{% url 'routine:builder' %}">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="routine-name">Routine Name:</label>
-            <input type="text" name="name" placeholder="Routine Name" id="routine-name" value="{{ routine_name }}" required />
-        </div>
-        <button type="submit" class="btn btn-secondary">Set Name</button>
-    </form>
-
     <!-- Add task form -->
     <div class="add-task">
         <h3>Add Tasks</h3>
         <form id="task-form" method="post" action="{% url 'routine:builder' %}" class="task-form">
             {% csrf_token %}
-            <input type="hidden" name="routine_name" value="{{ routine_name }}">
+            
+            <!-- Move routine name input here -->
+            <div class="form-group">
+                <label for="routine-name">Routine Name:</label>
+                <input type="text" name="routine_name" placeholder="Enter routine name" id="routine-name" value="{{ routine_name }}" required />
+            </div>
+            
             <div class="form-group">
                 {{ form.task.label_tag }} 
                 {{ form.task }} 
@@ -59,20 +56,22 @@
                 <div class="form-error">{{ form.duration.errors }}</div>
                 {% endif %}
             </div>
-            <button type="submit" class="btn btn-primary">Add Task</button>
+            <button type="submit" class="btn btn-outline-default btn-sm">Add Task</button>
         </form>
     </div>
+    
     <!-- Action buttons -->
     <div class="form-actions">
         <form action="{% url 'routine:save' %}" method="post" class="save-form">
             {% csrf_token %} 
-            <button type="submit" class="btn btn-primary">Save Routine</button>
+            <input type="hidden" name="routine_name" value="{{ routine_name }}" />
+            <button type="submit" class="btn btn-outline-default btn-sm">Save Routine</button>
         </form>
         <form id="start-routine-form" action="{% url 'routine:start_builder' %}" method="post" class="start-form">
             {% csrf_token %}
             <input type="hidden" name="redirect_to_timer" value="true" />
             <input type="hidden" name="routine_name" value="{{ routine_name }}" />
-            <button type="submit" class="btn btn-success">Start Routine</button>
+            <button type="submit" class="btn btn-outline-default btn-sm">Start Routine</button>
         </form>
     </div>
 </div>

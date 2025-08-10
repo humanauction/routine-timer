@@ -287,11 +287,11 @@ footer {
     font-size: 1rem;
     margin-bottom: 8px;
     color: #333;
-    font-weight: 500;
+    font-weight: 300;
 }
 
 input, textarea, select {
-    border: 2px solid var(--dark-bg);
+    border: 1px solid var(--dark-bg);
     border-radius: 8px;
     padding: 12px 16px;
     font-size: 1rem;
@@ -309,10 +309,10 @@ input:focus, textarea:focus, select:focus {
 
 button, .btn {
     border: 1px solid transparent;
-    border-radius: 8px;
+    border-radius: 4px;
     padding: 12px 24px;
     font-size: .8rem;
-    font-weight: 300;
+    font-weight: 200;
     cursor: pointer;
     transition: all 0.2s ease;
     text-decoration: none;
@@ -332,7 +332,7 @@ button, .btn {
 
 .btn-outline-default:hover, button[type="submit"]:hover {
     background: var(--primary-color);
-    color: #fff;
+    color: var(--tertiary-color);
     border-color: var(--tertiary-color);
     transform: translateY(-1px);
 }
@@ -517,6 +517,103 @@ button, .btn {
         box-sizing: border-box;
         width: 100%;
         height: 100%;
+    }
+
+    .routine-builder {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+    .task-list,
+    .add-task {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+    }
+
+
+    .tasks {
+        list-style: none;
+        padding: 0;
+    }
+
+    .task-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem;
+        background-color: white;
+        margin-bottom: 0.5rem;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .total-time {
+        text-align: right;
+        font-size: 1.1em;
+        margin: 1rem 1rem;
+    }
+
+    .save-form,
+    .start-form {
+        display: inline-block;
+        margin-right: 1rem;
+        margin-bottom: auto;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-error {
+        color: #dc3545;
+        font-size: 0.875em;
+        margin-top: 0.25rem;
+    }
+
+    .live-preview {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 20px 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+
+    .live-preview h2 {
+        margin-top: 0;
+        color: #343a40;
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 10px;
+    }
+
+    .preview-name {
+        margin-bottom: 15px;
+        font-size: 1.1em;
+    }
+
+    .task-item.preview-only {
+        border-left: 3px solid #007bff;
+        opacity: 0.8;
+        background-color: rgba(0, 123, 255, 0.05);
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .form-actions form {
+        display: inline-block;
+    }
+
+    .form-actions button {
+        margin: auto;
+    }
+
+    .task-form {
+        margin-bottom: 30px;
     }
 
     #panel-standalone-timer.active .timer-centerpiece {
