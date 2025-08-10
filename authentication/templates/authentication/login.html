@@ -4,7 +4,7 @@
 {% block title %}Login & Sign Up{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'authentication/css/auth.css' %}" />
+<link rel="stylesheet" href="{% static 'authentication/css/auth.css' %}?v=2" />
 {% endblock %}
 
 {% block content %}
@@ -54,12 +54,13 @@
                     <fieldset>
                         <legend class="visually-hidden">Login</legend>
                         <label for="username">Username or Email</label>
-                        <input
-                            id="username"
-                            name="username"
-                            type="text"
-                            required
-                        />
+                        <input 
+                            id="username" 
+                            name="username" 
+                            type="text" 
+                            autocomplete="username"
+                            required>
+
                         {% if login_form.username.errors %}
                         <div class="error-message">
                             {% for error in login_form.username.errors %}
@@ -69,14 +70,12 @@
                         {% endif %}
 
                         <label for="password">Password</label>
-                        <input
-                            id="password"
-                            name="password"
-                            type="password"
-                            placeholder="••••••••"
-                            required
+                        <input 
+                            id="password" 
+                            name="password" 
+                            type="password" 
                             autocomplete="current-password"
-                        />
+                            required>
                         {% if login_form.password.errors %}
                         <div class="error-message">
                             {% for error in login_form.password.errors %}
@@ -147,6 +146,7 @@
                             id="signup_username"
                             name="username"
                             type="text"
+                            autocomplete="username"
                             required
                         />
                         {% if signup_form.username.errors %}
@@ -162,6 +162,7 @@
                             id="signup_email"
                             name="email"
                             type="email"
+                            autocomplete="email"
                             required
                         />
                         {% if signup_form.email.errors %}

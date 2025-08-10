@@ -1,17 +1,8 @@
 <div class="home-panel">
     <h1>Welcome to Routine Timer!</h1>
     <p>
-        yes, there is nothing here. no, that is on purpose. now away with ye...
+        yes, there is nothing here. no, that is on purpose. one day, though... 
+        it'll be a dashboard.
+        probably.
     </p>
-    <ul class="quick-links">
-        {% if routine and routine.id %}
-            <li><a href="{% url 'routine:start' routine.id %}" class="href">Start Routine</a></li>
-        {% else %}
-            <li><span class="disabled">Start Routine (no routine available)</span></li>
-        {% endif %}
-        <li><a href="{% url 'routine:builder' %}">Create a New Routine</a></li>
-        <li><a href="{% url 'routine:list' %}">View My Routines</a></li>
-        <li><a href="{% url 'timer:standalone' %}">Standalone Timer</a></li>
-        <li><a href="{% url 'home:contact' %}">Contact Us</a></li>
-    </ul>
 </div>
