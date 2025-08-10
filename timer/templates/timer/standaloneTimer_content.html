@@ -3,33 +3,46 @@
     <div class="timer-display">
         <div class="ac-bg">
             <div class="timer-centerpiece">
+                <!-- Mobile: Duration controls above timer -->
+                <div class="timer-controls mobile-top-controls">
+                    <input type="number" id="total-duration-input" min="1" max="90" value="2" />
+                    <select id="slice-size-select">
+                        <option value="1">1 min/slice</option>
+                        <option value="5">5 min/slice</option>
+                        <option value="10">10 min/slice</option>
+                    </select>
+                </div>
+
                 <svg id="timer-dial" aria-label="Timer Dial"></svg>
+                
                 <div class="timer-bottom-group">
                     <!-- Time Remaining -->
                     <div id="timer-remaining" class="timer-remaining">
                         <p>Time Remaining:</p>
                         <p id="time-remaining-display">00:00</p>
                     </div>
-                    <!-- Timer Controls -->
+                    
+                    <!-- Main Timer Controls -->
                     <div class="timer-actions">
                         <button id="start-timer" class="timer-btn" aria-label="Start Timer"><i class="fas fa-play"></i></button>
                         <button class="timer-btn" id="pause-btn"><i class="fa fa-pause"></i></button>
                         <button id="stop-timer" class="timer-btn" aria-label="Stop Timer"><i class="fa fa-stop"></i></button>
-                        <button id="reset-timer" class="timer-btn" aria-label="Reset Timer"><i class="fa fa-refresh"></i></button>
                     </div>
-                    <div class="timer-controls">
+
+                    <!-- Mobile: Bottom row for reset and +1 -->
+                    <div class="mobile-bottom-controls">
+                        <button id="reset-timer" class="timer-btn" aria-label="Reset Timer"><i class="fa fa-refresh"></i></button>
+                        <button id="increment-1" class="timer-btn" aria-label="Add 1 minute">+1</button>
+                    </div>
+
+                    <!-- Desktop: All increment/decrement controls -->
+                    <div class="timer-controls desktop-controls">
                         <button id="decrement-10" class="timer-btn" aria-label="Subtract 10 minutes">-10</button>
                         <button id="decrement-5" class="timer-btn" aria-label="Subtract 5 minutes">-5</button>
                         <button id="decrement-1" class="timer-btn" aria-label="Subtract 1 minute">-1</button>
-                        <button id="increment-1" class="timer-btn" aria-label="Add 1 minute">+1</button>
+                        <button id="increment-1-desktop" class="timer-btn" aria-label="Add 1 minute">+1</button>
                         <button id="increment-5" class="timer-btn" aria-label="Add 5 minutes">+5</button>
                         <button id="increment-10" class="timer-btn" aria-label="Add 10 minutes">+10</button>
-                        <input type="number" id="total-duration-input" min="1" max="90" value="2" />
-                        <select id="slice-size-select">
-                            <option value="1">1 min/slice</option>
-                            <option value="5">5 min/slice</option>
-                            <option value="10">10 min/slice</option>
-                        </select>
                     </div>
                 </div>
             </div>

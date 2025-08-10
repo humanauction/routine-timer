@@ -566,9 +566,26 @@ button, .btn {
 
     .standalone-timer #total-duration-input,
     .standalone-timer #slice-size-select {
-        display: none;
+        
     }
 
+    .standalone-timer .mobile-top-controls {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .standalone-timer .mobile-bottom-controls {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 16px;
+    }
+
+    .standalone-timer .desktop-controls {
+        display: none;
+    }
 
     @keyframes fadeIn {
         from {
@@ -582,4 +599,17 @@ button, .btn {
         }
     }
     
+}
+
+@media (min-width: 769px) {
+    .standalone-timer .mobile-top-controls,
+    .standalone-timer .mobile-bottom-controls {
+        display: none;
+    }
+    
+    .standalone-timer .desktop-controls {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+    }
 }
