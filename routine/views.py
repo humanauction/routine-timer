@@ -180,7 +180,7 @@ class StartRoutineBuilderView(LoginRequiredMixin, View):
                 )
         else:
             routine_name = request.POST.get('routine_name')
-        
+
         if not routine_name:
             routine_name = 'My Routine'
 
@@ -190,10 +190,10 @@ class StartRoutineBuilderView(LoginRequiredMixin, View):
                 {'success': False, 'error': 'No tasks in routine'},
                 status=400
             )
-        
+
         routine = save_routine_to_db(request.user, routine_name, tasks)
         clear_routine(request.session)
-        
+
         # Check if this is a form submission (not AJAX)
         if request.POST.get('redirect_to_timer') == 'true':
             # Redirect to timer page
