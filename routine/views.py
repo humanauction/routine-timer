@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect, get_object_or_404
 import json
@@ -45,7 +45,7 @@ class TimerView(DetailView):
         context['tasks'] = tasks
         context['total'] = total
         context['routine'] = self.object
-        context['routine_items'] = items  # Add this for consistency
+        context['routine_items'] = items
         return context
 
     # AJAX partial support here
@@ -504,3 +504,25 @@ def create_routine(request):
     max_routines = 5 if user else 1
     if routine_count >= max_routines:
         return JsonResponse({'error': 'Routine limit reached.'}, status=400)
+    # logic to create the routine here
+    if request.method == 'POST':
+        name = request.POST.get('name', 'Untitled Routine')
+        routine = Routine.objects.create(user=user, name=name)
+        return JsonResponse({'success': True, 'routine_id': routine.id})
+    # For GET requests, return a simple response or a form
+    return HttpResponse("Routine creation page")
+
+
+def add_task_to_builder(request):
+    """Add a new task to the routine in the session"""
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            task = form.cleaned_data['task']
+            duration = form.cleaned_data['duration']
+            add_task(request.session, task, duration)
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'error': form.errors}, status=400)
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
