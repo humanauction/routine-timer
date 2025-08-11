@@ -10,11 +10,14 @@
     <div class="routine-header">
         <h1>{{ routine.name }}</h1>
         <div class="routine-actions">
-            <a href="{% url 'routine:list' %}" class="btn btn-secondary">
+            <a href="{% url 'routine:list' %}" class="btn btn-outline-default btn-sm">
                 <i class="fas fa-arrow-left"></i> Back to Routines
             </a>
-            <a href="{% url 'routine:start' routine.id %}" class="btn btn-primary start-routine" data-routine-id="{{ routine.id }}">
+            <a href="{% url 'routine:start' routine.id %}" class="btn btn-outline-default btn-sm start-routine" data-routine-id="{{ routine.id }}">
                 <i class="fas fa-play"></i> Start Routine
+            </a>
+            <a href="{% url 'routine:builder' %}?edit={{ routine.id }}" class="btn btn-outline-default">
+                <i class="fas fa-edit"></i> Edit Routine
             </a>
             <a href="{% url 'routine:delete' routine.id %}" class="btn btn-danger">
                 <i class="fas fa-trash"></i> Delete
@@ -58,9 +61,8 @@
         </ul>
     </div>
 </div>
+{% endblock %} 
 <!-- detail.js at the bottom -->
-{% endblock %} <!-- Close the content block here -->
-
 {% block extra_js %}
 {{ block.super }}
 <script>

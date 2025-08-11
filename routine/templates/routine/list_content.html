@@ -1,8 +1,8 @@
 {% load static %}
 <div class="routines-container">
     <div class="header-section">
-        <h1>My Routines</h1>
-        <a href="{% url 'routine:builder' %}" class="btn btn-primary new-routine-btn">
+        <h2>My Routines</h2>
+        <a href="{% url 'routine:builder' %}" class="btn btn-outline-default btn-sm">
             <i class="fas fa-plus"></i> New Routine
         </a>
     </div>
@@ -21,30 +21,29 @@
                 <div class="card-body">
                     <div class="routine-stats">
                         <div class="stat-item">
-                            <span class="stat-value">{{ routine.tasks.count }}</span>
+                            <span class="stat-value">{{ routine.items.count }}</span>
                             <span class="stat-label">Tasks</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value">{{ routine.total_time }}</span>
-                            <span class="stat-label">Minutes</span>
                         </div>
                     </div>
                 </div>
                 <div class="card-actions">
                     <a href="{% url 'routine:timer' routine.id %}" 
-                       class="btn btn-start" 
+                       class="btn btn-start btn-sm" 
                        title="Start Routine">
                         <i class="fas fa-play"></i>
                         Start
                     </a>
                     <a href="{% url 'routine:detail' routine.id %}" 
-                       class="btn btn-details" 
+                       class="btn btn-details btn-sm" 
                        title="View Details">
                         <i class="fas fa-info-circle"></i>
                         Details
                     </a>
+                    <a href="{% url 'routine:builder' %}?edit={{ routine.id }}" class="btn btn-outline-default btn-sm">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
                     <a href="{% url 'routine:delete' routine.id %}" 
-                       class="btn btn-delete" 
+                       class="btn btn-delete btn-sm" 
                        title="Delete Routine"
                        onclick="return confirm('Are you sure you want to delete this routine?')">
                         <i class="fas fa-trash"></i>

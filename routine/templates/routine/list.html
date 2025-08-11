@@ -8,8 +8,8 @@
 {% block content %}
 <div class="routines-container">
     <div class="header-section">
-        <h1>My Routines</h1>
-        <a href="{% url 'routine:builder' %}" class="btn btn-primary new-routine-btn">
+        <h2>My Routines</h2>
+        <a href="{% url 'routine:builder' %}" class="btn btn-outline-default btn-sm">
             <i class="fas fa-plus"></i> New Routine
         </a>
     </div>
@@ -52,6 +52,9 @@
                         <i class="fas fa-info-circle"></i>
                         Details
                     </a>
+                    <a href="{% url 'routine:builder' %}?edit={{ routine.id }}" class="btn btn-outline-default btn-sm">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
                     <a href="{% url 'routine:delete' routine.id %}" 
                        class="btn btn-delete" 
                        title="Delete Routine"
@@ -70,7 +73,7 @@
             </div>
             <h2>No Routines Yet</h2>
             <p>Create your first routine here.</p>
-            <a href="{% url 'routine:builder' %}" class="btn btn-primary">
+            <a href="{% url 'routine:builder' %}" class="btn btn-outline-default btn-sm">
                 <i class="fas fa-plus"></i> Create Your First Routine
             </a>
         </div>
