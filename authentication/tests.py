@@ -7,7 +7,9 @@ class AuthViewTests(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = CustomUser.objects.create_user(
-            username='testuser', email='test@example.com', password='testpass123'
+            username='testuser',
+            email='test@example.com',
+            password='testpass123'
         )
 
     def test_login_page_loads(self):
