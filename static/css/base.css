@@ -3,6 +3,7 @@
     --secondary-color: #a3aab5;
     --tertiary-color: #242424;
     --accent-color: #e24ad3;
+    --accent-red: #c41e3a;
     --text-color: #161616;
     --light-bg: #e6e8ed;
     --dark-bg: #4d4d4e;
@@ -609,7 +610,7 @@ button, .btn {
     }
 
     .form-actions button {
-        margin: auto;
+        margin: auto 0;
     }
 
     .task-form {

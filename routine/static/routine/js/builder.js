@@ -215,17 +215,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const startForm = document.getElementById('start-routine-form');
     if (startForm) {
         startForm.addEventListener('submit', function (e) {
-            // Check if form has redirect_to_timer field (mobile form submission)
             const redirectField = document.querySelector('input[name="redirect_to_timer"]');
             if (redirectField && redirectField.value === 'true') {
-                // Let the form submit normally (don't prevent default)
                 return;
             }
-
-            // Otherwise, prevent default and use AJAX
             e.preventDefault();
             const url = startForm.getAttribute('action');
             const csrfToken = startForm.querySelector('[name="csrfmiddlewaretoken"]').value;
+
+            // FIX: Safely get routine name value
+            const routineNameInput = document.getElementById('routine-name');
+            const routineNameValue = routineNameInput ? routineNameInput.value : '';
+
             fetch(url, {
                 method: 'POST',
                 headers: {
@@ -234,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    routine_name: document.getElementById('routine-name').value,
+                    routine_name: routineNameValue,
                     tasks: Array.from(document.querySelectorAll('.task-item')).map(item => ({
                         task: item.querySelector('.task-name').textContent,
                         duration: parseInt(item.querySelector('.task-duration').textContent)

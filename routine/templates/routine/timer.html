@@ -81,6 +81,10 @@
             <li class="empty-message">No tasks completed</li>
         </ul>
     </div>
+    <!-- back to routine list button -->
+    <a href="{% url 'routine:list' %}" class="btn btn-outline-default btn-sm back-btn" aria-label="Back to Routine List">
+        <i class="fas fa-arrow-left"></i>
+    </a>
 </div>
 <!-- Sound files -->
 <audio id="task-complete-sound" src="{% static 'sounds/slice.mp3' %}" preload="auto"></audio>
