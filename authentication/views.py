@@ -36,10 +36,14 @@ class LoginView(DjangoLoginView):
         signup_form = SignupForm()
         # --- AJAX support ---
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            return render(request, 'authentication/login_content.html', {
-                'login_form': login_form,
-                'signup_form': signup_form
-            })
+            return render(
+                request,
+                'authentication/login_content.html',
+                {
+                    'login_form': login_form,
+                    'signup_form': signup_form
+                }
+            )
         # --- normal page load ---
         return render(request, self.template_name, {
             'login_form': login_form,
@@ -72,10 +76,14 @@ class LoginView(DjangoLoginView):
             else:
                 # --- AJAX support ---
                 if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                    return render(request, 'authentication/login_content.html', {
-                        'login_form': login_form,
-                        'signup_form': signup_form
-                    })
+                    return render(
+                        request,
+                        'authentication/login_content.html',
+                        {
+                            'login_form': login_form,
+                            'signup_form': signup_form
+                        }
+                    )
                 # --- normal page load ---
                 return render(request, self.template_name, {
                     'login_form': login_form,
@@ -86,14 +94,20 @@ class LoginView(DjangoLoginView):
             signup_form = SignupForm()
 
             if login_form.is_valid():
-                return self.form_valid(login_form)
+                return self.form_valid(
+                    login_form
+                )
             else:
                 # --- AJAX support ---
                 if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                    return render(request, 'authentication/login_content.html', {
-                        'login_form': login_form,
-                        'signup_form': signup_form
-                    })
+                    return render(
+                        request,
+                        'authentication/login_content.html',
+                        {
+                            'login_form': login_form,
+                            'signup_form': signup_form
+                        }
+                    )
                 # --- normal page load ---
                 return render(request, self.template_name, {
                     'login_form': login_form,

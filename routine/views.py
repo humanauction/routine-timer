@@ -27,7 +27,11 @@ class TimerView(DetailView):
 
     def get_object(self, queryset=None):
         routine_pk = self.kwargs.get('routine_pk')
-        return get_object_or_404(Routine, pk=routine_pk, user=self.request.user)  # Add user check
+        return get_object_or_404(
+            Routine,
+            pk=routine_pk,
+            user=self.request.user
+        )  # Add user check
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -261,17 +265,17 @@ class RoutineDetailView(LoginRequiredMixin, View):
         routine = get_object_or_404(Routine, pk=pk, user=request.user)
         routine_items = routine.items.all().order_by('order')
         total_duration = sum(item.duration for item in routine_items)
-        
+
         context = {
             'routine': routine,
             'routine_items': routine_items,
             'total_duration': total_duration
         }
-        
+
         # Handle AJAX requests for mobile navigation
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return render(request, 'routine/detail_content.html', context)
-        
+
         return render(request, 'routine/detail.html', context)
 
 
@@ -493,7 +497,10 @@ def save_timer_state(request, routine_pk):
 
 def create_routine(request):
     user = request.user if request.user.is_authenticated else None
-    routine_count = Routine.objects.filter(user=user).count() if user else Routine.objects.filter(user=None).count()
+    if user:
+        routine_count = Routine.objects.filter(user=user).count()
+    else:
+        routine_count = Routine.objects.filter(user=None).count()
     max_routines = 5 if user else 1
     if routine_count >= max_routines:
         return JsonResponse({'error': 'Routine limit reached.'}, status=400)
