@@ -29,11 +29,16 @@
                     <span></span><span></span><span></span><span></span>
                 </div>
             </header>
-
             <!-- navigation section -->
             <nav class="main-nav">
                 <div class="nav-content">
-                    <!-- Each nav item needs to be in a container with its panel -->
+                    {% if user.is_authenticated and user.profile.is_guest %}
+                        <!-- Guest indicator above everything -->
+                        <div class="guest-indicator">
+                            <i class="fas fa-user-clock"></i> Guest Mode
+                        </div>
+                    {% endif %}
+                    <!-- Home - always first -->
                     <div class="nav-item-container">
                         <a
                             href="{% url 'home:index' %}"
@@ -45,7 +50,7 @@
                         </a>
                         <div class="nav-panel" id="panel-home"></div>
                     </div>
-
+                    <!-- Standalone Timer - always second -->
                     <div class="nav-item-container">
                         <a
                             href="{% url 'timer:standalone' %}"
@@ -55,23 +60,13 @@
                             <i class="fas fa-clock icon"></i>
                             <span>Standalone Timer</span>
                         </a>
-                        <div
-                            class="nav-panel"
-                            id="panel-standalone-timer"
-                        ></div>
+                        <div class="nav-panel" id="panel-standalone-timer"></div>
                     </div>
                     {% if user.is_authenticated %}
                         {% if user.profile.is_guest %}
-                            <!-- Guest user -->
-                            <div class="guest-indicator">
-                                <i class="fas fa-user-clock"></i> Guest Mode
-                            </div>
+                            <!-- Guest user menu items -->
                             <div class="nav-item-container">
-                                <a
-                                    href="{% url 'routine:builder' %}"
-                                    class="nav-item {% if request.resolver_match.view_name == 'routine:builder' %}active{% endif %}"
-                                    data-panel="builder"
-                                >
+                                <a href="{% url 'routine:builder' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:builder' %}active{% endif %}" data-panel="builder">
                                     <i class="fas fa-plus-circle icon"></i>
                                     <span>New Routine</span>
                                 </a>
@@ -79,86 +74,58 @@
                             </div>
                             
                             <div class="nav-item-container">
-                                <a
-                                    href="{% url 'authentication:login' %}"
-                                    class="nav-item"
-                                    data-panel="signup"
-                                >
+                                <a href="{% url 'authentication:login' %}" class="nav-item" data-panel="signup">
                                     <i class="fas fa-save icon"></i>
                                     <span>Sign Up to Save</span>
                                 </a>
                                 <div class="nav-panel" id="panel-signup"></div>
                             </div>
+                            
                             <div class="nav-item-container">
-                                <a
-                                    href="{% url 'authentication:logout' %}"
-                                    class="nav-item"
-                                    data-panel="logout"
-                                >
+                                <a href="{% url 'authentication:logout' %}" class="nav-item" data-panel="logout">
                                     <i class="fas fa-sign-out-alt icon"></i>
                                     <span>End Guest Session</span>
                                 </a>
                                 <div class="nav-panel" id="panel-logout"></div>
                             </div>
                         {% else %}
-                     <!-- Regular user -->
-                    <div class="nav-item-container">
-                        <a
-                            href="{% url 'routine:builder' %}"
-                            class="nav-item {% if request.resolver_match.view_name == 'routine:builder' %}active{% endif %}"
-                            data-panel="builder"
-                        >
-                            <i class="fas fa-plus-circle icon"></i>
-                            <span>New Routine</span>
-                        </a>
-                        <div class="nav-panel" id="panel-builder"></div>
-                    </div>
-                    <div class="nav-item-container">
-                        <a
-                            href="{% url 'routine:list' %}"
-                            class="nav-item {% if request.resolver_match.url_name == 'routine:list' %}active{% endif %}"
-                            data-panel="list"
-                        >
-                            <i class="fas fa-list icon"></i>
-                            <span>My Routines</span>
-                        </a>
-                        <div class="nav-panel" id="panel-list"></div>
-                    </div>
-
-                    <div class="nav-item-container">
-                        <a
-                            href="{% url 'authentication:logout' %}"
-                            class="nav-item"
-                            data-panel="logout"
-                        >
-                            <i class="fas fa-sign-out-alt icon"></i>
-                            <span>Logout</span>
-                        </a>
-                        <div class="nav-panel" id="panel-logout"></div>
-                    </div>
-                    {% endif %}
+                            <!-- Regular user menu items -->
+                            <div class="nav-item-container">
+                                <a href="{% url 'routine:builder' %}" class="nav-item {% if request.resolver_match.view_name == 'routine:builder' %}active{% endif %}" data-panel="builder">
+                                    <i class="fas fa-plus-circle icon"></i>
+                                    <span>New Routine</span>
+                                </a>
+                                <div class="nav-panel" id="panel-builder"></div>
+                            </div>
+                            
+                            <div class="nav-item-container">
+                                <a href="{% url 'routine:list' %}" class="nav-item {% if request.resolver_match.url_name == 'routine:list' %}active{% endif %}" data-panel="list">
+                                    <i class="fas fa-list icon"></i>
+                                    <span>My Routines</span>
+                                </a>
+                                <div class="nav-panel" id="panel-list"></div>
+                            </div>
+                            <div class="nav-item-container">
+                                <a href="{% url 'authentication:logout' %}" class="nav-item" data-panel="logout">
+                                    <i class="fas fa-sign-out-alt icon"></i>
+                                    <span>Logout</span>
+                                </a>
+                                <div class="nav-panel" id="panel-logout"></div>
+                            </div>
+                        {% endif %}
                     {% else %}
-                    <!-- Not authenticated -->
-                    <div class="nav-item-container">
-                        <a
-                            href="{% url 'authentication:login' %}"
-                            class="nav-item"
-                            data-panel="login"
-                        >
-                            <i class="fas fa-sign-in-alt icon"></i>
-                            <span>Login / Register</span>
-                        </a>
-                        <div class="nav-panel" id="panel-login"></div>
-                    </div>
+                        <!-- Not authenticated -->
+                        <div class="nav-item-container">
+                            <a href="{% url 'authentication:login' %}" class="nav-item" data-panel="login">
+                                <i class="fas fa-sign-in-alt icon"></i>
+                                <span>Login / Register</span>
+                            </a>
+                            <div class="nav-panel" id="panel-login"></div>
+                        </div>
                     {% endif %}
-
-                    <!-- Contact link -->
+                    <!-- Contact link - always last -->
                     <div class="nav-item-container">
-                        <a
-                            href="{% url 'home:contact' %}"
-                            class="nav-item {% if request.resolver_match.view_name == 'home:contact' %}active{% endif %}"
-                            data-panel="contact"
-                        >
+                        <a href="{% url 'home:contact' %}" class="nav-item {% if request.resolver_match.view_name == 'home:contact' %}active{% endif %}" data-panel="contact">
                             <i class="fas fa-envelope icon"></i>
                             <span>Contact Us</span>
                         </a>
