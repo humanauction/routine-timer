@@ -66,7 +66,7 @@ function initRoutineDetail() {
 
     // Setup drag and drop reordering with Sortable.js
     const taskList = document.getElementById('routine-tasks');
-    if (taskList) {
+    if (taskList && window.Sortable) {
         new Sortable(taskList, {
             animation: 150,
             handle: '.drag-handle',
@@ -104,3 +104,27 @@ function initRoutineDetail() {
 document.addEventListener('DOMContentLoaded', function () {
     initRoutineDetail();
 });
+
+// Export for AJAX loading
+window.initRoutineDetail = initRoutineDetail;
+
+function loadDetailScripts() {
+    // Load detail.js if it's not already loaded
+    if (!document.querySelector('script[src*="detail.js"]')) {
+        const script = document.createElement('script');
+        script.src = '/static/routine/js/detail.js';
+        script.defer = true;
+        script.onload = function () {
+            // Initialize detail functionality after script loads
+            if (window.initRoutineDetail) {
+                window.initRoutineDetail();
+            }
+        };
+        document.head.appendChild(script);
+    } else {
+        // Script already loaded, just initialize
+        if (window.initRoutineDetail) {
+            window.initRoutineDetail();
+        }
+    }
+}

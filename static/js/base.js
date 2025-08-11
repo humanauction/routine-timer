@@ -163,4 +163,219 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     }
+
+    // Handle direct navigation
+    handleDirectNavigation();
+
+    // Also handle browser back/forward buttons
+    window.addEventListener('popstate', function (event) {
+        if (window.innerWidth <= 768) {
+            handleDirectNavigation();
+        }
+    });
 });
+
+// replace the direct navigation handler
+
+function handleDirectNavigation() {
+    if (window.innerWidth <= 768) {
+        const path = window.location.pathname;
+
+        // Handle detail pages via AJAX
+        if (path.startsWith('/routine/detail/')) {
+            handleDetailPageAjax(path);
+        } else if (path.startsWith('/routine/timer/')) {
+            handleTimerPageAjax(path);
+        } else if (path === '/routine/') {
+            // Handle direct navigation to routine list
+            const listNavItem = document.querySelector('[data-panel="list"]');
+            if (listNavItem) {
+                // Simulate clicking the nav item to load list content
+                listNavItem.click();
+            }
+        }
+        // Add other direct navigation cases as needed
+    }
+}
+
+function handleDetailPageAjax(path) {
+    const listNavItem = document.querySelector('[data-panel="list"]');
+    const listPanel = document.getElementById('panel-list');
+
+    if (!listNavItem || !listPanel) {
+        console.error('List nav item or panel not found');
+        window.location.href = path;
+        return;
+    }
+
+    // Activate the list nav item
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    listNavItem.classList.add('active');
+
+    // Hide main content and show panel
+    const main = document.querySelector('main');
+    if (main) main.style.display = 'none';
+
+    // Hide all panels first
+    document.querySelectorAll('.nav-panel').forEach(panel => {
+        panel.classList.remove('active');
+    });
+
+    // Show loading state
+    listPanel.innerHTML = '<div class="loading">Loading...</div>';
+    listPanel.classList.add('active');
+
+    console.log('Fetching detail page:', path); // Debug
+
+    // Load detail content via AJAX
+    fetch(path, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(html => {
+            console.log('Raw HTML response:', html.substring(0, 500)); // Debug - see first 500 chars
+
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            // Debug: Log what elements are available
+            console.log('Available elements:', {
+                detailContent: !!doc.querySelector('#detail-content'),
+                detailContentClass: !!doc.querySelector('.detail-content'),
+                mainContent: !!doc.querySelector('.main-content'),
+                main: !!doc.querySelector('main'),
+                routineDetail: !!doc.querySelector('.routine-detail'),
+                container: !!doc.querySelector('.container'),
+                body: !!doc.body
+            });
+
+            // Try multiple selectors to find content
+            let content =
+                doc.querySelector('.routine-detail') ||
+                doc.querySelector('#detail-content') ||
+                doc.querySelector('.detail-content') ||
+                doc.querySelector('.main-content') ||
+                doc.querySelector('main') ||
+                doc.querySelector('.container') ||
+                doc.body; // Fallback
+
+            if (content) {
+                console.log('Found content with:', content.className || content.tagName);
+                listPanel.innerHTML = content.innerHTML;
+                // Load detail-specific JS
+                loadDetailScripts();
+            } else {
+                console.error('Could not find any content in response');
+                console.log('Full HTML:', html); // Debug - see full response
+                listPanel.innerHTML = '<p>Error loading content</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading detail page:', error);
+            listPanel.innerHTML = '<p>Error loading page. Please try again.</p>';
+        });
+}
+
+function handleTimerPageAjax(path) {
+    // Similar to detail, but for timer pages
+    const timerPanel = document.getElementById('panel-timer');
+
+    if (timerPanel) {
+        // Your timer AJAX loading logic here
+        fetch(path, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                // Parse the response and extract content
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // Look for timer_content specifically
+                let content = doc.querySelector('#timer-content, .timer-content, .main-content, main');
+
+                if (content) {
+                    timerPanel.innerHTML = content.innerHTML;
+                    timerPanel.classList.add('active');
+
+                    // Hide other panels
+                    document.querySelectorAll('.nav-panel').forEach(panel => {
+                        if (panel !== timerPanel) {
+                            panel.classList.remove('active');
+                        }
+                    });
+
+                    // Load timer-specific JS if needed
+                    loadTimerScripts();
+                } else {
+                    console.error('Could not find content in response');
+                    timerPanel.innerHTML = '<p>Error loading content</p>';
+                    timerPanel.classList.add('active');
+                }
+            })
+            .catch(error => {
+                console.error('Error loading timer page:', error);
+                timerPanel.innerHTML = '<p>Error loading page. Please try again.</p>';
+                timerPanel.classList.add('active');
+            });
+    }
+}
+
+function loadDetailScripts() {
+    // Load detail.js if it's not already loaded
+    if (!document.querySelector('script[src*="detail.js"]')) {
+        const script = document.createElement('script');
+        script.src = '/static/routine/js/detail.js';
+        script.defer = true;
+        script.onload = function () {
+            // Initialize detail functionality after script loads
+            if (window.initRoutineDetail) {
+                window.initRoutineDetail();
+            }
+        };
+        document.head.appendChild(script);
+    } else {
+        // Script already loaded, just initialize
+        if (window.initRoutineDetail) {
+            window.initRoutineDetail();
+        }
+    }
+}
+
+function loadTimerScripts() {
+    // Load timer.js if it's not already loaded
+    if (!document.querySelector('script[src*="timer.js"]')) {
+        const script = document.createElement('script');
+        script.src = '/static/routine/js/timer.js';
+        script.defer = true;
+        script.onload = function () {
+            // Initialize timer functionality after script loads
+            if (window.initRoutineTimer) {
+                window.initRoutineTimer();
+            }
+        };
+        document.head.appendChild(script);
+    } else {
+        // Script already loaded, just initialize
+        if (window.initRoutineTimer) {
+            window.initRoutineTimer();
+        }
+    }
+}
+

@@ -27,11 +27,10 @@ class TimerView(DetailView):
 
     def get_object(self, queryset=None):
         routine_pk = self.kwargs.get('routine_pk')
-        return get_object_or_404(Routine, pk=routine_pk)
+        return get_object_or_404(Routine, pk=routine_pk, user=self.request.user)  # Add user check
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Add more context variables here later
         items = self.object.items.all().order_by('order')
         tasks = [
             {'task': item.task, 'duration': item.duration}
@@ -42,6 +41,7 @@ class TimerView(DetailView):
         context['tasks'] = tasks
         context['total'] = total
         context['routine'] = self.object
+        context['routine_items'] = items  # Add this for consistency
         return context
 
     # AJAX partial support here
@@ -261,11 +261,18 @@ class RoutineDetailView(LoginRequiredMixin, View):
         routine = get_object_or_404(Routine, pk=pk, user=request.user)
         routine_items = routine.items.all().order_by('order')
         total_duration = sum(item.duration for item in routine_items)
-        return render(request, 'routine/detail.html', {
+        
+        context = {
             'routine': routine,
-            'routine_items': routine_items,  # Changed from 'tasks'
+            'routine_items': routine_items,
             'total_duration': total_duration
-        })
+        }
+        
+        # Handle AJAX requests for mobile navigation
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return render(request, 'routine/detail_content.html', context)
+        
+        return render(request, 'routine/detail.html', context)
 
 
 # delete routine
@@ -441,6 +448,7 @@ def timer(request, routine_pk):
         'routine_items': items,
     }
 
+    # This is already correct in your code
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return render(request, 'routine/timer_content.html', context)
     else:
