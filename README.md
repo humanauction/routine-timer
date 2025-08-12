@@ -176,7 +176,7 @@ See the ERD below for relationships and fields:
 
 ## Wireframes
 
-![Wireframes1](routine_cap/docs/images/timer_app_cap.png)
+![Wireframes1](routine_cap/docs/images/app_cap_1.png)
 ![Wireframes2](routine_cap/docs/images/timer_app_cap2.png)
 
 ## User Paths
