@@ -16,8 +16,8 @@ Project Board: https://github.com/users/humanauction/projects/11/views/1
 
 ## Table of Contents
 
--[Introduction](#introduction) -[Methodology](#methodology)
-
+-   [Introduction](#introduction) 
+-   [Methodology](#methodology)
 -   [Features](#features)
 -   [Project Structure](#project-structure)
 -   [Tech Stack](#tech-stack)
@@ -26,9 +26,11 @@ Project Board: https://github.com/users/humanauction/projects/11/views/1
 -   [Wireframes](#wireframes)
 -   [User Flows](#user-flows)
 -   [Validation](#validation)
--   [Running Tests](#running-tests) -[AI Collaboration](#ai-collaboration)
+-   [Running Tests](#running-tests)
+-   [AI Collaboration](#ai-collaboration)
 -   [Contributing](#contributing)
--   [License](#license) -[Thanks, etc…](#thanks)
+-   [License](#license)
+-   [Thanks, etc…](#thanks)
 
 ---
 
@@ -74,7 +76,7 @@ A kanban board tracks progress. Columns: Backlog, In Progress, Review, Done. See
 ---
 
 ## Project Structure
-
+```
 routine-timer/
 ├── authentication/
 │ ├── static/authentication/css/
@@ -107,7 +109,7 @@ routine-timer/
 │ ├── registration/
 ├── manage.py
 └── README.md
-
+```
 ---
 
 ## Tech Stack
@@ -179,7 +181,7 @@ See the ERD below for relationships and fields:
 
 ## User Paths
 
-![Alt text](relative/path/to/image.png)
+![user paths](routine_cap/docs/images/routine_cap_final_userpath.png)
 
 ---
 
