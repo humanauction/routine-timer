@@ -38,4 +38,7 @@ urlpatterns = [
     path('create/', views.create_routine, name='create'),
     path('task/remove/', views.remove_task_from_builder, name='remove'),
     path('builder/add-task/', views.add_task_to_builder, name='add_task_to_builder'),
+    path('start/<int:pk>/', views.start_timer, name='start'),
+    path('complete/<int:pk>/', views.complete_timer, name='complete'),
+    path('detail/<int:pk>/', views.TimerView.as_view(), name='detail'),
 ]

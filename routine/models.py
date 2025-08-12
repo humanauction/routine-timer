@@ -58,6 +58,8 @@ class TimerState(models.Model):
     current_seconds = models.PositiveIntegerField(default=0)
     is_paused = models.BooleanField(default=True)
     last_updated = models.DateTimeField(auto_now=True)
+    start_time = models.DateTimeField(null=True, blank=True)
+    end_time = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f'TimerState for {self.user.username} - {self.routine.name}'

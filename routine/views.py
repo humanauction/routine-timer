@@ -1,4 +1,4 @@
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseNotAllowed
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect, get_object_or_404
 import json
@@ -525,4 +525,28 @@ def add_task_to_builder(request):
         else:
             return JsonResponse({'error': form.errors}, status=400)
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+def start_timer(request, pk):
+    if request.method == 'POST':
+        try:
+            timer = TimerState.objects.get(pk=pk)
+            timer.status = 'running'
+            timer.save()
+            return JsonResponse({'status': 'running'})
+        except TimerState.DoesNotExist:
+            return JsonResponse({'error': 'Timer not found'}, status=404)
+    return HttpResponseNotAllowed(['POST'])
+
+
+def complete_timer(request, pk):
+    if request.method == 'POST':
+        try:
+            timer = TimerState.objects.get(pk=pk)
+            timer.status = 'complete'
+            timer.save()
+            return JsonResponse({'status': 'complete'})
+        except TimerState.DoesNotExist:
+            return JsonResponse({'error': 'Timer not found'}, status=404)
+    return HttpResponseNotAllowed(['POST'])
 

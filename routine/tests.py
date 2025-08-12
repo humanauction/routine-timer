@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-from .models import Routine, RoutineItem
+from .models import Routine, RoutineItem, TimerState
 from authentication.models import CustomUser
 
 
@@ -88,10 +88,14 @@ class TimerTests(TestCase):
         )
         self.client.login(username='timeruser', password='timerpass')
         self.routine = Routine.objects.create(
-            user=self.user, title='Test Routine', total_duration=20, status='draft'
+            user=self.user, name='Test Routine'
         )
-        self.timer = Timer.objects.create(
-            routine=self.routine, start_time=None, end_time=None, status='pending'
+        self.timer = TimerState.objects.create(
+            user=self.user,
+            routine=self.routine,
+            current_task_index=0,
+            current_seconds=0,
+            is_paused=True
         )
 
     def test_start_timer(self):
