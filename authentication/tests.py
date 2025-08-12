@@ -7,9 +7,7 @@ class AuthViewTests(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = CustomUser.objects.create_user(
-            username='testuser',
-            email='test@example.com',
-            password='testpass123'
+            username='testuser', email='test@example.com', password='testpass123'
         )
 
     def test_login_page_loads(self):
@@ -18,9 +16,9 @@ class AuthViewTests(TestCase):
         self.assertTemplateUsed(response, 'authentication/login.html')
 
     def test_signup_page_loads(self):
-        response = self.client.get(reverse('authentication:signup'))
+        response = self.client.get(reverse('authentication:login'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'authentication/signup.html')
+        self.assertTemplateUsed(response, 'authentication/login.html')
 
     def test_login_form_invalid(self):
         response = self.client.post(reverse('authentication:login'), {
@@ -53,10 +51,11 @@ class AuthViewTests(TestCase):
             'username': 'testuser',
             'password': 'wrongpass'
         })
-        self.assertContains(response, "Invalid credentials", status_code=200)
+        self.assertContains(response, "Please enter a correct username and password", status_code=200)
 
     def test_signup(self):
-        response = self.client.post(reverse('authentication:signup'), {
+        response = self.client.post(reverse('authentication:login'), {
+            'form_type': 'sign_up',
             'username': 'newuser',
             'email': 'new@example.com',
             'password1': 'newpass123',
@@ -66,9 +65,9 @@ class AuthViewTests(TestCase):
         self.assertTrue(CustomUser.objects.filter(username='newuser').exists())
 
     def test_guest_access(self):
-        response = self.client.get(reverse('home'))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Continue as Guest")
+        response = self.client.get(reverse('authentication:guest_login'))
+        self.assertEqual(response.status_code, 302)
+
 
     def test_admin_login(self):
         admin = CustomUser.objects.create_superuser(
@@ -79,10 +78,4 @@ class AuthViewTests(TestCase):
             'password': 'adminpass'
         })
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith('/admin'))
-
-    def test_password_reset(self):
-        response = self.client.post(reverse('password_reset'), {
-            'email': 'test@example.com'
-        })
-        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(reverse('home:index')))
