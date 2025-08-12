@@ -55,6 +55,7 @@ class TimerState(models.Model):
     )
     routine = models.ForeignKey(Routine, on_delete=models.CASCADE)
     current_task_index = models.PositiveIntegerField(default=0)
+    status = models.CharField(max_length=20, default='pending')
     current_seconds = models.PositiveIntegerField(default=0)
     is_paused = models.BooleanField(default=True)
     last_updated = models.DateTimeField(auto_now=True)

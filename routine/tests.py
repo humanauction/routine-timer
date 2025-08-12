@@ -1,5 +1,6 @@
 from django.test import TestCase, Client
 from django.urls import reverse
+from django.utils import timezone
 from .models import Routine, RoutineItem, TimerState
 from authentication.models import CustomUser
 
@@ -95,28 +96,41 @@ class TimerTests(TestCase):
             routine=self.routine,
             current_task_index=0,
             current_seconds=0,
-            is_paused=True
+            is_paused=True,
+            start_time=timezone.now(),
+            end_time=timezone.now()
         )
 
     def test_start_timer(self):
-        response = self.client.post(reverse('timer:start', args=[self.timer.id]))
+        response = self.client.post(reverse('routine:start', args=[self.timer.id]))
         self.timer.refresh_from_db()
         self.assertEqual(self.timer.status, 'running')
 
     def test_complete_timer(self):
         self.timer.status = 'running'
         self.timer.save()
-        response = self.client.post(reverse('timer:complete', args=[self.timer.id]))
+        response = self.client.post(reverse('routine:complete', args=[self.timer.id]))
         self.timer.refresh_from_db()
         self.assertEqual(self.timer.status, 'complete')
 
     def test_timer_edge_case_negative_duration(self):
-        self.timer.end_time = self.timer.start_time
+        from django.utils import timezone
+        now = timezone.now()
+        self.timer.start_time = now
+        self.timer.end_time = now  # Explicitly same time
         self.timer.save()
-        response = self.client.get(reverse('timer:detail', args=[self.timer.id]))
+    
+    # Add debug in test
+        print(f"Test: start_time={self.timer.start_time}, end_time={self.timer.end_time}")
+        
+        response = self.client.get(reverse('routine:timerstate_detail', args=[self.timer.id]))
+        
+        # Debug response content
+        print(f"Response content: {response.content.decode()}")
+        
         self.assertContains(response, "Invalid timer duration", status_code=200)
 
     def test_timer_view_access(self):
-        response = self.client.get(reverse('timer:detail', args=[self.timer.id]))
+        response = self.client.get(reverse('routine:timerstate_detail', args=[self.timer.id]))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test Routine')

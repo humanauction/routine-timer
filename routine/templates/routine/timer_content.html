@@ -10,6 +10,9 @@
 
 {% block content %}
 <div class="timer-container">
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
     <!-- mobile view back btn -->
     <button id="mobile-back-btn" class="mobile-back-btn" aria-label="Back to Routine">
         <i class="fas fa-arrow-left"></i>
@@ -19,8 +22,9 @@
         data-csrf-token="{{ csrf_token }}"
         data-routine-total="{{ total|default:0 }}">
     </div>
-    <h1>Routine Timer</h1>
-    
+    <h1>{{ routine.name }}</h1>
+    <p class="text-muted">Routine Timer</p>
+
     <!-- Timer Display -->
     <div class="timer-display">
         <div class="current-task">

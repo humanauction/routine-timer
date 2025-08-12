@@ -15,7 +15,7 @@ urlpatterns = [
     path('start-builder/', StartRoutineBuilderView.as_view(),
          name='start_builder'),
     path('save/', SaveRoutineView.as_view(), name='save'),
-    path('start/<int:pk>/', StartRoutineView.as_view(), name='start'),
+    # path('start/<int:pk>/', StartRoutineView.as_view(), name='start'),
     path('detail/<int:pk>/', RoutineDetailView.as_view(), name='detail'),
     path('delete/<int:pk>/', DeleteRoutineView.as_view(), name='delete'),
     path('timer/<int:routine_pk>/', TimerView.as_view(), name='timer'),
@@ -40,5 +40,6 @@ urlpatterns = [
     path('builder/add-task/', views.add_task_to_builder, name='add_task_to_builder'),
     path('start/<int:pk>/', views.start_timer, name='start'),
     path('complete/<int:pk>/', views.complete_timer, name='complete'),
-    path('detail/<int:pk>/', views.TimerView.as_view(), name='detail'),
+    
+    path('timerstate/<int:pk>/', views.timerstate_detail, name='timerstate_detail'),
 ]
