@@ -149,7 +149,7 @@ header {
 /* Main Content */
 main {
     grid-area: main;
-    background-color: va(--primary-color);
+    background-color: var(--primary-color);
     height: 100%;
     min-height: 0;
     display: flex;
