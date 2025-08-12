@@ -4,7 +4,7 @@
 {% block title %}Timer{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'routine/css/timer.css' %}" />
+<link rel="stylesheet" href="{% static 'routine/css/timer.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 {% endblock %}
 
@@ -94,7 +94,7 @@
     {% if tasks %}
     {{ tasks|json_script:"routine-tasks-data" }}
     {% else %}
-    <input type="hidden" id="get-tasks-url" value="{% url 'routine:get_current_tasks' %}" />
+    <input type="hidden" id="get-tasks-url" value="{% url 'routine:get_current_tasks' %}">
     {% endif %}
 </div>
 {% endblock %}

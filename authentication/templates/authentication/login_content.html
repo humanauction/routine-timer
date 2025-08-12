@@ -49,7 +49,7 @@
                         type="text"
                         required
                         value="{{ login_form.username.value|default_if_none:'' }}"
-                    />
+                    >
                     {% if login_form.username.errors %}
                     <div class="error-message">
                         {% for error in login_form.username.errors %}
@@ -66,7 +66,7 @@
                         placeholder="••••••••"
                         required
                         autocomplete="current-password"
-                    />
+                    >
                     {% if login_form.password.errors %}
                     <div class="error-message">
                         {% for error in login_form.password.errors %}
@@ -139,7 +139,7 @@
                         type="text"
                         required
                         value="{{ signup_form.username.value|default_if_none:'' }}"
-                    />
+                    >
                     {% if signup_form.username.errors %}
                     <div class="error-message">
                         {% for error in signup_form.username.errors %}
@@ -155,7 +155,7 @@
                         type="email"
                         required
                         value="{{ signup_form.email.value|default_if_none:'' }}"
-                    />
+                    >
                     {% if signup_form.email.errors %}
                     <div class="error-message">
                         {% for error in signup_form.email.errors %}
@@ -171,7 +171,7 @@
                         type="password"
                         required
                         autocomplete="new-password"
-                    />
+                    >
                     {% if signup_form.password1.errors %}
                     <div class="error-message">
                         {% for error in signup_form.password1.errors %}
@@ -187,7 +187,7 @@
                         type="password"
                         required
                         autocomplete="new-password"
-                    />
+                    >
                     {% if signup_form.password2.errors %}
                     <div class="error-message">
                         {% for error in signup_form.password2.errors %}

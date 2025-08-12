@@ -4,7 +4,7 @@
 {% block title %}Routine Builder - Routine Timer{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'routine/css/builder.css' %}" />
+<link rel="stylesheet" href="{% static 'routine/css/builder.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -63,7 +63,7 @@
                     value="{{ routine_name }}" 
                     required 
                     autocomplete="off"
-                />
+                >
             </div>
             
             <!-- Task input -->
@@ -95,7 +95,7 @@
         {% if tasks %}
         <form action="{% url 'routine:save' %}" method="post" class="save-form">
             {% csrf_token %} 
-            <input type="hidden" name="routine_name" value="{{ routine_name }}" />
+            <input type="hidden" name="routine_name" value="{{ routine_name }}">
             <button type="submit" class="btn btn-outline-default btn-sm">
                 <i class="fas fa-save"></i> Save Routine
             </button>
@@ -103,8 +103,8 @@
         
         <form id="start-routine-form" action="{% url 'routine:start_builder' %}" method="post" class="start-form">
             {% csrf_token %}
-            <input type="hidden" name="redirect_to_timer" value="true" />
-            <input type="hidden" name="routine_name" value="{{ routine_name }}" />
+            <input type="hidden" name="redirect_to_timer" value="true">
+            <input type="hidden" name="routine_name" value="{{ routine_name }}">
             <button type="submit" class="btn btn-outline-default btn-sm">
                 <i class="fas fa-play"></i> Start Routine
             </button>

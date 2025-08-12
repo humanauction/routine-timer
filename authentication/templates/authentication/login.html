@@ -4,7 +4,7 @@
 {% block title %}Login & Sign Up{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'authentication/css/auth.css' %}?v=2" />
+<link rel="stylesheet" href="{% static 'authentication/css/auth.css' %}?v=2">
 {% endblock %}
 
 {% block content %}
@@ -148,7 +148,7 @@
                             type="text"
                             autocomplete="username"
                             required
-                        />
+                        >
                         {% if signup_form.username.errors %}
                         <div class="error-message">
                             {% for error in signup_form.username.errors %}
@@ -164,7 +164,7 @@
                             type="email"
                             autocomplete="email"
                             required
-                        />
+                        >
                         {% if signup_form.email.errors %}
                         <div class="error-message">
                             {% for error in signup_form.email.errors %}
@@ -180,7 +180,7 @@
                             type="password"
                             required
                             autocomplete="new-password"
-                        />
+                        >
                         {% if signup_form.password1.errors %}
                         <div class="error-message">
                             {% for error in signup_form.password1.errors %}
@@ -196,7 +196,7 @@
                             type="password"
                             required
                             autocomplete="new-password"
-                        />
+                        >
                         {% if signup_form.password2.errors %}
                         <div class="error-message">
                             {% for error in signup_form.password2.errors %}
