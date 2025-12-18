@@ -70,11 +70,11 @@ class RoutineViewTests(TestCase):
             {'task': 'Test', 'duration': 0}
         )
         self.assertEqual(response.status_code, 400)
-        
+
         # Access the nested error structure
         error_data = response.json().get('error', {})
         duration_errors = error_data.get('duration', [])
-        
+
         self.assertTrue(len(duration_errors) > 0)
         self.assertIn(
             'Ensure this value is greater than or equal to 1.',
@@ -85,7 +85,9 @@ class RoutineViewTests(TestCase):
 class TimerTests(TestCase):
     def setUp(self):
         self.user = CustomUser.objects.create_user(
-            username='timeruser', email='timer@example.com', password='timerpass'
+            username='timeruser',
+            email='timer@example.com',
+            password='timerpass'
         )
         self.client.login(username='timeruser', password='timerpass')
         self.routine = Routine.objects.create(
@@ -102,14 +104,18 @@ class TimerTests(TestCase):
         )
 
     def test_start_timer(self):
-        response = self.client.post(reverse('routine:start', args=[self.timer.id]))
+        response = self.client.post(
+            reverse('routine:start', args=[self.timer.id])
+        )
         self.timer.refresh_from_db()
         self.assertEqual(self.timer.status, 'running')
 
     def test_complete_timer(self):
         self.timer.status = 'running'
         self.timer.save()
-        response = self.client.post(reverse('routine:complete', args=[self.timer.id]))
+        response = self.client.post(
+            reverse('routine:complete', args=[self.timer.id])
+        )
         self.timer.refresh_from_db()
         self.assertEqual(self.timer.status, 'complete')
 
@@ -119,18 +125,27 @@ class TimerTests(TestCase):
         self.timer.start_time = now
         self.timer.end_time = now  # Explicitly same time
         self.timer.save()
-    
+
     # Add debug in test
-        print(f"Test: start_time={self.timer.start_time}, end_time={self.timer.end_time}")
-        
-        response = self.client.get(reverse('routine:timerstate_detail', args=[self.timer.id]))
-        
+        print(
+            f"Test: start_time={self.timer.start_time}, "
+            f"end_time={self.timer.end_time}"
+        )
+
+        response = self.client.get(
+            reverse('routine:timerstate_detail', args=[self.timer.id])
+        )
+
         # Debug response content
         print(f"Response content: {response.content.decode()}")
-        
-        self.assertContains(response, "Invalid timer duration", status_code=200)
+
+        self.assertContains(
+            response, "Invalid timer duration", status_code=200
+        )
 
     def test_timer_view_access(self):
-        response = self.client.get(reverse('routine:timerstate_detail', args=[self.timer.id]))
+        response = self.client.get(
+            reverse('routine:timerstate_detail', args=[self.timer.id])
+        )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test Routine')
