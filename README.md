@@ -2,81 +2,79 @@
 
 Routine Planner App README
 
-# Routine Timer App
+## Routine Timer App
 
 TL/DR; A Django-based web application for planning, timing, and tracking routines.  
 Users can create routines, add tasks, run timers, countdowns and manage sessions.  
 Supports authentication, guest access, and admin management.
 
-Deployed site: https://routine-timer-51d399bd76a2.herokuapp.com/
+Deployed site: <https://routine-timer-51d399bd76a2.herokuapp.com/>
 Github Repo: humanauction/routine-cap
-Project Board: https://github.com/users/humanauction/projects/11/views/1
+Project Board: <https://github.com/users/humanauction/projects/11/views/1>
 
 ---
 
 ## Table of Contents
 
--   [Introduction](#introduction) 
--   [Methodology](#methodology)
--   [Features](#features)
--   [Project Structure](#project-structure)
--   [Tech Stack](#tech-stack)
--   [Design System](#design-system)
--   [Database Schema](#database-schema)
--   [Wireframes](#wireframes)
--   [User Flows](#user-flows)
--   [Validation](#validation)
--   [Running Tests](#running-tests)
--   [AI Collaboration](#ai-collaboration)
--   [Contributing](#contributing)
--   [License](#license)
--   [Thanks, etc…](#thanks)
+- [Introduction](#introduction)
+- [Methodology](#methodology)
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Tech Stack](#tech-stack)
+- [Design System](#design-system)
+- [Database Schema](#database-schema)
+- [Wireframes](#wireframes)
+- [User Paths](#user-paths)
+- [Validation](#validation)
+- [Testing](#testing)
+- [AI Collaboration](#ai-collaboration)
+- [License](#license)
+- [Thanks, etc…](#thanks-etc)
 
 ---
 
 ## Introduction
 
-## The Routine Planner App helps users design, save and run daily routines with an integrated timer. Minimal by design, clean, distraction-free interface keeps focus on productivity, while features like routine modification requests and saved routines enhance flexibility.
+The Routine Planner App helps users design, save and run daily routines with an integrated timer. Minimal by design, clean, distraction-free interface keeps focus on productivity, while features like routine modification requests and saved routines enhance flexibility
 
 ## Methodology
 
-We followed agile principles, including Kanban and MoSCoW methods, so expect minimal documentation! MVP focused on delivering strong security principles and future scaling through modular design. We prioritized core features (routine CRUD, timer mode) in pre-production; Iterated on user feedback for MVP refinements; Held multiple, regular demo & retrospective sessions to adjust scope. This helped identify issues and solutions in advance as well as on the fly, specific examples include:
-Feature
-Benefit
-Separate forms
-Keeps view logic thin
-Clean fields
-Prevents injection
-Centralised password rules
-Django + custom validation, easier test, reuse, and auditing
-Class-based views (CBVs)
-Consistency, easy extension, clear lifecycle hooks (form_valid)
+We followed agile principles, including Kanban and MoSCoW methods, so expect minimal documentation! MVP focused on delivering strong security principles and future scaling through modular design. We prioritized core features (routine CRUD, timer mode) in pre-production; Iterated on user feedback for MVP refinements; Held multiple, regular demo & retrospective sessions to adjust scope. This helped identify issues and solutions in advance and real-time, specific examples include:
 
-# Key User Stories:
+- Feature
+- Benefit
+- Separate forms
+- Keeps view logic thin
+- Clean fields
+- Prevents injection
+- Centralised password rules
+- Django + custom validation, easier test, reuse, and auditing
+- Class-based views (CBVs)
+- Consistency, easy extension, clear lifecycle hooks (form_valid)
 
-As a user, I can create/edit/delete routines - Achieved.
-As a user, I can run a routine in timer mode - Achieved.
-As an admin, I can edit or delete a user routine - Achieved.
+## Key User Stories
 
-Project Board
-A kanban board tracks progress. Columns: Backlog, In Progress, Review, Done. See: https://github.com/users/humanauction/projects/11/views/1 for details.
+- As a user, I can create/edit/delete routines: Achieved.
+- As a user, I can run a routine in timer mode: Achieved.
+- As an admin, I can edit or delete a user routine: Achieved.
 
----
+### Project Board
+
+A kanban board tracks progress. Columns: Backlog, In Progress, Review, Done. See: <https://github.com/users/humanauction/projects/11/views/1>
 
 ## Features
 
--   User authentication (login, signup, guest, admin).
--   Routine builder: create, edit, save routines.
--   Routine Countdown Timer: run routines, track progress, increment/decrement controls.
--   Productivity Timer: pie-chart, “pomodoro”-type countdown with segmentation control.
--   Responsive UI for desktop and mobile via AJAX.
--   Admin dashboard for managing users and routines.
--   Session tracking and event logging.
-
----
+- User authentication (login, signup, guest, admin).
+- Routine builder: create, edit, save routines.
+- Routine Countdown Timer: run routines, track progress, increment/decrement controls.
+- Productivity Timer: pie-chart, “pomodoro”-type countdown with segmentation control.
+- Responsive UI for desktop and mobile via AJAX.
+- Admin dashboard for managing users and routines.
+- Session tracking and event logging.
 
 ## Project Structure
-```
+
+```doc
 routine-timer/
 ├── authentication/
 │ ├── static/authentication/css/
@@ -110,50 +108,47 @@ routine-timer/
 ├── manage.py
 └── README.md
 ```
----
 
 ## Tech Stack
 
--   **Backend:** Django 4.x, Python 3.11+
--   **Frontend:** HTML5, CSS3 (custom), JavaScript (vanilla)
--   **Database:** PostgreSQL
--   **Icons:** Font Awesome
--   **Linting & Formatting:** ESLint, Prettier, Black -**Testing & Validation:** pytest, jest, manual, validator.w3.org
--   **Static files:** Managed via Django
--   **Devops:** GitHub, Heroku
-
----
+- **Backend:** Django 4.x, Python 3.11+
+- **Frontend:** HTML5, CSS3 (custom), JavaScript (vanilla)
+- **Database:** PostgreSQL
+- **Icons:** Font Awesome
+- **Linting & Formatting:** ESLint, Prettier, Black -**Testing & Validation:** pytest, jest, manual, validator.w3.org
+- **Static files:** Managed via Django
+- **Devops:** GitHub, Heroku
 
 ## Design System
 
--   **Color Palette:**
+- **Color Palette:**
 
-primary-color: #f5f5f5;
-secondary-color: #a3aab5;
-text-color: #161616;  
-accent-color: #e24ad3;  
-light-bg: #e6e8ed;
-dark-bg: #4d4d4e;
-tertiary-color: #242424;
-accent-red: #c41e3a;
+- primary-color: #f5f5f5;
+- secondary-color: #a3aab5;
+- text-color: #161616;  
+- accent-color: #e24ad3;  
+- light-bg: #e6e8ed;
+- dark-bg: #4d4d4e;
+- tertiary-color: #242424;
+- accent-red: #c41e3a;
 
 ![color palette](routine_cap/docs/images/routine_cap_colors1.png)
 
--   **Font:**
+- **Font:**
 
-    -   `"Atkinson Hyperlegible Mono", "Roboto Mono", sans-serif, monospace`
+  - Atkinson Hyperlegible Mono, Roboto Mono, sans-serif, monospace
 
--   **Buttons:**
+- **Buttons:**
 
-    -   Outline and filled styles, small and large variants
-    -   Accessible color contrast
+  - Outline and filled styles, small and large variants
+  - Accessible color contrast
 
--   **Cards:**
+- **Cards:**
 
-    -   White background, visible border, subtle shadow
+  - White background, visible border, subtle shadow
 
--   **Forms:**
-    -   Clean, modern, with clear spacing and focus states
+- **Forms:**
+  - Clean, modern, with clear spacing and focus states
 
 ---
 
@@ -163,14 +158,14 @@ See the ERD below for relationships and fields:
 
 **Main tables:**
 
--   `user_session`: session tracking
--   `signup_event`: signup verification
--   `user`: authentication, roles
--   `routine`: routines created by users
--   `routine_task`: tasks within routines
--   `timer`: tracks routine execution
--   `user_saved_routine`: routines saved by users
--   `satimer`: standalone timer -`slice`: granular function of satimer
+- `user_session`: session tracking
+- `signup_event`: signup verification
+- `user`: authentication, roles
+- `routine`: routines created by users
+- `routine_task`: tasks within routines
+- `timer`: tracks routine execution
+- `user_saved_routine`: routines saved by users
+- `satimer`: standalone timer -`slice`: granular function of satimer
 
 ![ERD](routine_cap/docs/images/routine_cap_final_erd.png)
 
@@ -203,9 +198,9 @@ Unit Tests conducted using Pytest (backend), Jest (frontend), validation for 26 
 ![pytest validation1](routine_cap/docs/images/routine_cap_pytest1.png)
 ![pytest validation2](routine_cap/docs/images/routine_cap_pytest2.png)
 
--   Unit tests are located in each app’s `tests.py`
+- Unit tests are located in each app’s `tests.py`
 
--   Coverage includes authentication, home, routine builder, routine timer, standalone timer and session logic. General, edge case & user flow were both written and AI generated to test and validate. Examples include:
+- Coverage includes authentication, home, routine builder, routine timer, standalone timer and session logic. General, edge case & user flow were both written and AI generated to test and validate. Examples include:
 
 Authentication:
 Invalid credentials
@@ -263,10 +258,10 @@ Dillon for testing, user feedback, MVP refinements, project scheduling and timin
 
 ## To do / for Improvement
 
--   **Accessibility:**
+- **Accessibility:**
     UX, ARIA attributes, autocomplete.
 
--   **Defensive Programming:**
+- **Defensive Programming:**
     Integration Tests: API endpoint flows with Postman/Newman
     E2E Tests: Cypress for routine-timer workflows
     Coverage checks to guard against regressions.
