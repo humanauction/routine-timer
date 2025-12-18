@@ -555,7 +555,7 @@ def timerstate_detail(request, pk):
     timer = get_object_or_404(TimerState, pk=pk)
     routine = timer.routine
     tasks = routine.items.all().order_by('order')
-    # If your Routine model has a total_time() method, use it; otherwise, sum durations:
+    # use Routine model total_time() method:
     try:
         total = routine.total_time()
     except AttributeError:
@@ -564,8 +564,12 @@ def timerstate_detail(request, pk):
 
     # Debug print
     print(f"start_time: {timer.start_time}, end_time: {timer.end_time}")
-    
-    if timer.start_time and timer.end_time and timer.end_time <= timer.start_time:
+
+    if (
+        timer.start_time
+        and timer.end_time
+        and timer.end_time <= timer.start_time
+    ):
         error = "Invalid timer duration"
         print(f"Error set: {error}")
 
