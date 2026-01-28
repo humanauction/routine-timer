@@ -30,4 +30,5 @@ env.py
 .LSOverride
 ._*
 
+# node_modules
 node_modules/
