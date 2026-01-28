@@ -29,3 +29,5 @@ env.py
 .AppleDouble
 .LSOverride
 ._*
+
+node_modules/
