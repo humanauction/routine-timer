@@ -55,14 +55,14 @@ check-venv:
 	fi
 	@echo "^_^ Virtual environment active"
 
-# Check DEBUG setting
+# Check DEBUG setting TODO: BUG make project specific (i.e. not routine_cap.settings)
 check-debug:
 	@echo "Checking DEBUG setting..."
 	@if grep -q "DEBUG=True" .env 2>/dev/null; then \
 		echo "❌ ERROR: DEBUG=True found in .env - not safe for production!"; \
 		exit 1; \
 	fi
-	@if $(PYTHON) -c "import os; os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'aaa_config.settings'); import django; django.setup(); from django.conf import settings; exit(1 if settings.DEBUG else 0)" 2>/dev/null; then \
+	@if $(PYTHON) -c "import os; os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'routine_cap.settings'); import django; django.setup(); from django.conf import settings; exit(1 if settings.DEBUG else 0)" 2>/dev/null; then \
 		echo "❌ ERROR: DEBUG=True in Django settings - not safe for production!"; \
 		exit 1; \
 	fi
