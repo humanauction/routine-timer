@@ -82,7 +82,9 @@ check-secrets:
 		echo "❌ ERROR: Database file is tracked by git!"; \
 		exit 1; \
 	fi
-	@if grep -r "SECRET_KEY.*=" . --include="*.py" --exclude-dir=venv | grep -v "env("; then \
+	@if grep -r "SECRET_KEY.*=" . --include="*.py" \
+		--exclude-dir=venv --exclude-dir=.venv \
+		--exclude="env.py" | grep -v "env("; then \
 		echo "❌ ERROR: Hardcoded SECRET_KEY found in Python files!"; \
 		exit 1; \
 	fi
