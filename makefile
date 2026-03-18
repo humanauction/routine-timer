@@ -24,8 +24,8 @@ drymig:
 	python manage.py makemigrations --dry-run
 
 migrations:
-
 	python manage.py makemigrations
+
 migrate:
 	python manage.py migrate
 
