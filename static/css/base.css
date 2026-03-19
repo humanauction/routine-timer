@@ -374,7 +374,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 button, .btn {
-    /* border: 1px solid transparent; */
+    border: none;
     border-radius: 4px;
     padding: 12px 24px;
     font-size: .8rem;

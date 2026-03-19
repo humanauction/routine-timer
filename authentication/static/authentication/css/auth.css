@@ -92,6 +92,7 @@ label {
 
 input {
     width: 100%;
+    border: none;
     padding: 12px 16px;
     border-radius: 8px;
     background: var(--light-bg);
@@ -114,6 +115,7 @@ input:focus {
     padding: 12px 24px;
     background: transparent;
     border-radius: 8px;
+    border: none;
     cursor: pointer;
     font-weight: 500;
     font-size: 1rem;
@@ -202,6 +204,7 @@ input:focus {
 .social {
     width: 44px;
     height: 44px;
+    border: none;
     border-radius: 8px;
     background: var(--primary-color);
     cursor: pointer;
