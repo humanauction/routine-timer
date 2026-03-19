@@ -1,4 +1,7 @@
 :root {
+    --mono-700: #2b2b2b;
+    --mono-900: #111111;
+
     --primary-color: #f5f5f5;
     --secondary-color: #a3aab5;
     --tertiary-color: #242424;
@@ -7,10 +10,49 @@
     --text-color: #161616;
     --light-bg: #e6e8ed;
     --dark-bg: #4d4d4e;
-    --header-height: 60px;
-    --footer-height: 60px;
-    --nav-width: 250px;
-    --nav-width-collapsed: 70px;
+}
+
+/* System default */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary-color: #111111;
+        --secondary-color: #2b2b2b;
+        --tertiary-color: #f5f5f5;
+        --accent-color: #e24ad3;
+        --accent-red: #c41e3a;
+        --text-color: #f5f5f5;
+        --light-bg: #2b2b2b;
+        --dark-bg: #111111;
+        --mono-700: #2b2b2b;
+        --mono-900: #111111;
+    }
+}
+
+/* Manual override */
+:root[data-theme="dark"] {
+    --primary-color: #111111;
+    --secondary-color: #2b2b2b;
+    --tertiary-color: #f5f5f5;
+    --accent-color: #e24ad3;
+    --accent-red: #c41e3a;
+    --text-color: #f5f5f5;
+    --light-bg: #2b2b2b;
+    --dark-bg: #111111;
+    --mono-700: #2b2b2b;
+    --mono-900: #111111;
+}
+
+:root[data-theme="light"] {
+    --primary-color: #f5f5f5;
+    --secondary-color: #a3aab5;
+    --tertiary-color: #242424;
+    --accent-color: #e24ad3;
+    --accent-red: #c41e3a;
+    --text-color: #161616;
+    --light-bg: #e6e8ed;
+    --dark-bg: #4d4d4e;
+    --mono-700: #2b2b2b;
+    --mono-900: #111111;
 }
 
 * {
@@ -57,6 +99,29 @@ header {
 .logo {
     font-size: 1.5rem;
     font-weight: bold;
+}
+
+.theme-toggle {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    color: var(--tertiary-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.theme-toggle:hover {
+    background: var(--light-bg);
+    transform: translateY(-1px);
+}
+
+:root[data-theme="dark"] .theme-toggle {
+    color: var(--primary-color);
 }
 
 .mobile-menu-toggle {

@@ -379,3 +379,25 @@ function loadTimerScripts() {
     }
 }
 
+(function () {
+    const root = document.documentElement;
+    const storageKey = 'theme';
+    const stored = localStorage.getItem(storageKey);
+
+    if (stored === 'dark' || stored === 'light') {
+        root.setAttribute('data-theme', stored);
+    } else {
+        root.removeAttribute('data-theme');
+    }
+
+    const toggle = document.getElementById('themeToggle');
+    if (!toggle) return;
+
+    toggle.addEventListener('click', function () {
+        const current = root.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        localStorage.setItem(storageKey, next);
+    });
+})();
+
