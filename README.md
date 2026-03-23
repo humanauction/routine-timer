@@ -9,7 +9,7 @@ Users can create routines, add tasks, run timers, countdowns and manage sessions
 Supports authentication, guest access, and admin management.
 
 Deployed site: <https://routine-timer-51d399bd76a2.herokuapp.com/>
-Github Repo: humanauction/routine-cap
+Github Repo: <https://github.com/humanauction/routine-timer>
 Project Board: <https://github.com/users/humanauction/projects/11/views/1>
 
 ---
